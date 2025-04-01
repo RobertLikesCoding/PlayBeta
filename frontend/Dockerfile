@@ -1,5 +1,5 @@
 FROM node:lts-alpine
-WORKDIR /app
+WORKDIR /nuxt
 COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --silent
 COPY . .
