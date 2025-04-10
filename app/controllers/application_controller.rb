@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
 
   SECRET_KEY = Rails.application.credentials.jwt_secret_key
 
-  def encoded_token(user)
+  def encode_token(user)
     payload = {
       user_id: user.id,
       user_type: user.class.name
@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
     JWT.encode(payload, SECRET_KEY)
   end
 
-  def decoded_token
+  def decode_token
     header = request.headers["Authorization"]
       if header
           token = header.split(" ")[1]
@@ -27,9 +27,9 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    if decoded_token
-      user_id = decoded_token[0]["user_id"]
-      user_type = decoded_token[0]["user_type"]
+    if decode_token
+      user_id = decode_token[0]["user_id"]
+      user_type = decode_token[0]["user_type"]
       begin
         user_model = user_type.constantize  # Convert the user_type string to the actual class (e.g., "GameDeveloper" => GameDeveloper)
         @user = user_model.find_by(id: user_id)

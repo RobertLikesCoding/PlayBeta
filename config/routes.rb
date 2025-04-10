@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :game_developers do
         post "sign_up", to: "game_developers#signup"
-        get "me", to: "game_developers#me"
+        get "me", to: "gam_developers#me"
       end
 
       post "auth/sign_in", to: "auth#signin"
