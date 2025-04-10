@@ -4,15 +4,16 @@ class Api::V1::GameDevelopersController < ApplicationController
 
   def create
     game_developer = GameDeveloper.new(game_developer_params)
-    @token = encode_token(game_developer: game_developer)
+    if game_developer.save
+      @token = encode_token(game_developer)
 
-    render json: {
-      studio_name: game_developer.studio_name,
-      # location: game_developer.location,
-      # bio: game_developer.bio,
-      # website: game_developer.website,
-      token: @token
-    }, status: :created
+      render json: {
+        studio_name: game_developer.studio_name,
+        token: @token
+      }, status: :created
+    else
+      render json: { errors: game_developer.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def signup
