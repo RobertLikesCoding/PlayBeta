@@ -7,7 +7,7 @@ Rails.application.routes.draw do
           get "me", to: "game_developers#me"
         end
       end
-      post "auth/sign_in", to: "auth#signin"
+      post "auth/log_in", to: "auth#login"
     end
   end
 

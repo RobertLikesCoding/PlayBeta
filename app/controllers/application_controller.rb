@@ -3,13 +3,8 @@ class ApplicationController < ActionController::API
 
   SECRET_KEY = Rails.application.credentials.jwt_secret_key
 
-  def encode_token(user)
-    payload = {
-      user_id: user.id,
-      user_type: user.class.name
-    }
-
-    JWT.encode(payload, SECRET_KEY)
+  def encode_token(user_id)
+    JWT.encode(user_id, SECRET_KEY)
   end
 
   def decode_token

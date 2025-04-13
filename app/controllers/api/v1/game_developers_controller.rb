@@ -3,20 +3,17 @@ class Api::V1::GameDevelopersController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :handle_invalid_record
 
   def create
-    game_developer = GameDeveloper.new(game_developer_params)
-    if game_developer.save
-      @token = encode_token(game_developer)
+    user = GameDeveloper.new(user_params)
+    if user.save
+      @token = encode_token(user.id)
 
       render json: {
-        studio_name: game_developer.studio_name,
+        studio_name: user.studio_name,
         token: @token
       }, status: :created
     else
-      render json: { errors: game_developer.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
-  end
-
-  def signup
   end
 
   def me
@@ -25,7 +22,7 @@ class Api::V1::GameDevelopersController < ApplicationController
 
   private
 
-  def game_developer_params
+  def user_params
     params.require(:game_developer).permit(:email, :password, :password_confirmation, :bio, :website, :studio_name, :location)
   end
 
