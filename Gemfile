@@ -47,7 +47,12 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
+  # Loads environment variables from a .env file into ENV
   gem "dotenv-rails"
+
+  # Testing framework for Rails applications [https://github.com/rspec/rspec-rails]
   gem "rspec-rails", "~> 7.1.1"
+
+  # Creates authentication tokens
   gem "jwt"
 end
