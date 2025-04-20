@@ -35,7 +35,16 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
-gem "faker"
+  # Creates authentication tokens
+  gem "jwt"
+
+group :test do
+  # Checks test coverage
+  gem "simplecov", require: false
+
+  # Testing framework for Rails applications [https://github.com/rspec/rspec-rails]
+  gem "rspec-rails", "~> 7.1.1"
+end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -50,9 +59,6 @@ group :development, :test do
   # Loads environment variables from a .env file into ENV
   gem "dotenv-rails"
 
-  # Testing framework for Rails applications [https://github.com/rspec/rspec-rails]
-  gem "rspec-rails", "~> 7.1.1"
-
-  # Creates authentication tokens
-  gem "jwt"
+  # Creates fake data
+  gem "faker"
 end
