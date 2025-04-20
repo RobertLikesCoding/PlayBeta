@@ -61,4 +61,7 @@ group :development, :test do
 
   # Creates fake data
   gem "faker"
+
+  # Creates test data
+  gem "factory_bot_rails"
 end
