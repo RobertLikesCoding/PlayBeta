@@ -1,11 +1,16 @@
 test_studio_one:
-  email: "developer1@example.com"
+  email: "studio_one@example.com"
   password_digest: <%= BCrypt::Password.create('password123') %>
   studio_name: "Awesome Studio"
   bio: "This is a short bio about the game developer. They are awesome!"
 
 test_studio_two:
-  email: "developer2@example.com"
+  email: "studio_two@example.com"
   password_digest: <%= BCrypt::Password.create('securepassword') %>
   studio_name: "Creative Studio"
-  bio: ""
+  bio: "Too short bio"
+
+invalid_studio:
+  email: ""
+  password_digest: <%= BCrypt::Password.create('') %>
+  studio_name: ""

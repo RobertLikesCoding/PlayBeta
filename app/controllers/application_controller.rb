@@ -1,10 +1,8 @@
 class ApplicationController < ActionController::API
   before_action :authorized
 
-  SECRET_KEY = Rails.application.credentials.jwt_secret_key
-
   def encode_token(user_id)
-    JWT.encode(user_id, SECRET_KEY)
+    JWT.encode(user_id, ENV["JWT_SECRET_KEY"])
   end
 
   def decode_token
@@ -12,7 +10,7 @@ class ApplicationController < ActionController::API
       if header
           token = header.split(" ")[1]
           begin
-              decoded = JWT.decode(token, SECRET_KEY, { algorithm: "HS256" })[0]
+              decoded = JWT.decode(token, ENV["JWT_SECRET_KEY"], { algorithm: "HS256" })[0]
               HashWithIndifferentAccess.new(decoded)
           rescue JWT::DecodeError => e
             Rails.logger.error("JWT Decode Error: #{e.message}")
