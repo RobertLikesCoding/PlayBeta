@@ -4,11 +4,8 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
   let(:user) { create(:game_developer) }
 
   describe "GET /index" do
-    before do
-      create_list(:game_developer, 2)
-    end
-
     it "returns a list of game developers" do
+      create_list(:game_developer, 2)
       get "/api/v1/game_developers"
 
       expect(response).to have_http_status(:ok)
@@ -24,12 +21,9 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
 
   describe "GET game_developers/me" do
     context "when authenticated" do
-      before do
+      it "returns the current user" do
         token = JWT.encode({ user_id: user.id }, ENV["JWT_SECRET_KEY"], "HS256")
         get "/api/v1/game_developers/me", headers: { "Authorization" => "Bearer #{token}" }
-      end
-
-      it "returns the current user" do
         expect(response).to have_http_status(:ok)
 
         current_user = JSON.parse(response.body)
@@ -41,7 +35,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     end
   end
 
-  describe "POST /api/v1/game_developers" do
+  describe "POST /signup" do
     context "with valid params" do
       let(:valid_params) do
         {
@@ -55,7 +49,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       end
 
       it "should create a new user" do
-        post "/api/v1/game_developers", params: valid_params
+        post "/api/v1/game_developers/signup", params: valid_params
 
         expect(response).to have_http_status(:created)
 
@@ -78,7 +72,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       end
 
       it "should not create a new user" do
-        post "/api/v1/game_developers", params: invalid_params
+        post "/api/v1/game_developers/signup", params: invalid_params
 
         expect(response).to have_http_status(:unprocessable_entity)
 

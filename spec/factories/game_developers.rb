@@ -1,8 +1,24 @@
 FactoryBot.define do
   factory :game_developer do
     email { Faker::Internet.email }
-    password { "passywordy2" }
-    studio_name { Faker::Company.name }
-    bio { Faker::Lorem.sentence(word_count: 30) }
+    password { "password123" }
+    password_confirmation { "password123" }
+    studio_name { "Awesome Studio" }
+    bio { "This is a short bio about the game developer. They are awesome!" }
+
+    # Define traits for specific scenarios
+    trait :invalid do
+      email { "" }
+      password { "" }
+      studio_name { "" }
+    end
+
+    trait :short_bio do
+      bio { "Too short bio" }
+    end
+
+    trait :long_bio do
+      bio { "A" * 1002 }
+    end
   end
 end

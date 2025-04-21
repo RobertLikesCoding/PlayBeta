@@ -44,6 +44,9 @@ group :test do
 
   # Testing framework for Rails applications [https://github.com/rspec/rspec-rails]
   gem "rspec-rails", "~> 7.1.1"
+
+  # I had issues with getting a clean test database so I decided to install this gem
+  gem "database_cleaner-active_record"
 end
 
 group :development, :test do

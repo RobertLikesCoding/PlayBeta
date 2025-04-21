@@ -1,47 +1,44 @@
 require 'rails_helper'
 
 RSpec.describe GameDeveloper, type: :model do
-  fixtures :game_developers
-
-  # MODEL TESTS
   it "should encrypt password" do
-    game_developer = game_developers(:test_studio_one)
+    game_developer = build(:game_developer, email: "test@studio.com", password: "password123")
 
     expect(game_developer.authenticate("password123")).to be_truthy
   end
 
   it "is valid with email, password and studio_name" do
-    game_developer = game_developers(:test_studio_one)
+    game_developer = build(:game_developer)
     expect(game_developer).to be_valid
   end
 
   it "is invalid without email" do
-    game_developer = game_developers(:invalid_studio)
+    game_developer = build(:game_developer, :invalid)
     expect(game_developer).to_not be_valid
   end
 
   it "is invalid with duplicate email" do
-    duplicate = GameDeveloper.create({
-      email: "studio_one@example.com",
-      password_digest: "password123",
-      studio_name: "Awesome Studio"
+    user = create(:game_developer)
+    duplicate = GameDeveloper.build({
+      email: user.email,
+      password_digest: user.password_digest,
+      studio_name: user.studio_name
     })
+
     expect(duplicate).to_not be_valid
   end
 
   it "bio should have minimum length" do
-    studio1 = game_developers(:test_studio_one)
-    studio2 = game_developers(:test_studio_two)
+    valid_game_developer = build(:game_developer)
+    short_bio_game_developer = build(:game_developer, :short_bio)
 
-    expect(studio1).to be_valid
-    expect(studio2).to_not be_valid
+    expect(valid_game_developer).to be_valid
+    expect(short_bio_game_developer).to_not be_valid
   end
 
   it "bio shouldn't exceed limit" do
-    studio1 = game_developers(:test_studio_one)
-    studio1.bio = "A" * 1002
-
-    expect(studio1).to_not be_valid
+    long_bio_game_developer = build(:game_developer, :long_bio)
+    expect(long_bio_game_developer).to_not be_valid
   end
 
   #
