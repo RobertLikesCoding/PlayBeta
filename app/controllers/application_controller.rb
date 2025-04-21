@@ -29,7 +29,6 @@ class ApplicationController < ActionController::API
   end
 
   def authorized
-    Rails.logger.warn("Authorization failed: #{decode_token.inspect}")
     render json: { error: "Unauthorized access. Please log in." }, status: :unauthorized unless current_user
   end
 end

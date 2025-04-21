@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :game_developers, only: [ :create ] do
+      resources :game_developers, only: [ :create, :index ] do
         collection do
           post "sign_up", to: "game_developers#create"
           get "me", to: "game_developers#me"
