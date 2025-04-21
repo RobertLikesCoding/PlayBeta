@@ -21,9 +21,6 @@ COPY Gemfile Gemfile.lock ./
 # Install dependencies
 RUN bundle install
 
-# Set environment to development
-ENV RAILS_ENV=development
-
 # Copy the rest of the application code
 COPY . .
 

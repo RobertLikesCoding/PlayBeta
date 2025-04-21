@@ -1,6 +1,10 @@
 class Api::V1::GameDevelopersController < ApplicationController
-  skip_before_action :authorized, only: [ :create ]
-  rescue_from ActiveRecord::RecordInvalid, with: :handle_invalid_record
+  skip_before_action :authorized, only: [ :create, :index ]
+
+def index
+  game_developers = GameDeveloper.all
+  render json: game_developers.as_json(except: [ :password_digest ]), status: :ok
+end
 
   def create
     user = GameDeveloper.new(user_params)
@@ -17,16 +21,16 @@ class Api::V1::GameDevelopersController < ApplicationController
   end
 
   def me
-    render json: current_user, status: :ok
+    render json: {
+      id: current_user.id,
+      email: current_user.email,
+      bio: current_user.bio
+    }, status: :ok
   end
 
   private
 
   def user_params
     params.require(:game_developer).permit(:email, :password, :password_confirmation, :bio, :website, :studio_name, :location)
-  end
-
-  def handle_invalid_record(exception)
-    render json: { errors: exception.record.errors.full_messages }, status: :unprocessable_entity
   end
 end
