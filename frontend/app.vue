@@ -1,6 +1,12 @@
 <template>
-  <div class="text-red-500 text-sm font-bold">
-    Tailwind is working!
+  <div>
+    Wow, is this really it?
   </div>
-  <Button label="Verify" />
+  <UButton color="secondary">TESTER</UButton>
 </template>
+
+<script setup lang="ts">
+
+</script>
+
+<style lang="scss" scoped></style>
