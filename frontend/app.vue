@@ -1,12 +1,14 @@
 <template>
   <div>
-    Wow, is this really it?
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
-  <UButton color="secondary">TESTER</UButton>
 </template>
 
 <script setup lang="ts">
+  import { NuxtLayout, NuxtPage } from '#components';
 
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
