@@ -32,14 +32,17 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: playbeta_frontend
     ports:
       - "3001:3001"
+      - "24678:24678"
     volumes:
-      - ./frontend:/nuxt
+      - ./frontend:/frontend
+      - /frontend/node_modules
     depends_on:
       - backend
     environment:
-      - API_BASE_URL=http://localhost:3000
+      - NODE_ENV=development
 
 volumes:
   playbeta-db-data:
