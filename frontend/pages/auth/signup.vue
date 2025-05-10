@@ -12,7 +12,14 @@
       class="flex-col gap-3 flex"
     >
       <div class="flex flex-col gap-1">
-        <form.Field name="email">
+        <form.Field
+          name="email"
+          :validators="{
+            onBlur: ({ value }) => {
+              return validateEmail(value)
+            },
+          }"
+        >
           <template v-slot="{ field, state }">
             <label :htmlFor="field.name">Email</label>
             <UInput
@@ -26,7 +33,11 @@
               "
               @blur="field.handleBlur"
             />
-            <FieldInfo :state="state" />
+            <em
+              v-for="error of state.meta.errors"
+              class="text-red-300"
+              >{{ error }}</em
+            >
           </template>
         </form.Field>
       </div>
@@ -89,7 +100,7 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       // Do something with form data
-      alert(value)
+      alert(JSON.stringify(value))
     },
     defaultValues: {
       email: '',
@@ -97,4 +108,14 @@
       passwordConfirmation: '',
     },
   })
+
+  function validateEmail(value: string) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (value && !emailRegex.test(value)) {
+      return 'Please provide a valid email address'
+    }
+    if (value === '') {
+      return 'Email is required'
+    }
+  }
 </script>
