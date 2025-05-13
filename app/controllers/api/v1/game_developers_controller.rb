@@ -12,7 +12,7 @@ end
       @token = encode_token(user.id)
 
       render json: {
-        email: user.email,
+        user_id: user.id,
         token: @token
       }, status: :created
     else

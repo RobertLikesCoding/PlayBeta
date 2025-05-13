@@ -77,7 +77,7 @@
 
       <div class="flex flex-col gap-1">
         <form.Field
-          name="passwordConfirmation"
+          name="password_confirmation"
           :validators="{
             onBlur: ({ value }) => {
               return validatePasswordConfirm(value)
@@ -126,16 +126,39 @@
 
   const form = useForm({
     onSubmit: async ({ value }) => {
-      console.log(value)
+      // POST request to backend
+      try {
+        const response = await $fetch('/api/v1/game_developers/signup', {
+          baseURL: useRuntimeConfig().public.apiBase,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: {
+            game_developer: {
+              email: value.email,
+              password: value.password,
+              password_confirmation: value.password_confirmation,
+            },
+          },
+        })
+
+        if (response) {
+          console.log('Sign Up Success', response)
+          return response
+        }
+
+        throw new Error('Signup failed:')
+      } catch (error) {
+        console.error(error)
+      }
     },
     defaultValues: {
       email: '',
       password: '',
-      passwordConfirmation: '',
+      password_confirmation: '',
     },
   })
-
-  console.log(form.getAllErrors)
 
   function validateEmail(value: string): string | undefined {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
