@@ -3,12 +3,7 @@
     <h1 class="text-2xl font-bold mb-4">Sign Up</h1>
 
     <form
-      @submit="
-        (e) => {
-          e.preventDefault()
-          form.handleSubmit()
-        }
-      "
+      @submit.prevent="form.handleSubmit()"
       class="flex-col gap-3 flex"
     >
       <div class="flex flex-col gap-1">
@@ -106,14 +101,29 @@
           </template>
         </form.Field>
       </div>
-
       <UButton
         type="submit"
         class="mt-4 justify-center"
         size="xl"
         label="Submit"
+        :loading="form.useStore((meta) => meta.isSubmitting).value"
+        :disabled="form.useStore((meta) => meta.isSubmitting).value"
       />
     </form>
+    <div
+      v-if="form.useStore((meta) => meta.isSubmitted).value"
+      class="border-2 rounded-md mt-5 p-2 border-green-300"
+    >
+      <p>
+        Sign Up was successfull. We've send you an activation link to your inbox
+      </p>
+    </div>
+    <div
+      v-if="hasError"
+      class="border-2 rounded-md mt-5 p-2 border-red-400"
+    >
+      <p>Sign Up failed, please try again</p>
+    </div>
   </div>
 </template>
 
@@ -124,33 +134,43 @@
     layout: 'auth',
   })
 
+  const hasError = ref(false)
+
+  type SignUpResponse =
+    | { user_id: number; token: string }
+    | { errors: string[] }
+
   const form = useForm({
     onSubmit: async ({ value }) => {
-      // POST request to backend
       try {
-        const response = await $fetch('/api/v1/game_developers/signup', {
-          baseURL: useRuntimeConfig().public.apiBase,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: {
-            game_developer: {
-              email: value.email,
-              password: value.password,
-              password_confirmation: value.password_confirmation,
+        const response: SignUpResponse = await $fetch(
+          '/api/v1/game_developers/signup',
+          {
+            baseURL: useRuntimeConfig().public.apiBase,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: {
+              game_developer: {
+                email: value.email,
+                password: value.password,
+                password_confirmation: '123',
+              },
             },
           },
-        })
+        )
 
-        if (response) {
-          console.log('Sign Up Success', response)
-          return response
+        if ('errors' in response) {
+          console.error('Sign up failed', response.errors)
         }
-
-        throw new Error('Signup failed:')
+        console.log('Sign Up Success', response)
+        return response
       } catch (error) {
+        hasError.value = true
         console.error(error)
+      } finally {
+        form.reset()
       }
     },
     defaultValues: {
