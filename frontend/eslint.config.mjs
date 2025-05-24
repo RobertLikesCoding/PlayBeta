@@ -1,6 +1,13 @@
-// @ts-check
-import withNuxt from './.nuxt/eslint.config.mjs'
+import nuxtConfig from './.nuxt/eslint.config.mjs'
+import prettier from 'eslint-config-prettier'
 
-export default withNuxt(
-  // Your custom configs here
-)
+export default [
+  nuxtConfig,
+  ...prettier(),
+  {
+    rules: {
+      'prettier/prettier': 'warn', // shows Prettier issues in ESLint
+      // your other rules here...
+    },
+  },
+]

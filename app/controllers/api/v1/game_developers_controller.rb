@@ -12,7 +12,7 @@ end
       @token = encode_token(user.id)
 
       render json: {
-        studio_name: user.studio_name,
+        user_id: user.id,
         token: @token
       }, status: :created
     else
@@ -31,6 +31,6 @@ end
   private
 
   def user_params
-    params.require(:game_developer).permit(:email, :password, :password_confirmation, :bio, :website, :studio_name, :location)
+    params.require(:game_developer).permit(:email, :password, :password_confirmation)
   end
 end

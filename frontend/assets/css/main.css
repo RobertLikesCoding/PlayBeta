@@ -19,8 +19,15 @@
   --color-green-950: #052E16;
 }
 
-/* Set the background color */
-body {
-  background-color: var(--color-green-100); /* Example: light green */
-  color: black
+/* the light and dark @theme options are for setting variables like bg color */
+@theme dark {
+
 }
+
+@theme light {
+  
+}
+
+body {
+}
+
