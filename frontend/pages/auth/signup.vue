@@ -111,7 +111,7 @@
       />
     </form>
     <div
-      v-if="form.useStore((meta) => meta.isSubmitted).value"
+      v-if="form.useStore((meta) => meta.isSubmitted).value && !signupErrors"
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
       <p>
@@ -119,10 +119,19 @@
       </p>
     </div>
     <div
-      v-if="hasError"
+      v-if="signupErrors.length"
       class="border-2 rounded-md mt-5 p-2 border-red-400"
     >
-      <p>Sign Up failed, please try again</p>
+      <p>Sign Up failed because:</p>
+      <ul>
+        <li
+          v-for="error in signupErrors"
+          key="error"
+          class="list-disc list-inside"
+        >
+          {{ error }}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -134,7 +143,7 @@
     layout: 'auth',
   })
 
-  const hasError = ref(false)
+  const signupErrors = ref<string[]>([])
 
   type SignUpResponse =
     | { user_id: number; token: string }
@@ -142,6 +151,7 @@
 
   const form = useForm({
     onSubmit: async ({ value }) => {
+      signupErrors.value = []
       try {
         const response: SignUpResponse = await $fetch(
           '/api/v1/game_developers/signup',
@@ -155,22 +165,26 @@
               game_developer: {
                 email: value.email,
                 password: value.password,
-                password_confirmation: '123',
+                password_confirmation: value.password_confirmation,
               },
             },
+            throw: false,
           },
         )
 
-        if ('errors' in response) {
-          console.error('Sign up failed', response.errors)
-        }
-        console.log('Sign Up Success', response)
+        form.reset()
         return response
       } catch (error) {
-        hasError.value = true
+        // @ts-expect-error
+        if (error?.data.errors) {
+          // @ts-expect-error
+          signupErrors.value = error.data.errors
+        } else {
+          signupErrors.value = [
+            'An unexpected error occurred. Please try again.',
+          ]
+        }
         console.error(error)
-      } finally {
-        form.reset()
       }
     },
     defaultValues: {
