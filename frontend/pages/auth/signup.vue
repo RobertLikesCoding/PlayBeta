@@ -115,7 +115,7 @@
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
       <p>
-        Sign Up was successfull. We've send you an activation link to your inbox
+        Sign Up was successful. We've sent you an activation link to your inbox
       </p>
     </div>
     <div
