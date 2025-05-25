@@ -1,6 +1,10 @@
 <template>
-  <div class="container mx-auto px-10 max-w-md">
-    <h1 class="text-2xl font-bold mb-4">Sign Up</h1>
+  <div class="mx-auto max-w-sm px-4">
+    <h1 class="text-3xl font-semibold mb-5 text-center">Create an account</h1>
+    <p class="pb-5">
+      By signing up, you can upload your demos, connect with dedicated
+      playtesters, and gather insights to improve your game.
+    </p>
 
     <form
       @submit.prevent="form.handleSubmit()"
@@ -103,7 +107,7 @@
       </div>
       <UButton
         type="submit"
-        class="mt-4 justify-center"
+        class="mt-2 justify-center hover:cursor-pointer"
         size="xl"
         label="Submit"
         :loading="form.useStore((meta) => meta.isSubmitting).value"
@@ -133,6 +137,14 @@
         </li>
       </ul>
     </div>
+    <p class="text-center pt-10">
+      Already have an account?
+      <NuxtLink
+        to="auth/login"
+        class="text-primary cursor-pointer hover:text-primary-300"
+        >Sign in</NuxtLink
+      >
+    </p>
   </div>
 </template>
 
