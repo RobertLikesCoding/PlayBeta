@@ -1,10 +1,10 @@
 <template>
-  <div class="container mx-auto max-w-6xl px-5">
+  <div class="container mx-auto max-w-6xl">
     <header>
       <Navbar />
     </header>
 
-    <main>
+    <main class="px-5">
       <slot />
     </main>
 
