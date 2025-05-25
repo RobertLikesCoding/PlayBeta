@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="container mx-auto max-w-6xl px-5">
     <header>
-      <NavBar />
+      <Navbar />
     </header>
 
     <main>
@@ -11,3 +11,7 @@
     <Footer />
   </div>
 </template>
+
+<script setup lang="ts">
+  import Navbar from '~/components/Navbar.vue'
+</script>

@@ -6,6 +6,7 @@
 
   --breakpoint-3xl: 1920px;
 
+  /* This is how you overwrite tailwind colors! */
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
   --color-green-200: #B3F5D1;
@@ -17,6 +18,11 @@
   --color-green-800: #016538;
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
+}
+
+:root {
+  /* This is how you overwrite NuxtUI colors! */
+  --ui-primary: var(--color-green-400);
 }
 
 /* the light and dark @theme options are for setting variables like bg color */
