@@ -13,7 +13,7 @@ class Api::V1::AuthController < ApplicationController
       }, status: :accepted
     else
       # Generic error message for both cases
-      render json: { message: "Invalid email or password" }, status: :unauthorized
+      render json: { errors: [ "Invalid email or password" ] }, status: :unauthorized
     end
   end
 

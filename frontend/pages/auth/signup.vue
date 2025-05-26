@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-auto max-w-sm px-4">
-    <h1 class="text-3xl font-semibold mb-5 text-center">Create an account</h1>
+  <div class="max-w-md px-4">
+    <h1 class="text-3xl font-semibold mb-8 text-center">Create an account</h1>
     <p class="pb-5">
       By signing up, you can upload your demos, connect with dedicated
       playtesters, and gather insights to improve your game.
@@ -8,7 +8,7 @@
 
     <form
       @submit.prevent="form.handleSubmit()"
-      class="flex-col gap-3 flex"
+      class="flex-col gap-4 flex"
     >
       <div class="flex flex-col gap-1">
         <form.Field
@@ -115,7 +115,9 @@
       />
     </form>
     <div
-      v-if="form.useStore((meta) => meta.isSubmitted).value && !signupErrors"
+      v-if="
+        form.useStore((meta) => meta.isSubmitted).value && !signupErrors.length
+      "
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
       <p>
@@ -140,7 +142,7 @@
     <p class="text-center pt-10">
       Already have an account?
       <NuxtLink
-        to="auth/login"
+        to="login"
         class="text-primary cursor-pointer hover:text-primary-300"
         >Sign in</NuxtLink
       >
