@@ -100,10 +100,13 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
+  import { useAuth } from '#imports'
   // this is for setting the layout for the auth pages seperatly from the default layout
   definePageMeta({
     layout: 'auth',
   })
+
+  const { setToken } = useAuth()
 
   const signInErrors = ref<string[]>([])
 
@@ -130,7 +133,11 @@
         })
 
         form.reset()
-        return response
+
+        if ('token' in response) {
+          setToken(response.token)
+          navigateTo('/')
+        }
       } catch (error) {
         // @ts-expect-error
         if (error?.data.errors) {
