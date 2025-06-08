@@ -101,9 +101,10 @@
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
   import { useAuth } from '#imports'
-  // this is for setting the layout for the auth pages seperatly from the default layout
   definePageMeta({
+    // this is for setting the layout for the auth pages seperatly from the default layout
     layout: 'auth',
+    middleware: ['redirect-if-auth'],
   })
 
   const { setToken } = useAuth()

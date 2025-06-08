@@ -155,6 +155,7 @@
   // this is for setting the layout for the auth pages seperatly from the default layout
   definePageMeta({
     layout: 'auth',
+    middleware: ['redirect-if-auth'],
   })
 
   const { setToken } = useAuth()
