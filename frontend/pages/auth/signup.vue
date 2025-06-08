@@ -142,7 +142,7 @@
     <p class="text-center pt-10">
       Already have an account?
       <NuxtLink
-        to="login"
+        to="/auth/login"
         class="text-primary cursor-pointer hover:text-primary-300"
         >Sign in</NuxtLink
       >
@@ -156,6 +156,8 @@
   definePageMeta({
     layout: 'auth',
   })
+
+  const { setToken } = useAuth()
 
   const signupErrors = ref<string[]>([])
 
@@ -187,7 +189,10 @@
         )
 
         form.reset()
-        return response
+        if ('token' in response) {
+          setToken(response.token)
+          navigateTo('/dashboard/')
+        }
       } catch (error) {
         // @ts-expect-error
         if (error?.data.errors) {

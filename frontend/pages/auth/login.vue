@@ -90,7 +90,7 @@
     <p class="text-center pt-10">
       Don't have an account yet?
       <NuxtLink
-        to="signup"
+        to="/auth/signup"
         class="text-primary cursor-pointer hover:text-primary-300"
         >Sign up</NuxtLink
       >
@@ -136,7 +136,7 @@
 
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/')
+          navigateTo('/dashboard/')
         }
       } catch (error) {
         // @ts-expect-error

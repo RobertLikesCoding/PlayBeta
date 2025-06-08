@@ -17,6 +17,7 @@
     "@nuxt/ui": "^3.1.0",
     "@tanstack/vue-form": "^1.6.3",
     "eslint": "^9.25.1",
+    "ipx": "^3.0.3",
     "nuxt": "^3.16.2",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3",
