@@ -21,11 +21,18 @@ end
   end
 
   def me
-    render json: {
-      id: current_user.id,
-      email: current_user.email,
-      bio: current_user.bio
-    }, status: :ok
+    if current_user
+      render json: {
+        id: current_user.id,
+        email: current_user.email,
+        bio: current_user.bio,
+        website: current_user.website,
+        location: current_user.location,
+        studio_name: current_user.studio_name
+      }, status: :ok
+    else
+      render json: { error: "Unauthorized" }, status: :unauthorized
+    end
   end
 
   private
