@@ -30,8 +30,6 @@ end
         location: current_user.location,
         studio_name: current_user.studio_name
       }, status: :ok
-    else
-      render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 

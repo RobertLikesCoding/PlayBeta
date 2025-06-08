@@ -33,6 +33,17 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         expect(current_user["password_digest"]).to_not be_present
       end
     end
+
+    context "when unauthorized" do
+      it "returns an error message" do
+        token = nil
+        get "/api/v1/game_developers/me", headers: { "Authorization" => "Bearer #{token}" }
+        expect(response).to have_http_status(:unauthorized)
+
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq("Unauthorized access. Please log in.")
+      end
+    end
   end
 
   describe "POST /signup" do
@@ -42,8 +53,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
           game_developer: {
             email: "developer@example.com",
             password: "password123",
-            password_confirmation: "password123",
-            studio_name: "Awesome Studio"
+            password_confirmation: "password123"
           }
         }
       end
@@ -54,7 +64,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         expect(response).to have_http_status(:created)
 
         json = JSON.parse(response.body)
-        expect(json["studio_name"]).to eq("Awesome Studio")
+        expect(json["user_id"]).to be_present
         expect(json["token"]).to be_present
       end
     end
