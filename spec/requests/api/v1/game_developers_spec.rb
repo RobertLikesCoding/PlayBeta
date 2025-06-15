@@ -20,9 +20,11 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
   end
 
   describe "GET game_developers/me" do
+    let(:jwt_secret) { "test_secret_key" }
+
     context "when authenticated" do
       it "returns the current user" do
-        token = JWT.encode({ user_id: user.id }, ENV["JWT_SECRET_KEY"], "HS256")
+        token = JWT.encode({ user_id: user.id }, jwt_secret, "HS256")
         get "/api/v1/game_developers/me", headers: { "Authorization" => "Bearer #{token}" }
         expect(response).to have_http_status(:ok)
 
@@ -36,8 +38,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
 
     context "when unauthorized" do
       it "returns an error message" do
-        token = nil
-        get "/api/v1/game_developers/me", headers: { "Authorization" => "Bearer #{token}" }
+        get "/api/v1/game_developers/me"
         expect(response).to have_http_status(:unauthorized)
 
         json = JSON.parse(response.body)
