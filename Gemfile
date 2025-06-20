@@ -43,7 +43,7 @@ group :test do
   gem "simplecov", require: false
 
   # Testing framework for Rails applications [https://github.com/rspec/rspec-rails]
-  gem "rspec-rails", "~> 8.0.0"
+  gem "rspec-rails", "~> 8.0.1"
 
   # I had issues with getting a clean test database so I decided to install this gem
   gem "database_cleaner-active_record"
