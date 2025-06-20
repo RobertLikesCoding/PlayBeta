@@ -40,7 +40,10 @@
     </div>
 
     <!-- DESKTOP MENU -->
-    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+    <div
+      data-test="desktop-menu"
+      class="w-full block flex-grow lg:flex lg:items-center lg:w-auto"
+    >
       <div class="text-sm hidden lg:block lg:flex-grow py-5">
         <NuxtLink
           to="#responsive-heNuxtLinkder"
@@ -63,7 +66,7 @@
       </div>
 
       <NuxtLink
-        :to="isAuthenticated ? '/dashboard/' : '/auth/signup/'"
+        :to="isAuthenticated ? '/dashboard' : '/auth/signup'"
         class="text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white hidden lg:block mr-5"
         >Account
       </NuxtLink>
@@ -97,7 +100,7 @@
             Blog
           </NuxtLink>
           <NuxtLink
-            :to="isAuthenticated ? '/dashboard/' : '/auth/signup/'"
+            :to="isAuthenticated ? '/dashboard' : '/auth/signup'"
             class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
             >Account
           </NuxtLink>

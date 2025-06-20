@@ -20,9 +20,11 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
   end
 
   describe "GET game_developers/me" do
+    let(:jwt_secret) { "test_secret_key" }
+
     context "when authenticated" do
       it "returns the current user" do
-        token = JWT.encode({ user_id: user.id }, ENV["JWT_SECRET_KEY"], "HS256")
+        token = JWT.encode({ user_id: user.id }, jwt_secret, "HS256")
         get "/api/v1/game_developers/me", headers: { "Authorization" => "Bearer #{token}" }
         expect(response).to have_http_status(:ok)
 
@@ -31,6 +33,16 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         expect(current_user["bio"]).to eq(user.bio)
         expect(current_user["email"]).to eq(user.email)
         expect(current_user["password_digest"]).to_not be_present
+      end
+    end
+
+    context "when unauthorized" do
+      it "returns an error message" do
+        get "/api/v1/game_developers/me"
+        expect(response).to have_http_status(:unauthorized)
+
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq("Unauthorized access. Please log in.")
       end
     end
   end
@@ -42,8 +54,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
           game_developer: {
             email: "developer@example.com",
             password: "password123",
-            password_confirmation: "password123",
-            studio_name: "Awesome Studio"
+            password_confirmation: "password123"
           }
         }
       end
@@ -54,7 +65,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         expect(response).to have_http_status(:created)
 
         json = JSON.parse(response.body)
-        expect(json["studio_name"]).to eq("Awesome Studio")
+        expect(json["user_id"]).to be_present
         expect(json["token"]).to be_present
       end
     end

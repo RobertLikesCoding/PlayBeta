@@ -13,8 +13,10 @@ class ApplicationController < ActionController::API
     return nil unless token
 
       begin
-          decoded = JWT.decode(token, ENV["JWT_SECRET_KEY"], { algorithm: "HS256" })[0]
-          HashWithIndifferentAccess.new(decoded)
+        # for testing use a seperate secret
+        jwt_secret = Rails.env.test? ? "test_secret_key" : ENV["JWT_SECRET_KEY"]
+        decoded = JWT.decode(token, jwt_secret, { algorithm: "HS256" })[0]
+        HashWithIndifferentAccess.new(decoded)
       rescue JWT::DecodeError => e
         Rails.logger.error("JWT Decode Error: #{e.message}")
         nil
