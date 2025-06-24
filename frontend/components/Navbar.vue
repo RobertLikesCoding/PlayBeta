@@ -1,6 +1,6 @@
 <template>
-  <nav class="flex items-center justify-between flex-wrap">
-    <div class="flex items-center flex-shrink-0 text-white mr-6 px-5">
+  <nav class="flex items-center justify-between flex-wrap px-5 h-26">
+    <div class="flex items-center flex-shrink-0 text-white mr-6">
       <NuxtLink
         to="/"
         class="font-semibold text-xl tracking-tight"
@@ -9,7 +9,7 @@
     </div>
 
     <!-- HAMBURGER BUTTON -->
-    <div class="block lg:hidden p-5">
+    <div class="block lg:hidden py-5 z-10">
       <UButton
         @click="isMenuOpen = !isMenuOpen"
         class="flex items-center px-3 py-2 border rounded hover:text-white hover:border-white cursor-pointer"
@@ -42,7 +42,7 @@
     <!-- DESKTOP MENU -->
     <div
       data-test="desktop-menu"
-      class="w-full block flex-grow lg:flex lg:items-center lg:w-auto"
+      class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden"
     >
       <div class="text-sm hidden lg:block lg:flex-grow py-5">
         <NuxtLink
@@ -65,60 +65,77 @@
         </NuxtLink>
       </div>
 
-      <NuxtLink
+      <button
         v-if="isAuthenticated"
-        to="/"
-        class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white mr-5"
-        @click="clearToken"
-        >Logout
-      </NuxtLink>
+        class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white cursor-pointer mr-5"
+        @click="logout"
+      >
+        Logout
+      </button>
 
       <NuxtLink
         :to="isAuthenticated ? '/dashboard' : '/auth/signup'"
-        class="text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white hidden lg:block mr-5"
+        class="text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white"
         >Account
       </NuxtLink>
-
-      <!-- MOBILE MENU -->
-      <Transition
-        enter-active-class="transition-opacity transition-transform duration-300 ease-out"
-        enter-from-class="opacity-0 -translate-y-2"
-        enter-to-class="opacity-100 translate-y-0"
-      >
-        <div
-          class="absolute bg-neutral-900 w-full text-sm lg:flex-grow block lg:hidden px-5 pb-5"
-          v-show="isMenuOpen"
-        >
-          <NuxtLink
-            to="#responsive-header"
-            class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white mr-4"
-          >
-            About Us
-          </NuxtLink>
-          <NuxtLink
-            to="#responsive-header"
-            class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white mr-4"
-          >
-            Services
-          </NuxtLink>
-          <NuxtLink
-            to="#responsive-header"
-            class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white"
-          >
-            Blog
-          </NuxtLink>
-          <NuxtLink
-            :to="isAuthenticated ? '/dashboard' : '/auth/signup'"
-            class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
-            >Account
-          </NuxtLink>
-        </div>
-      </Transition>
     </div>
+
+    <!-- MOBILE MENU -->
+    <Transition
+      enter-active-class="transition-all duration-200 ease-out"
+      enter-from-class="-translate-y-80"
+      enter-to-class="translate-y-0"
+      leave-active-class="transition-all duration-500 ease-in"
+      leave-from-class="translate-y-0"
+      leave-to-class="-translate-y-80"
+    >
+      <div
+        class="absolute top-0 right-0 bg-neutral-900 w-full text-sm lg:hidden p-5 z-9"
+        v-show="isMenuOpen"
+      >
+        <NuxtLink
+          to="#responsive-header"
+          class="block lg:inline-block lg:mt-0 text-primary-300 hover:text-white mt-2"
+        >
+          About Us
+        </NuxtLink>
+        <NuxtLink
+          to="#responsive-header"
+          class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white"
+        >
+          Services
+        </NuxtLink>
+        <NuxtLink
+          to="#responsive-header"
+          class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white"
+        >
+          Blog
+        </NuxtLink>
+        <div class="bg-white w-full h-0.5 opacity-5 my-4"></div>
+        <button
+          v-if="isAuthenticated"
+          class="block lg:inline-block lg:mt-0 text-primary-300 hover:text-white cursor-pointer mr-5"
+          @click="logout"
+        >
+          Logout
+        </button>
+        <NuxtLink
+          :to="isAuthenticated ? '/dashboard' : '/auth/signup'"
+          class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
+          >Account
+        </NuxtLink>
+      </div>
+    </Transition>
   </nav>
 </template>
 
 <script setup lang="ts">
   const isMenuOpen = ref(false)
   const { isAuthenticated, clearToken } = useAuth()
+  const router = useRouter()
+
+  function logout() {
+    clearToken()
+    router.push('/')
+  }
 </script>
