@@ -5,4 +5,5 @@ export interface GameDeveloperAPI {
   website: string
   location: string
   studio_name: string
+  avatar: string
 }
