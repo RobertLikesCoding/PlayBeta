@@ -28,7 +28,8 @@
               trailing-icon="i-lucide-at-sign"
               variant="subtle"
               @input="
-                (e) => field.handleChange((e.target as HTMLInputElement).value)
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
               "
               @blur="field.handleBlur"
             />
@@ -60,7 +61,8 @@
               trailing-icon="lucide:lock-keyhole"
               variant="subtle"
               @input="
-                (e) => field.handleChange((e.target as HTMLInputElement).value)
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
               "
               @blur="field.handleBlur"
             />
@@ -92,7 +94,8 @@
               trailing-icon="lucide:lock-keyhole"
               variant="subtle"
               @input="
-                (e) => field.handleChange((e.target as HTMLInputElement).value)
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
               "
               @blur="field.handleBlur"
             />
@@ -192,7 +195,7 @@
         form.reset()
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/dashboard/')
+          navigateTo('/dashboard/submissions')
         }
       } catch (error) {
         // @ts-expect-error

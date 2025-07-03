@@ -19,7 +19,8 @@
               trailing-icon="i-lucide-at-sign"
               variant="subtle"
               @input="
-                (e) => field.handleChange((e.target as HTMLInputElement).value)
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
               "
             />
             <em
@@ -43,7 +44,8 @@
               trailing-icon="lucide:lock-keyhole"
               variant="subtle"
               @input="
-                (e) => field.handleChange((e.target as HTMLInputElement).value)
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
               "
             />
             <em
@@ -137,7 +139,7 @@
 
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/dashboard/')
+          navigateTo('/dashboard/submissions')
         }
       } catch (error) {
         // @ts-expect-error
