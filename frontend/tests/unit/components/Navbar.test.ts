@@ -29,7 +29,7 @@ describe('Navbar', () => {
     const wrapper = await mountSuspended(Navbar)
 
     const desktopItems = wrapper.find('.hidden')
-    expect(desktopItems.findAll('a').length).toEqual(3)
+    expect(desktopItems.findAll('a').length).toEqual(4)
   })
 
   describe('Account Button', () => {
@@ -55,7 +55,7 @@ describe('Navbar', () => {
         .findAllComponents({ name: 'NuxtLink' })
         .find((link) => link.text() === 'Account')
 
-      expect(accountLink?.props('to')).toBe('/dashboard')
+      expect(accountLink?.props('to')).toBe('/dashboard/submissions')
     })
   })
 })

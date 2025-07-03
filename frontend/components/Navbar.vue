@@ -74,7 +74,7 @@
       </button>
 
       <NuxtLink
-        :to="isAuthenticated ? '/dashboard' : '/auth/signup'"
+        :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
         class="text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white"
         >Account
       </NuxtLink>
@@ -120,7 +120,7 @@
           Logout
         </button>
         <NuxtLink
-          :to="isAuthenticated ? '/dashboard' : '/auth/signup'"
+          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
           >Account
         </NuxtLink>

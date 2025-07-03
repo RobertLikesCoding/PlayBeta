@@ -137,7 +137,7 @@
 
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/dashboard/')
+          navigateTo('/dashboard/submissions')
         }
       } catch (error) {
         // @ts-expect-error
