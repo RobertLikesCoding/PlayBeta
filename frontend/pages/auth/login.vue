@@ -13,13 +13,15 @@
           <template v-slot="{ field, state }">
             <label :htmlFor="field.name">Email</label>
             <UInput
+              :id="field.name"
               :name="field.name"
               type="email"
               :value="field.state.value"
               trailing-icon="i-lucide-at-sign"
               variant="subtle"
               @input="
-                (e) => field.handleChange((e.target as HTMLInputElement).value)
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
               "
             />
             <em
@@ -37,13 +39,15 @@
           <template v-slot="{ field, state }">
             <label :htmlFor="field.name">Password</label>
             <UInput
+              :id="field.name"
               :name="field.name"
               type="password"
               :value="field.state.value"
               trailing-icon="lucide:lock-keyhole"
               variant="subtle"
               @input="
-                (e) => field.handleChange((e.target as HTMLInputElement).value)
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
               "
             />
             <em
@@ -137,7 +141,7 @@
 
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/dashboard/')
+          navigateTo('/dashboard/submissions')
         }
       } catch (error) {
         // @ts-expect-error
