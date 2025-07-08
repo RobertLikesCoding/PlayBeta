@@ -96,18 +96,21 @@
         <NuxtLink
           to="#responsive-header"
           class="block lg:inline-block lg:mt-0 text-primary-300 hover:text-white mt-2"
+          @click="isMenuOpen = false"
         >
           About Us
         </NuxtLink>
         <NuxtLink
           to="#responsive-header"
           class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white"
+          @click="isMenuOpen = false"
         >
           Services
         </NuxtLink>
         <NuxtLink
           to="#responsive-header"
           class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white"
+          @click="isMenuOpen = false"
         >
           Blog
         </NuxtLink>
@@ -122,6 +125,7 @@
         <NuxtLink
           :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
+          @click="isMenuOpen = false"
           >Account
         </NuxtLink>
       </div>
