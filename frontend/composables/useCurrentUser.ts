@@ -1,20 +1,31 @@
 import type { GameDeveloperAPI } from '~/types/GameDeveloper'
 
 const user = ref<GameDeveloperAPI | null>(null)
-const loaded = ref(false)
+const isLoading = ref(true)
 
 export function useCurrentUser() {
   const { token, isAuthenticated } = useAuth()
 
   async function fetchUser() {
-    if (!loaded.value && isAuthenticated) {
+    isLoading.value = true
+
+    if (user.value && isAuthenticated) {
+      isLoading.value = false
+      return user.value
+    }
+
+    try {
       user.value = await $fetch('/api/v1/game_developers/me', {
         baseURL: useRuntimeConfig().public.apiBase,
         headers: { Authorization: `Bearer ${token.value}` },
       })
-      loaded.value = true
+    } catch (error) {
+      console.error('Failed to fetch current user')
+    } finally {
+      isLoading.value = false
     }
     return user.value
   }
-  return { user, fetchUser }
+
+  return { user, isLoading, fetchUser }
 }
