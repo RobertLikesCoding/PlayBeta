@@ -21,9 +21,7 @@ end
   end
 
   def update_me
-    if current_user.nil?
-      render json: { error: "User not found" }, status: :not_found
-    end
+      return render json: { error: "User not found" }, status: :not_found if current_user.nil?
 
     if current_user.update(user_params)
       render json: { message: "Successfully updated user data" }, status: :ok

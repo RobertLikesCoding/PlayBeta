@@ -13,6 +13,7 @@
           <template v-slot="{ field, state }">
             <label :htmlFor="field.name">Email</label>
             <UInput
+              :id="field.name"
               :name="field.name"
               type="email"
               :value="field.state.value"
@@ -38,6 +39,7 @@
           <template v-slot="{ field, state }">
             <label :htmlFor="field.name">Password</label>
             <UInput
+              :id="field.name"
               :name="field.name"
               type="password"
               :value="field.state.value"

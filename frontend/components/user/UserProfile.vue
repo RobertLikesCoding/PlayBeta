@@ -12,6 +12,7 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Email</label>
               <UInput
+                :id="field.name"
                 :name="field.name"
                 type="email"
                 :value="field.state.value"
@@ -36,6 +37,7 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Avatar</label>
               <UInput
+                :id="field.name"
                 :name="field.name"
                 type="file"
                 :value="field.state.value"
@@ -60,6 +62,7 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Studio Name</label>
               <UInput
+                :id="field.name"
                 :name="field.name"
                 type="text"
                 :value="field.state.value"
@@ -84,6 +87,7 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Located in</label>
               <UInput
+                :id="field.name"
                 :name="field.name"
                 type="text"
                 :value="field.state.value"
@@ -108,6 +112,7 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Website</label>
               <UInput
+                :id="field.name"
                 :name="field.name"
                 type="url"
                 :value="field.state.value"
@@ -159,6 +164,7 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Change Your Password</label>
               <UInput
+                :id="field.name"
                 :name="field.name"
                 type="password"
                 :value="field.state.value"
@@ -183,6 +189,7 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Confirm Your New Password</label>
               <UInput
+                :id="field.name"
                 :name="field.name"
                 type="password"
                 :value="field.state.value"

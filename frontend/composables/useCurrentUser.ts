@@ -9,7 +9,7 @@ export function useCurrentUser() {
   async function fetchUser() {
     isLoading.value = true
 
-    if (user.value && isAuthenticated) {
+    if (user.value && isAuthenticated.value) {
       isLoading.value = false
       return user.value
     }
