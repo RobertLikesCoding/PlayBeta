@@ -4,7 +4,7 @@
       <Navbar />
     </header>
 
-    <main class="px-5">
+    <main class="p-5">
       <slot />
     </main>
 
