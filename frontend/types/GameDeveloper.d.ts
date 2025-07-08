@@ -7,3 +7,8 @@ export interface GameDeveloperAPI {
   studio_name: string
   avatar: string
 }
+
+export interface UpdateGameDeveloperResponse {
+  message?: string
+  errors?: string[]
+}
