@@ -4,13 +4,14 @@ import Navbar from '~/components/Navbar.vue'
 
 let mockIsAuthenticated = false
 let mockToken: string | null = null
+const clearTokenMock = vi.fn()
 
 vi.mock('~/composables/useAuth', () => ({
   useAuth: () => ({
     isAuthenticated: mockIsAuthenticated,
     token: mockToken,
     setToken: () => {},
-    clearToken: () => {},
+    clearToken: clearTokenMock,
   }),
 }))
 
@@ -56,6 +57,18 @@ describe('Navbar', () => {
         .find((link) => link.text() === 'Account')
 
       expect(accountLink?.props('to')).toBe('/dashboard/submissions')
+    })
+  })
+  describe('Logout button', () => {
+    it('should call clearToken when logging out', async () => {
+      const wrapper = await mountSuspended(Navbar)
+      const logoutButton = wrapper
+        .findAll('button')
+        .find((btn) => btn.text() === 'Logout')
+
+      await logoutButton?.trigger('click')
+
+      expect(clearTokenMock).toHaveBeenCalled()
     })
   })
 })

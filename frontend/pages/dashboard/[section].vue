@@ -35,7 +35,7 @@
         <UserSubmissions v-if="activeSection === 'submissions'" />
         <UserProfile
           v-if="activeSection === 'profile'"
-          :user="dynamicUser || null"
+          :user="user || null"
           :is-loading="isLoading"
         />
         <UserSettings v-if="activeSection === 'settings'" />
@@ -60,10 +60,6 @@
   const route = useRoute()
   const activeSection = computed(() => {
     return route.params.section
-  })
-
-  const dynamicUser = computed(() => {
-    return user.value
   })
 
   const menu: { section: MenuSection; label: string }[] = [

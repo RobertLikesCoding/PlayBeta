@@ -60,7 +60,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       end
 
       it "should create a new user" do
-        post "/api/v1/game_developers/signup", params: valid_params
+        post "/api/v1/game_developers", params: valid_params
 
         expect(response).to have_http_status(:created)
 
@@ -83,7 +83,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       end
 
       it "should not create a new user" do
-        post "/api/v1/game_developers/signup", params: invalid_params
+        post "/api/v1/game_developers", params: invalid_params
 
         expect(response).to have_http_status(:unprocessable_entity)
 
