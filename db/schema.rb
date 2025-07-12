@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_06_200133) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_12_220534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_06_200133) do
     t.string "website"
     t.string "studio_name"
     t.string "location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "submissions", force: :cascade do |t|
+    t.string "title"
+    t.uuid "s_id"
+    t.string "description"
+    t.string "genre"
+    t.string "platforms"
+    t.string "demo_url"
+    t.string "status"
+    t.string "version"
+    t.string "visibility"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

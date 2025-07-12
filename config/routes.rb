@@ -7,7 +7,10 @@ Rails.application.routes.draw do
           patch "me", to: "game_developers#update"
         end
       end
+
       post "auth/login", to: "auth#login"
+
+      resources :submissions
     end
   end
 
