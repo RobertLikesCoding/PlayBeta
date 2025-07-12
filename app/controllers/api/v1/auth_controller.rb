@@ -19,7 +19,7 @@ class Api::V1::AuthController < ApplicationController
 
   private
 
-  def login_params
-    params.require(:auth).permit(:email, :password)
-  end
+    def login_params
+      params.require(:auth).permit(:email, :password)
+    end
 end

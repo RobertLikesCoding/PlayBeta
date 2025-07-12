@@ -1,10 +1,10 @@
 class Api::V1::GameDevelopersController < ApplicationController
-  skip_before_action :authorized, only: [ :create, :index, :update_me ]
+  skip_before_action :authorized, only: [ :create, :index, :update ]
 
-def index
-  game_developers = GameDeveloper.all
-  render json: game_developers.as_json(except: [ :password_digest ]), status: :ok
-end
+  def index
+    game_developers = GameDeveloper.all
+    render json: game_developers.as_json(except: [ :password_digest ]), status: :ok
+  end
 
   def create
     user = GameDeveloper.new(user_params)
@@ -20,8 +20,8 @@ end
     end
   end
 
-  def update_me
-      return render json: { error: "User not found" }, status: :not_found if current_user.nil?
+  def update
+    return render json: { error: "User not found" }, status: :not_found if current_user.nil?
 
     if current_user.update(user_params)
       render json: { message: "Successfully updated user data" }, status: :ok
@@ -30,7 +30,7 @@ end
     end
   end
 
-  def me
+  def show
     if current_user
       render json: {
         id: current_user.id,
@@ -45,8 +45,8 @@ end
 
   private
 
-  def user_params
-    params.require(:game_developer)
-      .permit(:email, :password, :password_confirmation, :bio, :website, :location, :studio_name, :avatar)
-  end
+    def user_params
+      params.require(:game_developer)
+        .permit(:email, :password, :password_confirmation, :bio, :website, :location, :studio_name, :avatar)
+    end
 end

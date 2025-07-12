@@ -177,7 +177,7 @@
       signupErrors.value = []
       try {
         const response: SignUpResponse = await $fetch(
-          '/api/v1/game_developers/signup',
+          '/api/v1/game_developers',
           {
             baseURL: useRuntimeConfig().public.apiBase,
             method: 'POST',

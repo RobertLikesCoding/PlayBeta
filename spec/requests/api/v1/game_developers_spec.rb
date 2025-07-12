@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::GameDevelopers", type: :request do
   let(:user) { create(:game_developer) }
+  let(:jwt_secret) { "test_secret_key" }
+  let(:token) { JWT.encode({ user_id: user.id }, jwt_secret, "HS256") }
 
   describe "GET /index" do
     it "returns a list of game developers" do
@@ -20,8 +22,6 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
   end
 
   describe "GET game_developers/me" do
-    let(:jwt_secret) { "test_secret_key" }
-
     context "when authenticated" do
       it "returns the current user" do
         token = JWT.encode({ user_id: user.id }, jwt_secret, "HS256")
@@ -60,7 +60,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       end
 
       it "should create a new user" do
-        post "/api/v1/game_developers/signup", params: valid_params
+        post "/api/v1/game_developers", params: valid_params
 
         expect(response).to have_http_status(:created)
 
@@ -83,13 +83,58 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       end
 
       it "should not create a new user" do
-        post "/api/v1/game_developers/signup", params: invalid_params
+        post "/api/v1/game_developers", params: invalid_params
 
         expect(response).to have_http_status(:unprocessable_entity)
 
         json = JSON.parse(response.body)
         expect(json["errors"]).to include("Email can't be blank")
       end
+    end
+  end
+
+  describe "POST /update" do
+    let(:update_params) do
+      {
+        game_developer: {
+          studio_name: "cool games"
+        }
+      }
+    end
+    let(:invalid_params) do
+        {
+          game_developer: {
+            email: ""
+          }
+        }
+      end
+
+    it "should respond with error message if current_user is not found" do
+      patch "/api/v1/game_developers/me"
+
+      expect(response).to have_http_status(:not_found)
+      json = JSON.parse(response.body)
+      expect(json["error"]).to eq("User not found")
+    end
+
+    it "should update user" do
+      patch "/api/v1/game_developers/me",
+        params: update_params,
+        headers: { "Authorization" => "Bearer #{token}" }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["message"]).to eq("Successfully updated user data")
+    end
+
+    it "responds with errors if the update fails" do
+      patch "/api/v1/game_developers/me",
+        params: invalid_params,
+        headers: { "Authorization" => "Bearer #{token}" }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      json = JSON.parse(response.body)
+      expect(json["errors"]).to include("Email can't be blank")
     end
   end
 end
