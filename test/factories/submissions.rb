@@ -8,6 +8,5 @@ FactoryBot.define do
     demo_url { Faker::Internet.url }
     status { %w[pending approved rejected].sample }
     version { Faker::App.semantic_version }
-    visibility { %w[public private unlisted].sample }
   end
 end
