@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::Submissions", type: :request do
   let(:game_developer) { create(:game_developer) }
-  let(:submissions) { create_list(:submission, 3, game_developer:) }
   let(:jwt_secret) { ENV['JWT_SECRET_KEY'] }
   let(:token) { JWT.encode({ user_id: game_developer.id }, jwt_secret, "HS256") }
   let(:headers) { { "Authorization" => "Bearer #{token}" } }
@@ -21,7 +20,15 @@ RSpec.describe "Api::V1::Submissions", type: :request do
   end
 
   describe "GET /show" do
+    let(:submission) { create(:submission, game_developer: game_developer) }
+
     it "should return a submission" do
+      get "/api/v1/submissions/#{submission.s_id}", headers: headers
+      expect(response).to have_http_status(:ok)
+
+      json = JSON.parse(response.body)
+      expect(json["data"]["message"]).to include("Successfully loaded submission")
+      expect(json["data"]["submission"]["s_id"]).to eq(submission.s_id)
     end
   end
 end
