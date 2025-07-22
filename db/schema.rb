@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_13_190646) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_22_193548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,5 +36,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_190646) do
     t.string "version"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "game_developer_id", null: false
+    t.index ["game_developer_id"], name: "index_submissions_on_game_developer_id"
   end
+
+  add_foreign_key "submissions", "game_developers"
 end
