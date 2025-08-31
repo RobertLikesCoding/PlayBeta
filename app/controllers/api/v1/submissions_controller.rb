@@ -6,10 +6,8 @@ class Api::V1::SubmissionsController < ApplicationController
     end
 
     render json: {
-      data: {
-        submissions: current_user.submissions,
-        message: "Successfully loaded submissions of #{current_user.studio_name}"
-      }
+      submissions: current_user.submissions,
+      message: "Successfully loaded submissions of #{current_user.studio_name}"
     }, status: :ok
   end
 
@@ -22,18 +20,36 @@ class Api::V1::SubmissionsController < ApplicationController
     end
 
     render json: {
-      data: {
-        submission: submission,
-        message: "Successfully loaded submission"
-      }
+      submission: submission,
+      message: "Successfully loaded submission"
     }, status: :ok
   end
 
-  # def create
-  # end
+  def create
+    submission = current_user.submissions.new(submission_params)
 
-  # def update
-  # end
+    if submission.save
+      render json: { message: "Successfully created new submission", submission: submission }, status: :ok
+    else
+      render json: {
+        message: "Failed to create submission",
+        errors: submission.errors.full_messages
+        }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    submission = Submission.find_by(s_id: params[:s_id])
+
+    if submission.update(submission_params)
+      render json: { message: "Successfully updated submission", submission: submission }, status: :ok
+    else
+      render json: {
+        message: "Failed to update submission",
+        errors: submission.errors.full_messages
+      }, status: unprocessable_entity
+    end
+  end
 
   # def destroy
   # end
@@ -41,14 +57,14 @@ class Api::V1::SubmissionsController < ApplicationController
   private
 
     def submission_params
-      params.permit(
+      params.require(:submission).permit(
         :title,
-        :s_id,
         :description,
         :genre,
         :platforms,
         :demo_url,
         :status,
-        :version)
+        :version
+      )
     end
 end
