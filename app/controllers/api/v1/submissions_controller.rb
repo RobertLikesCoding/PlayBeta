@@ -28,7 +28,7 @@ class Api::V1::SubmissionsController < ApplicationController
   def create
     submission = current_user.submissions.new(submission_params)
 
-    if submission.save
+    if submission.save!
       render json: { message: "Successfully created new submission", submission: submission }, status: :ok
     else
       render json: {
@@ -41,7 +41,7 @@ class Api::V1::SubmissionsController < ApplicationController
   def update
     submission = Submission.find_by(s_id: params[:s_id])
 
-    if submission.update(submission_params)
+    if submission.update!(submission_params)
       render json: { message: "Successfully updated submission", submission: submission }, status: :ok
     else
       render json: {

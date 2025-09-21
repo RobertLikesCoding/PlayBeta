@@ -27,7 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_195645) do
 
   create_table "submissions", force: :cascade do |t|
     t.string "title"
-    t.uuid "s_id", default: -> { "gen_random_uuid()" }
+    t.uuid "s_id", default: -> { "gen_random_uuid()" } # this is just a fallback if the model fails to create a s_id
     t.string "description"
     t.string "genre"
     t.string "platforms"

@@ -1,5 +1,6 @@
 class Submission < ApplicationRecord
   belongs_to :game_developer
+  before_validation :give_s_id
 
   validates :title, presence: true, length: { maximum: 100 }
   validates :s_id, presence: true, uniqueness: true
@@ -8,4 +9,8 @@ class Submission < ApplicationRecord
   validates :demo_url, presence: true, format: { with: /\Ahttps:\/\/.+\z/, message: "must start with https://" }
   validates :version, presence: true, length: { maximum: 20 }
   validates :status, presence: true, inclusion: { in: %w[pending approved rejected] }
+
+  def give_s_id
+    self.s_id ||= SecureRandom.uuid
+  end
 end

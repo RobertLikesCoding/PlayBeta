@@ -38,7 +38,6 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       post "/api/v1/submissions",
         headers: headers,
         params: { submission: submission_params }
-      puts response.body
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
