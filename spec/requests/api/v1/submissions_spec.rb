@@ -5,7 +5,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
   let(:jwt_secret) { ENV['JWT_SECRET_KEY'] }
   let(:token) { JWT.encode({ user_id: game_developer.id }, jwt_secret, "HS256") }
   let(:headers) { { "Authorization" => "Bearer #{token}" } }
-  let(:submission) { create(:submission, game_developer: game_developer) }
+  let!(:submission) { create(:submission, game_developer: game_developer) }
 
   describe "GET /index" do
     before { create_list(:submission, 3, game_developer:) }
@@ -16,7 +16,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       expect(response).to have_http_status(:success)
       json = JSON.parse(response.body)
       expect(json["message"]).to include("Successfully loaded submissions of")
-      expect(json["submissions"].size).to eq(3)
+      expect(json["submissions"].size).to eq(4)
     end
   end
 
@@ -47,15 +47,14 @@ RSpec.describe "Api::V1::Submissions", type: :request do
 
   describe "POST /update" do
     it "should update a submission" do
-      submission_params = attributes_for(:submission)
-      puts "params #{submission_params.inspect}"
+      submission_params = { title: 'A new title' }
 
       patch "/api/v1/submissions/#{submission.s_id}", headers: headers, params: { submission: submission_params }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
       expect(json["message"]).to eq("Successfully updated submission")
-      expect(json["submission"]).to include("s_id": submission.s_id)
+      expect(json["submission"]["title"]).to eq("A new title")
     end
   end
 end
