@@ -45,7 +45,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
     end
   end
 
-  describe "POST /update" do
+  describe "PATCH /update" do
     it "should update a submission" do
       submission_params = { title: 'A new title' }
 
