@@ -46,6 +46,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: playbeta-test
         ports:
           - 5432:5432
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -83,7 +84,7 @@ jobs:
       - name: Setup database
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/playbeta-test
         run: |
           bin/rails db:create
           bin/rails db:schema:load
@@ -91,7 +92,8 @@ jobs:
       - name: Run RSpec tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/playbeta-test
+          JWT_SECRET_KEY: test_jwt_secret_for_ci
         run: bundle exec rspec
 
       - name: Set up Node.js

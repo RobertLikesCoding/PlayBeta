@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::Submissions", type: :request do
   let(:game_developer) { create(:game_developer) }
-  let(:jwt_secret) { ENV['JWT_SECRET_KEY'] }
+  let(:jwt_secret) { ENV['JWT_SECRET_KEY'] || 'test_jwt_secret_fallback' }
   let(:token) { JWT.encode({ user_id: game_developer.id }, jwt_secret, "HS256") }
   let(:headers) { { "Authorization" => "Bearer #{token}" } }
   let!(:submission) { create(:submission, game_developer: game_developer) }
