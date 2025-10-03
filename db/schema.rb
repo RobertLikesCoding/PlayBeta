@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_06_200133) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_195645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,4 +24,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_06_200133) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "submissions", force: :cascade do |t|
+    t.string "title"
+    t.uuid "s_id", default: -> { "gen_random_uuid()" } # database is responsible for generating s_id by default
+    t.string "description"
+    t.string "genre"
+    t.string "platforms"
+    t.string "demo_url"
+    t.string "status"
+    t.string "version"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "game_developer_id", null: false
+    t.index ["game_developer_id"], name: "index_submissions_on_game_developer_id"
+  end
+
+  add_foreign_key "submissions", "game_developers"
 end

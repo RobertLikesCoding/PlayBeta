@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::GameDevelopers", type: :request do
   let(:user) { create(:game_developer) }
-  let(:jwt_secret) { "test_secret_key" }
+  let(:jwt_secret) { ENV['JWT_SECRET_KEY'] || 'test_jwt_secret_fallback' }
   let(:token) { JWT.encode({ user_id: user.id }, jwt_secret, "HS256") }
 
   describe "GET /index" do
