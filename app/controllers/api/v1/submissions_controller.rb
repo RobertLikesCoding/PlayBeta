@@ -12,7 +12,7 @@ class Api::V1::SubmissionsController < ApplicationController
   end
 
   def show
-    submission = Submission.find_by(s_id: params[:id])
+    submission = Submission.find_by(s_id: params[:s_id])
 
     if submission.nil?
       render json: { error: "Submission was not found in the database" }, status: :not_found
@@ -28,7 +28,7 @@ class Api::V1::SubmissionsController < ApplicationController
   def create
     submission = current_user.submissions.new(submission_params)
 
-    if submission.save!
+    if submission.save
       render json: { message: "Successfully created new submission", submission: submission }, status: :ok
     else
       render json: {
@@ -40,14 +40,15 @@ class Api::V1::SubmissionsController < ApplicationController
 
   def update
     submission = Submission.find_by(s_id: params[:s_id])
+    return render json: { message: "Submission not found" }, status: :not_found if submission.nil?
 
-    if submission.update!(submission_params)
+    if submission.update(submission_params)
       render json: { message: "Successfully updated submission", submission: submission }, status: :ok
     else
       render json: {
         message: "Failed to update submission",
         errors: submission.errors.full_messages
-      }, status: unprocessable_entity
+      }, status: :unprocessable_entity
     end
   end
 
