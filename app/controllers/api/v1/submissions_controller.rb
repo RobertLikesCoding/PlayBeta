@@ -48,7 +48,7 @@ class Api::V1::SubmissionsController < ApplicationController
       render json: {
         message: "Failed to update submission",
         errors: submission.errors.full_messages
-      }, status: unprocessable_entity
+      }, status: :unprocessable_entity
     end
   end
 
