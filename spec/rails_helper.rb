@@ -52,9 +52,12 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
   end
+
+  # Use truncation strategy for JS/system tests where transactions won't work
+  config.before(:each, js: true) do
 
   config.after(:each) do
     # Clean after each test
