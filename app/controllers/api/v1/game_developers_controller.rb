@@ -29,7 +29,7 @@ class Api::V1::GameDevelopersController < ApplicationController
         token: @token
       }, status: :created
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -39,7 +39,7 @@ class Api::V1::GameDevelopersController < ApplicationController
     if current_user.update(user_params)
       render json: { message: "Successfully updated user data" }, status: :ok
     else
-      render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: current_user.errors.full_messages }, status: :unprocessable_content
     end
   end
 

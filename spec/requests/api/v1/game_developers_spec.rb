@@ -85,7 +85,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       it "should not create a new user" do
         post "/api/v1/game_developers", params: invalid_params
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         json = JSON.parse(response.body)
         expect(json["errors"]).to include("Email can't be blank")
@@ -132,7 +132,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         params: invalid_params,
         headers: { "Authorization" => "Bearer #{token}" }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       json = JSON.parse(response.body)
       expect(json["errors"]).to include("Email can't be blank")
     end
