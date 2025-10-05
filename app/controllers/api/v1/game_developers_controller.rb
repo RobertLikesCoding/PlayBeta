@@ -6,6 +6,19 @@ class Api::V1::GameDevelopersController < ApplicationController
     render json: game_developers.as_json(except: [ :password_digest ]), status: :ok
   end
 
+  def show
+    if current_user
+      render json: {
+        id: current_user.id,
+        email: current_user.email,
+        bio: current_user.bio,
+        website: current_user.website,
+        location: current_user.location,
+        studio_name: current_user.studio_name
+      }, status: :ok
+    end
+  end
+
   def create
     user = GameDeveloper.new(user_params)
     if user.save
@@ -30,18 +43,6 @@ class Api::V1::GameDevelopersController < ApplicationController
     end
   end
 
-  def show
-    if current_user
-      render json: {
-        id: current_user.id,
-        email: current_user.email,
-        bio: current_user.bio,
-        website: current_user.website,
-        location: current_user.location,
-        studio_name: current_user.studio_name
-      }, status: :ok
-    end
-  end
 
   private
 

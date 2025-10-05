@@ -57,4 +57,17 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       expect(json["submission"]["title"]).to eq("A new title")
     end
   end
+
+  describe "DELETE /destroy" do
+    it "should delete a submission" do
+      new_submission = create(:submission, game_developer: game_developer)
+
+      delete "/api/v1/submissions/#{new_submission.s_id}", headers: headers
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["message"]).to eq("Successfully deleted submission")
+      expect(Submission.exists?(new_submission.id)).to be_falsey
+    end
+  end
 end
