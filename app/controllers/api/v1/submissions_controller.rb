@@ -1,5 +1,4 @@
 class Api::V1::SubmissionsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_submission, only: [ :show, :update, :destroy ]
 
   def index
@@ -60,12 +59,6 @@ class Api::V1::SubmissionsController < ApplicationController
         :status,
         :version
       )
-    end
-
-    def authenticate_user!
-      return if current_user.present?
-
-      render json: { message: "Unauthorized" }, status: :unauthorized
     end
 
     def set_submission

@@ -43,6 +43,18 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       json = JSON.parse(response.body)
       expect(json["message"]).to eq("Successfully created new submission")
     end
+
+    it "should render error when create fails" do
+      submission_params = { title: "" }
+
+      post "/api/v1/submissions",
+        headers: headers,
+        params: { submission: submission_params }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      json = JSON.parse(response.body)
+      expect(json["message"]).to eq("Failed to create submission")
+    end
   end
 
   describe "PATCH /update" do
@@ -56,6 +68,16 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       expect(json["message"]).to eq("Successfully updated submission")
       expect(json["submission"]["title"]).to eq("A new title")
     end
+
+    it "should render error when update fails" do
+      submission_params = { title: '' }
+
+      patch "/api/v1/submissions/#{submission.s_id}", headers: headers, params: { submission: submission_params }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      json = JSON.parse(response.body)
+      expect(json["message"]).to eq("Failed to update submission")
+    end
   end
 
   describe "DELETE /destroy" do
@@ -68,6 +90,17 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       json = JSON.parse(response.body)
       expect(json["message"]).to eq("Successfully deleted submission")
       expect(Submission.exists?(new_submission.id)).to be_falsey
+    end
+
+    it "should render error message when deletion fails" do
+      new_submission = create(:submission, game_developer: game_developer)
+      allow_any_instance_of(Submission).to receive(:destroy).and_return(false)
+
+      delete "/api/v1/submissions/#{new_submission.s_id}", headers: headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      json = JSON.parse(response.body)
+      expect(json["message"]).to eq("Deletion of submission failed")
     end
   end
 end
