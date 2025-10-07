@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::API
-  before_action :authorized
-
   def encode_token(user_id)
     JWT.encode({ user_id: user_id }, ENV["JWT_SECRET_KEY"])
   end
@@ -29,7 +27,7 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def authorized
+  def authenticate_user!
     render json: { error: "Unauthorized access. Please log in." }, status: :unauthorized unless current_user
   end
 end

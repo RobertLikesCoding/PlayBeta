@@ -1,5 +1,5 @@
 class Api::V1::GameDevelopersController < ApplicationController
-  skip_before_action :authorized, only: [ :create, :index, :update ]
+  before_action :authenticate_user!, except: [ :create, :index ]
 
   def index
     game_developers = GameDeveloper.all
@@ -34,8 +34,6 @@ class Api::V1::GameDevelopersController < ApplicationController
   end
 
   def update
-    return render json: { error: "User not found" }, status: :not_found if current_user.nil?
-
     if current_user.update(user_params)
       render json: { message: "Successfully updated user data" }, status: :ok
     else

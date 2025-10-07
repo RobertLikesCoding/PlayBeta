@@ -1,4 +1,5 @@
 class Api::V1::SubmissionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_submission, only: [ :show, :update, :destroy ]
 
   def index
