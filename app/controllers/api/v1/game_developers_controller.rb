@@ -1,33 +1,9 @@
 class Api::V1::GameDevelopersController < ApplicationController
-  skip_before_action :authorized, only: [ :create, :index, :update ]
+  before_action :authenticate_user!, except: [ :create, :index ]
 
   def index
     game_developers = GameDeveloper.all
     render json: game_developers.as_json(except: [ :password_digest ]), status: :ok
-  end
-
-  def create
-    user = GameDeveloper.new(user_params)
-    if user.save
-      @token = encode_token(user.id)
-
-      render json: {
-        user_id: user.id,
-        token: @token
-      }, status: :created
-    else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
-    end
-  end
-
-  def update
-    return render json: { error: "User not found" }, status: :not_found if current_user.nil?
-
-    if current_user.update(user_params)
-      render json: { message: "Successfully updated user data" }, status: :ok
-    else
-      render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
-    end
   end
 
   def show
@@ -42,6 +18,29 @@ class Api::V1::GameDevelopersController < ApplicationController
       }, status: :ok
     end
   end
+
+  def create
+    user = GameDeveloper.new(user_params)
+    if user.save
+      @token = encode_token(user.id)
+
+      render json: {
+        user_id: user.id,
+        token: @token
+      }, status: :created
+    else
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_content
+    end
+  end
+
+  def update
+    if current_user.update(user_params)
+      render json: { message: "Successfully updated user data" }, status: :ok
+    else
+      render json: { errors: current_user.errors.full_messages }, status: :unprocessable_content
+    end
+  end
+
 
   private
 

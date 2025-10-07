@@ -85,7 +85,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       it "should not create a new user" do
         post "/api/v1/game_developers", params: invalid_params
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         json = JSON.parse(response.body)
         expect(json["errors"]).to include("Email can't be blank")
@@ -109,14 +109,6 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         }
       end
 
-    it "should respond with error message if current_user is not found" do
-      patch "/api/v1/game_developers/me"
-
-      expect(response).to have_http_status(:not_found)
-      json = JSON.parse(response.body)
-      expect(json["error"]).to eq("User not found")
-    end
-
     it "should update user" do
       patch "/api/v1/game_developers/me",
         params: update_params,
@@ -127,12 +119,12 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
       expect(json["message"]).to eq("Successfully updated user data")
     end
 
-    it "responds with errors if the update fails" do
+    it "responds with errors if params are invalid" do
       patch "/api/v1/game_developers/me",
         params: invalid_params,
         headers: { "Authorization" => "Bearer #{token}" }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       json = JSON.parse(response.body)
       expect(json["errors"]).to include("Email can't be blank")
     end

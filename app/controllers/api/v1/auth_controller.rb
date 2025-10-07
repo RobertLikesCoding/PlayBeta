@@ -1,6 +1,4 @@
 class Api::V1::AuthController < ApplicationController
-  skip_before_action :authorized, only: [ :login ]
-
   def login
     @user = GameDeveloper.find_by(email: login_params[:email])
 

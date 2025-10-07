@@ -1,6 +1,6 @@
 class Api::V1::SubmissionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_submission, only: [ :show, :update ]
+  before_action :set_submission, only: [ :show, :update, :destroy ]
 
   def index
     render json: {
@@ -25,7 +25,7 @@ class Api::V1::SubmissionsController < ApplicationController
       render json: {
         message: "Failed to create submission",
         errors: submission.errors.full_messages
-        }, status: :unprocessable_entity
+        }, status: :unprocessable_content
     end
   end
 
@@ -36,12 +36,17 @@ class Api::V1::SubmissionsController < ApplicationController
       render json: {
         message: "Failed to update submission",
         errors: @submission.errors.full_messages
-      }, status: :unprocessable_entity
+      }, status: :unprocessable_content
     end
   end
 
-  # def destroy
-  # end
+  def destroy
+    if @submission.destroy
+      return render json: { message: "Successfully deleted submission" }, status: :ok
+    end
+
+    render json: { message: "Deletion of submission failed" }, status: :unprocessable_content
+  end
 
   private
 
@@ -55,12 +60,6 @@ class Api::V1::SubmissionsController < ApplicationController
         :status,
         :version
       )
-    end
-
-    def authenticate_user!
-      return if current_user.present?
-
-      render json: { message: "Unauthorized" }, status: :unauthorized
     end
 
     def set_submission
