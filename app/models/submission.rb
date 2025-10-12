@@ -1,4 +1,6 @@
 class Submission < ApplicationRecord
+  include Loggable
+
   belongs_to :game_developer
   has_many :event_logs, as: :loggable, dependent: :destroy
   before_validation :give_s_id
