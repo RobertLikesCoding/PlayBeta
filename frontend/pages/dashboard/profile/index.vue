@@ -232,6 +232,10 @@
     UpdateGameDeveloperResponse,
   } from '~/types/GameDeveloper'
 
+  definePageMeta({
+    layout: 'dashboard',
+  })
+
   const props = defineProps<{
     user: GameDeveloperAPI | null
     isLoading: boolean
