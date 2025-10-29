@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="flex flex-col gap-4 mb-4">
-      <NuxtLink to="dashboard/submissions">
-        <UButton
-          icon="i-lucide-arrow-left"
-          size="xl"
-          variant="outline"
-          color="neutral"
-          class="w-fit"
-          >Back</UButton
-        >
-      </NuxtLink>
+      <UButton
+        icon="i-lucide-arrow-left"
+        size="xl"
+        variant="outline"
+        color="neutral"
+        class="w-fit"
+        to="/dashboard/submissions"
+        >Back</UButton
+      >
       <h2 class="text-3xl font-bold">Create a new submission</h2>
     </div>
+
     <form
       @submit.prevent="form.handleSubmit()"
       class="flex flex-col gap-5"
@@ -30,10 +30,7 @@
                 type="text"
                 :value="field.state.value"
                 variant="outline"
-                @input="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
+                @update:modelValue="field.handleChange"
               />
               <em
                 v-for="error of state.meta.errors"
@@ -54,10 +51,7 @@
                 :name="field.name"
                 variant="outline"
                 :rows="5"
-                @input="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
+                @update:modelValue="field.handleChange"
               />
               <em
                 v-for="error of state.meta.errors"
@@ -70,7 +64,7 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="Genre">
+          <form.Field name="genre">
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Genre</label>
               <UInput
@@ -79,10 +73,7 @@
                 type="text"
                 :value="field.state.value"
                 variant="outline"
-                @input="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
+                @update:modelValue="field.handleChange"
               />
               <em
                 v-for="error of state.meta.errors"
@@ -104,10 +95,7 @@
                 type="text"
                 :value="field.state.value"
                 variant="outline"
-                @input="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
+                @update:modelValue="field.handleChange"
               />
               <em
                 v-for="error of state.meta.errors"
@@ -124,8 +112,10 @@
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
-                v-model="value"
+                v-model="field.state.value"
                 :items="items"
+                orientation="horizontal"
+                @input="field.handleChange"
               />
               <em
                 v-for="error of state.meta.errors"
@@ -137,7 +127,7 @@
           </form.Field>
         </div>
 
-        <div class="flex flex-col gap-2">
+        <!-- <div class="flex flex-col gap-2">
           <form.Field name="Screenshots">
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Screenshots</label>
@@ -160,7 +150,7 @@
               </em>
             </template>
           </form.Field>
-        </div>
+        </div> -->
       </div>
 
       <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
@@ -175,10 +165,7 @@
                 type="url"
                 :value="field.state.value"
                 variant="outline"
-                @input="
-                  (e: Event) => (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
+                @update:modelValue="field.handleChange"
               />
               <em
                 v-for="error of state.meta.errors"
@@ -207,11 +194,16 @@
 </template>
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
+  import type {
+    SubmissionFormValues,
+    SubmissionResponse,
+  } from '~/types/Submission'
 
   definePageMeta({
     layout: 'dashboard',
   })
 
+  const { token } = useAuth()
   const toast = useToast()
 
   function showToast() {
@@ -223,12 +215,49 @@
   }
 
   const items = ref(['Playstation', 'Xbox', 'Steam'])
-  const value = ref(['System'])
 
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-      } catch (error) {}
+        const response: SubmissionResponse = await $fetch(
+          '/api/v1/submissions',
+          {
+            baseURL: useRuntimeConfig().public.apiBase,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token.value}`,
+            },
+            body: {
+              submission: {
+                title: value.title,
+                description: value.description,
+                genre: value.genre,
+                platforms: value.platforms,
+                demo_url: value.demo_url,
+                version: value.version,
+              },
+            },
+          },
+        )
+
+        if (response && response.errors) {
+          console.error('Submission failed', response.errors)
+          return
+        }
+
+        await navigateTo('/dashboard/submissions')
+      } catch (error) {
+        console.error('An unexpected error occurred:', error)
+      }
+    },
+    defaultValues: {
+      title: '',
+      description: '',
+      genre: '',
+      platforms: [],
+      demo_url: '',
+      version: '',
     },
   })
 </script>
