@@ -112,7 +112,7 @@
             name="version"
             :validators="{
               onSubmit: ({ value }) =>
-                !value ? 'Verison is required' : undefined,
+                !value ? 'Version is required' : undefined,
             }"
           >
             <template v-slot="{ field, state }">
