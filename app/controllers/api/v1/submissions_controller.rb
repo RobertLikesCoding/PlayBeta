@@ -54,11 +54,11 @@ class Api::V1::SubmissionsController < ApplicationController
       params.require(:submission).permit(
         :title,
         :description,
-        :genre,
-        :platforms,
         :demo_url,
         :status,
-        :version
+        :version,
+        genre: [],
+        platforms: []
       )
     end
 

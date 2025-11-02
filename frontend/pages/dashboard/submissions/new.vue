@@ -79,20 +79,24 @@
           <form.Field
             name="genre"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Genre is required' : undefined,
+              onChange: ({ value }) =>
+                !value.length && 'Please select at least 1 genre',
             }"
           >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Genre</label>
-              <UInput
+              <USelect
                 :id="field.name"
                 :name="field.name"
-                type="text"
                 :value="field.state.value"
-                variant="outline"
-                @update:modelValue="field.handleChange"
+                :items="genres"
+                multiple
+                placeholder="Select a genre"
+                @update:modelValue="
+                  (val: unknown) => field.handleChange(val as string[])
+                "
               />
+
               <em
                 v-for="error of state.meta.errors"
                 class="text-red-300"
@@ -136,16 +140,18 @@
             name="platforms"
             :validators="{
               onSubmit: ({ value }) =>
-                !value ? 'Please select available platforms' : undefined,
+                !value.length && 'Please select at least 1 platform',
             }"
           >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
                 v-model="field.state.value"
-                :items="items"
+                :items="sortedPlatforms"
                 orientation="horizontal"
-                @input="field.handleChange"
+                @update:modelValue="
+                  (val: unknown) => field.handleChange(val as string[])
+                "
               />
               <em
                 v-for="error of state.meta.errors"
@@ -231,6 +237,7 @@
 </template>
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
+  import { value } from 'happy-dom/lib/PropertySymbol.js'
   import type { SubmissionResponse } from '~/types/Submission'
 
   definePageMeta({
@@ -248,7 +255,25 @@
     })
   }
 
-  const items = ref(['Playstation', 'Xbox', 'Steam'])
+  const platforms = ['Playstation', 'Xbox', 'Steam', 'Switch']
+  const genres = [
+    'action',
+    'adventure',
+    'rpg',
+    'simulation',
+    'strategy',
+    'sports',
+    'puzzle',
+    'horror',
+    'platformer',
+    'shooter',
+    'fighting',
+    'racing',
+    'sandbox',
+  ]
+  const sortedPlatforms = computed(() => {
+    return platforms.toSorted()
+  })
 
   onMounted(async () => {
     await form.validate('mount')
@@ -292,7 +317,7 @@
     defaultValues: {
       title: '',
       description: '',
-      genre: '',
+      genre: [] as string[],
       platforms: [] as string[],
       demo_url: '',
       version: '',
