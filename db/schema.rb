@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_12_192036) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_02_103615) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,14 +43,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_12_192036) do
     t.string "title"
     t.uuid "s_id", default: -> { "gen_random_uuid()" }
     t.string "description"
-    t.string "genre"
-    t.string "platforms"
     t.string "demo_url"
     t.string "status"
     t.string "version"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "game_developer_id", null: false
+    t.string "genre", default: [], array: true
+    t.string "platforms", default: [], array: true
     t.index ["game_developer_id"], name: "index_submissions_on_game_developer_id"
   end
 

@@ -1,5 +1,4 @@
 <template>
-  <div><h2>User Submissions</h2></div>
+  <div></div>
 </template>
-
 <script setup lang="ts"></script>

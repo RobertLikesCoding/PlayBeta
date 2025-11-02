@@ -2,8 +2,7 @@ FactoryBot.define do
   factory :event_log do
     # Optional association to the actor/owner
     association :game_developer
-    # Polymorphic association for whatever object is logged (defaults to a GameDeveloper)
-    association :loggable, factory: :submission
+    association :loggable, factory: :submission # defaults to submission
     action { "created" }
     changes_data { {  "title" => "New title" } }
 
