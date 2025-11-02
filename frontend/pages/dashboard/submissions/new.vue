@@ -237,7 +237,6 @@
 </template>
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import { value } from 'happy-dom/lib/PropertySymbol.js'
   import type { SubmissionResponse } from '~/types/Submission'
 
   definePageMeta({
