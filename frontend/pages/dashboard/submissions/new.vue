@@ -198,7 +198,7 @@
               onSubmit: ({ value }) => {
                 if (!value) return 'Please provide a link to the demo'
                 if (!value?.startsWith('https://'))
-                  return 'Please provide only save URLs starting with https'
+                  return 'Please provide only safe URLs starting with https'
               },
             }"
           >
