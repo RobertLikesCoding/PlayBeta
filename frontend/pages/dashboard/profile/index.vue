@@ -108,7 +108,15 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="website">
+          <form.Field
+            name="website"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value?.startsWith('https://')
+                  ? 'Please provide only save URLs starting with https'
+                  : undefined,
+            }"
+          >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Website</label>
               <UInput
@@ -117,6 +125,7 @@
                 type="url"
                 :value="field.state.value"
                 variant="outline"
+                placeholder="https://example.com"
                 @input="
                   (e: Event) =>
                     field.handleChange((e.target as HTMLInputElement).value)
@@ -210,17 +219,20 @@
         </div>
       </div>
 
-      <UButton
-        type="submit"
-        class="justify-center hover:cursor-pointer w-full mb-5"
-        size="xl"
-        label="Save changes"
-        :loading="form.useStore((meta) => meta.isSubmitting).value"
-        :disabled="
-          form.useStore((meta) => meta.isSubmitting).value ||
-          !form.useStore((meta) => meta.isDirty).value
-        "
-      />
+      <form.Subscribe>
+        <template v-slot="{ canSubmit, isSubmitting, isSubmitted, isTouched }">
+          <UButton
+            type="submit"
+            class="justify-center hover:cursor-pointer w-full mb-5"
+            size="xl"
+            :label="
+              isSubmitted && !isTouched ? 'Changes saved!' : 'Save changes'
+            "
+            :loading="form.useStore((meta) => meta.isSubmitting).value"
+            :disabled="isSubmitting || !canSubmit || !isTouched"
+          />
+        </template>
+      </form.Subscribe>
     </form>
   </div>
 </template>
@@ -244,14 +256,6 @@
   const { token } = useAuth()
 
   const toast = useToast()
-
-  function showToast() {
-    toast.add({
-      title: 'Success',
-      description: 'Your action was completed successfully.',
-      color: 'success',
-    })
-  }
 
   const form = useForm({
     onSubmit: async ({ value }) => {
@@ -281,6 +285,12 @@
         )
         if (response && response.errors) {
           console.error('Update failed:', response.errors)
+          toast.add({
+            title: 'Error',
+            description: 'Saving failed. Please try again',
+            color: 'error',
+            icon: 'i-lucide-x-circle',
+          })
         } else {
           form.reset({
             email: value.email,
@@ -292,8 +302,13 @@
             password: '',
             password_confirmation: '',
           })
-          showToast()
 
+          toast.add({
+            title: 'Success',
+            description: 'Your changes were saved successfully.',
+            color: 'success',
+            icon: 'i-lucide-check-circle',
+          })
           return response
         }
       } catch (error) {

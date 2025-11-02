@@ -195,8 +195,11 @@
           <form.Field
             name="demo_url"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Please provide a link to the demo' : undefined,
+              onSubmit: ({ value }) => {
+                if (!value) return 'Please provide a link to the demo'
+                if (!value?.startsWith('https://'))
+                  return 'Please provide only save URLs starting with https'
+              },
             }"
           >
             <template v-slot="{ field, state }">
