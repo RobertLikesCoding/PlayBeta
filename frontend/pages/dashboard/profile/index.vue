@@ -113,7 +113,7 @@
             :validators="{
               onSubmit: ({ value }) =>
                 !value?.startsWith('https://')
-                  ? 'Please provide only save URLs starting with https'
+                  ? 'Please provide only safe URLs starting with https'
                   : undefined,
             }"
           >
