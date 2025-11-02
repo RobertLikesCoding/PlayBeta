@@ -21,7 +21,13 @@
         <h3 class="text-2xl font-bold">Basic Information</h3>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="title">
+          <form.Field
+            name="title"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Title is required' : undefined,
+            }"
+          >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Title</label>
               <UInput
@@ -43,7 +49,13 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="description">
+          <form.Field
+            name="description"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Description is required' : undefined,
+            }"
+          >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Description</label>
               <UTextarea
@@ -64,7 +76,13 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="genre">
+          <form.Field
+            name="genre"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Genre is required' : undefined,
+            }"
+          >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Genre</label>
               <UInput
@@ -86,7 +104,13 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="version">
+          <form.Field
+            name="version"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Verison is required' : undefined,
+            }"
+          >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Version</label>
               <UInput
@@ -108,7 +132,13 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="platforms">
+          <form.Field
+            name="platforms"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Please select available platforms' : undefined,
+            }"
+          >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
@@ -156,7 +186,13 @@
       <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
         <h3 class="text-2xl font-bold">Demo Link</h3>
         <div class="flex flex-col gap-2">
-          <form.Field name="demo_url">
+          <form.Field
+            name="demo_url"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Please provide a link to the demo' : undefined,
+            }"
+          >
             <template v-slot="{ field, state }">
               <label :htmlFor="field.name">Demo Link</label>
               <UInput
@@ -178,26 +214,24 @@
         </div>
       </div>
 
-      <UButton
-        type="submit"
-        class="justify-center hover:cursor-pointer w-full mb-5"
-        size="xl"
-        label="Save changes"
-        :loading="form.useStore((meta) => meta.isSubmitting).value"
-        :disabled="
-          form.useStore((meta) => meta.isSubmitting).value ||
-          !form.useStore((meta) => meta.isDirty).value
-        "
-      />
+      <form.Subscribe>
+        <template v-slot="{ canSubmit, isSubmitting }">
+          <UButton
+            type="submit"
+            class="justify-center hover:cursor-pointer w-full mb-5"
+            size="xl"
+            :label="isSubmitting ? 'Submitting' : 'Create Submission'"
+            :loading="isSubmitting"
+            :disabled="isSubmitting || !canSubmit"
+          />
+        </template>
+      </form.Subscribe>
     </form>
   </div>
 </template>
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import type {
-    SubmissionFormValues,
-    SubmissionResponse,
-  } from '~/types/Submission'
+  import type { SubmissionResponse } from '~/types/Submission'
 
   definePageMeta({
     layout: 'dashboard',
@@ -215,6 +249,10 @@
   }
 
   const items = ref(['Playstation', 'Xbox', 'Steam'])
+
+  onMounted(async () => {
+    await form.validate('mount')
+  })
 
   const form = useForm({
     onSubmit: async ({ value }) => {
@@ -255,7 +293,7 @@
       title: '',
       description: '',
       genre: '',
-      platforms: [],
+      platforms: [] as string[],
       demo_url: '',
       version: '',
     },

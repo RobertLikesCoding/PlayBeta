@@ -9,6 +9,7 @@ class Submission < ApplicationRecord
   validates :s_id, presence: true, uniqueness: true
   validates :description, presence: true, length: { maximum: 1000 }
   validates :genre, presence: true, inclusion: { in: %w[action adventure rpg simulation strategy sports puzzle horror platformer shooter fighting racing sandbox] }
+  validates :platforms, presence: true
   validates :demo_url, presence: true, format: { with: /\Ahttps:\/\/.+\z/, message: "must start with https://" }
   validates :version, presence: true, length: { maximum: 20 }
   attribute :status, :string, default: "in_review"
