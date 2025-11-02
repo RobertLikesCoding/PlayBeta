@@ -207,6 +207,7 @@
                 type="url"
                 :value="field.state.value"
                 variant="outline"
+                placeholder="https://example.com"
                 @update:modelValue="field.handleChange"
               />
               <em
@@ -221,14 +222,14 @@
       </div>
 
       <form.Subscribe>
-        <template v-slot="{ canSubmit, isSubmitting }">
+        <template v-slot="{ canSubmit, isSubmitting, isTouched }">
           <UButton
             type="submit"
             class="justify-center hover:cursor-pointer w-full mb-5"
             size="xl"
             :label="isSubmitting ? 'Submitting' : 'Create Submission'"
             :loading="isSubmitting"
-            :disabled="isSubmitting || !canSubmit"
+            :disabled="isSubmitting || !canSubmit || !isTouched"
           />
         </template>
       </form.Subscribe>
@@ -245,14 +246,6 @@
 
   const { token } = useAuth()
   const toast = useToast()
-
-  function showToast() {
-    toast.add({
-      title: 'Success',
-      description: 'Your action was completed successfully.',
-      color: 'success',
-    })
-  }
 
   const platforms = ['Playstation', 'Xbox', 'Steam', 'Switch']
   const genres = [
@@ -305,10 +298,21 @@
 
         if (response && response.errors) {
           console.error('Submission failed', response.errors)
-          return
+          toast.add({
+            title: 'Error',
+            description: 'Failed to create your submission. Please try again.',
+            color: 'error',
+            icon: 'i-lucide-x-circle',
+          })
+        } else {
+          await navigateTo('/dashboard/submissions')
+          toast.add({
+            title: 'Success',
+            description: 'Your submission was created successfully.',
+            color: 'success',
+            icon: 'i-lucide-check-circle',
+          })
         }
-
-        await navigateTo('/dashboard/submissions')
       } catch (error) {
         console.error('An unexpected error occurred:', error)
       }

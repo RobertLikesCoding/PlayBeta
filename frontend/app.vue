@@ -1,14 +1,11 @@
 <template>
-  <div>
+  <UApp>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-  </div>
+  </UApp>
 </template>
 
 <script setup lang="ts">
-  import { NuxtLayout, NuxtPage } from '#components';
-
+  import { NuxtLayout, NuxtPage } from '#components'
 </script>
-
-<style scoped></style>
