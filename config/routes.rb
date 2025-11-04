@@ -10,7 +10,11 @@ Rails.application.routes.draw do
 
       post "auth/login", to: "auth#login"
 
-      resources :submissions, param: :s_id # use :s_id instead of :id in URLs and route params
+      resources :submissions, param: :s_id do # use :s_id instead of :id in URLs and route params
+        collection do
+          get :constants
+        end
+      end
     end
   end
 
