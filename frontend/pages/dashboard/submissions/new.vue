@@ -241,7 +241,6 @@
 </template>
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import { headers } from 'happy-dom/lib/PropertySymbol.js'
   import type {
     SubmissionConstants,
     SubmissionResponse,
