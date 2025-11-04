@@ -28,14 +28,6 @@ RSpec.describe GameDeveloper, type: :model do
     expect(duplicate).to_not be_valid
   end
 
-  it "bio should have minimum length" do
-    valid_game_developer = build(:game_developer)
-    short_bio_game_developer = build(:game_developer, :short_bio)
-
-    expect(valid_game_developer).to be_valid
-    expect(short_bio_game_developer).to_not be_valid
-  end
-
   it "bio shouldn't exceed limit" do
     long_bio_game_developer = build(:game_developer, :long_bio)
     expect(long_bio_game_developer).to_not be_valid

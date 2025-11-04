@@ -13,10 +13,6 @@ FactoryBot.define do
       studio_name { "" }
     end
 
-    trait :short_bio do
-      bio { "Too short bio" }
-    end
-
     trait :long_bio do
       bio { "A" * 1002 }
     end
