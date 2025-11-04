@@ -111,10 +111,10 @@
           <form.Field
             name="website"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value?.startsWith('https://')
-                  ? 'Please provide only safe URLs starting with https'
-                  : undefined,
+              onSubmit: ({ value }) => {
+                if (value && !value?.startsWith('https://'))
+                  return 'Please provide only save URLs starting with https'
+              },
             }"
           >
             <template v-slot="{ field, state }">
