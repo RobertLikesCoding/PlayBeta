@@ -103,4 +103,14 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       expect(json["message"]).to eq("Deletion of submission failed")
     end
   end
+
+  describe "GET /constants" do
+    it "returns constants for platforms and genres" do
+      get "/api/v1/submissions/constants"
+
+      data = JSON.parse(response.body)
+      expect(data["genres"]).to eq(SUBMISSION_CONSTANTS[:genres])
+      expect(data["platforms"]).to eq(SUBMISSION_CONSTANTS[:platforms])
+    end
+  end
 end

@@ -89,7 +89,7 @@
                 :id="field.name"
                 :name="field.name"
                 :value="field.state.value"
-                :items="genres"
+                :items="sortAndCapitalize(genres)"
                 multiple
                 placeholder="Select a genre"
                 @update:modelValue="
@@ -147,7 +147,7 @@
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
                 v-model="field.state.value"
-                :items="sortedPlatforms"
+                :items="sortAndCapitalize(platforms)"
                 orientation="horizontal"
                 @update:modelValue="
                   (val: unknown) => field.handleChange(val as string[])
@@ -241,7 +241,10 @@
 </template>
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import type { SubmissionResponse } from '~/types/Submission'
+  import type {
+    SubmissionConstants,
+    SubmissionResponse,
+  } from '~/types/Submission'
 
   definePageMeta({
     layout: 'dashboard',
@@ -250,29 +253,18 @@
   const { token } = useAuth()
   const toast = useToast()
 
-  const platforms = ['Playstation', 'Xbox', 'Steam', 'Switch']
-  const genres = [
-    'action',
-    'adventure',
-    'rpg',
-    'simulation',
-    'strategy',
-    'sports',
-    'puzzle',
-    'horror',
-    'platformer',
-    'shooter',
-    'fighting',
-    'racing',
-    'sandbox',
-  ]
-  const sortedPlatforms = computed(() => {
-    return platforms.toSorted()
-  })
+  const { platforms, genres } = await $fetch<SubmissionConstants>(
+    '/api/v1/submissions/constants',
+    {
+      baseURL: useRuntimeConfig().public.apiBase,
+    },
+  )
 
-  onMounted(async () => {
-    await form.validate('mount')
-  })
+  function sortAndCapitalize(list: string[]) {
+    return list.toSorted().map((item) => {
+      return item[0].toUpperCase() + item.substring(1)
+    })
+  }
 
   const form = useForm({
     onSubmit: async ({ value }) => {

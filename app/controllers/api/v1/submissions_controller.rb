@@ -1,5 +1,5 @@
 class Api::V1::SubmissionsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [ :constants ]
   before_action :set_submission, only: [ :show, :update, :destroy ]
 
   def index
@@ -46,6 +46,10 @@ class Api::V1::SubmissionsController < ApplicationController
     end
 
     render json: { message: "Deletion of submission failed" }, status: :unprocessable_content
+  end
+
+  def constants
+    render json: SUBMISSION_CONSTANTS
   end
 
   private
