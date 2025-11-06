@@ -5,7 +5,6 @@ FactoryBot.define do
     genre { SUBMISSION_CONSTANTS[:genres].sample(2) }
     platforms { SUBMISSION_CONSTANTS[:platforms].sample(2) }
     demo_url { Faker::Internet.url(host: 'example.com', scheme: 'https') }
-    status { Submission::STATUS.sample }
     version { Faker::App.semantic_version }
     association :game_developer
   end
