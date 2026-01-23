@@ -14,7 +14,7 @@
   "dependencies": {
     "@nuxt/icon": "^1.12.0",
     "@nuxt/image": "^1.10.0",
-    "@nuxt/ui": "^3.1.0",
+    "@nuxt/ui": "^4.4.0",
     "@tanstack/vue-form": "^1.6.3",
     "ipx": "^3.0.3",
     "nuxt": "^4.3.0",
