@@ -12,8 +12,8 @@
     "test:docker": "docker compose exec frontend npm test"
   },
   "dependencies": {
-    "@nuxt/icon": "^1.12.0",
-    "@nuxt/image": "^1.10.0",
+    "@nuxt/icon": "^2.2.1",
+    "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.4.0",
     "@tanstack/vue-form": "^1.6.3",
     "ipx": "^3.0.3",
@@ -30,10 +30,10 @@
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-vue": "^10.1.0",
-    "happy-dom": "^17.6.3",
+    "happy-dom": "^20.3.7",
     "prettier": "^3.5.3",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.3"
+    "vitest": "^3.2.4"
   }
 }
