@@ -4,7 +4,10 @@
       @submit.prevent="form.handleSubmit()"
       class="flex flex-col gap-5"
     >
-      <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
+      <section
+        class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4"
+        data-test-id="profile-section"
+      >
         <h3 class="text-2xl font-bold">Profile</h3>
 
         <div class="flex flex-col gap-2">
@@ -164,9 +167,12 @@
             </template>
           </form.Field>
         </div>
-      </div>
+      </section>
 
-      <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
+      <section
+        class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4"
+        data-test-id="password-section"
+      >
         <h3 class="text-2xl font-bold">Password Reset</h3>
         <div class="flex flex-col gap-2">
           <form.Field name="password">
@@ -217,7 +223,7 @@
             </template>
           </form.Field>
         </div>
-      </div>
+      </section>
 
       <form.Subscribe>
         <template v-slot="{ canSubmit, isSubmitting, isSubmitted, isTouched }">
