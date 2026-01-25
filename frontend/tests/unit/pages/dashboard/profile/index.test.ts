@@ -123,11 +123,12 @@ describe('Profile Page', () => {
 
     const submitButton = wrapper.find('button[type="submit"]')
 
-    expect(submitButton.attributes('disabled')).toBeDefined
+    expect(submitButton.attributes('disabled')).toBeDefined()
     const emailInput = wrapper.find('input[name="email"]')
     expect(emailInput.html()).toContain('email@abc.de')
 
-    emailInput.setValue('text@abc.de')
-    expect(submitButton.attributes('disabled')).not.toBeDefined
+    await emailInput.setValue('text@abc.de')
+    await flushPromises()
+    expect(submitButton.attributes('disabled')).not.toBeDefined()
   })
 })
