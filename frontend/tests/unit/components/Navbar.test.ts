@@ -2,23 +2,17 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import Navbar from '~/components/Navbar.vue'
 
-let mockIsAuthenticated = false
-let mockToken: string | null = null
-const clearTokenMock = vi.fn()
+const mockIsAuthenticated = ref(false)
+const mockToken = { value: 'test-token' }
 
 vi.mock('~/composables/useAuth', () => ({
   useAuth: () => ({
     isAuthenticated: mockIsAuthenticated,
     token: mockToken,
-    setToken: () => {},
-    clearToken: clearTokenMock,
+    setToken: vi.fn(),
+    clearToken: vi.fn(),
   }),
 }))
-
-function mockAuth(isAuthenticated: boolean, token: string | null) {
-  mockIsAuthenticated = isAuthenticated
-  mockToken = token
-}
 
 describe('Navbar', () => {
   it('renders the brand name', async () => {
@@ -36,11 +30,9 @@ describe('Navbar', () => {
   describe('Account Button', () => {
     beforeEach(() => {
       vi.clearAllMocks()
-      mockAuth(false, null) // default state
     })
 
     it('should link to signup if user is not logged in', async () => {
-      mockAuth(false, null)
       const wrapper = await mountSuspended(Navbar)
       const accountLink = wrapper
         .findAllComponents({ name: 'NuxtLink' })
@@ -50,7 +42,8 @@ describe('Navbar', () => {
     })
 
     it('should link to dashboard if user is logged in', async () => {
-      mockAuth(true, 'someToken')
+      mockIsAuthenticated.value = true
+
       const wrapper = await mountSuspended(Navbar)
       const accountLink = wrapper
         .findAllComponents({ name: 'NuxtLink' })
@@ -59,6 +52,7 @@ describe('Navbar', () => {
       expect(accountLink?.props('to')).toBe('/dashboard/submissions')
     })
   })
+
   describe('Logout button', () => {
     it('should call clearToken when logging out', async () => {
       const wrapper = await mountSuspended(Navbar)
