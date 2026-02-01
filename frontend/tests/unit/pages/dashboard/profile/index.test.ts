@@ -1,7 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import ProfilePage from '~/pages/dashboard/profile/index.vue'
-import { flushPromises } from '@vue/test-utils'
+import { flushPromises, VueWrapper } from '@vue/test-utils'
+
+vi.stubGlobal(
+  '$fetch',
+  vi.fn().mockResolvedValue({
+    message: 'Successfully updated user data',
+  }),
+)
 
 describe('Profile Page', () => {
   const inputFields = [
@@ -23,56 +30,35 @@ describe('Profile Page', () => {
     avatar: '',
   }
 
-  beforeEach(() => {
-    vi.clearAllMocks()
+  let wrapper: VueWrapper
+
+  beforeEach(async () => {
+    wrapper = await mountSuspended(ProfilePage, {
+      props: {
+        user: user,
+        isLoading: false,
+      },
+    })
   })
 
   for (const field of inputFields) {
     it(`should render the ${field} input element`, async () => {
-      const wrapper = await mountSuspended(ProfilePage, {
-        props: {
-          user: user,
-          isLoading: false,
-        },
-      })
-
       const inputElement = wrapper.find(`input[name="${field}"]`)
       expect(inputElement.exists()).toBe(true)
     })
   }
 
   it('should render the bio textarea element', async () => {
-    const wrapper = await mountSuspended(ProfilePage, {
-      props: {
-        user: user,
-        isLoading: false,
-      },
-    })
-
     const textarea = wrapper.find('textarea[name="bio"]')
     expect(textarea.exists()).toBe(true)
   })
 
   it('should render a submit button', async () => {
-    const wrapper = await mountSuspended(ProfilePage, {
-      props: {
-        user: user,
-        isLoading: false,
-      },
-    })
-
     const submitButton = wrapper.find('button[type="submit"]')
     expect(submitButton.exists()).toBe(true)
   })
 
   it('should render the profile section', async () => {
-    const wrapper = await mountSuspended(ProfilePage, {
-      props: {
-        user: user,
-        isLoading: false,
-      },
-    })
-
     const profileSection = wrapper.find(
       'section[data-test-id="profile-section"]',
     )
@@ -82,13 +68,6 @@ describe('Profile Page', () => {
   })
 
   it('should render the password section', async () => {
-    const wrapper = await mountSuspended(ProfilePage, {
-      props: {
-        user: user,
-        isLoading: false,
-      },
-    })
-
     const passwordSection = wrapper.find(
       'section[data-test-id="password-section"]',
     )
@@ -98,37 +77,35 @@ describe('Profile Page', () => {
   })
 
   it('should disable submit button when form is untouched', async () => {
-    const wrapper = await mountSuspended(ProfilePage, {
-      props: {
-        user: user,
-        isLoading: false,
-      },
-    })
-
-    await flushPromises()
-
     const submitButton = wrapper.find('button[type="submit"]')
     expect(submitButton.attributes('disabled')).toBe('')
   })
 
   it('should enable submit button when form is modified', async () => {
-    const wrapper = await mountSuspended(ProfilePage, {
-      props: {
-        user: user,
-        isLoading: false,
-      },
-    })
-
-    await flushPromises()
-
     const submitButton = wrapper.find('button[type="submit"]')
+    const emailInput = wrapper.find('input[name="email"]')
 
     expect(submitButton.attributes('disabled')).toBeDefined()
-    const emailInput = wrapper.find('input[name="email"]')
-    expect(emailInput.html()).toContain('email@abc.de')
+    expect(emailInput.html()).toContain(user.email)
 
     await emailInput.setValue('text@abc.de')
-    await flushPromises()
     expect(submitButton.attributes('disabled')).not.toBeDefined()
+  })
+
+  describe('the submit button', () => {
+    it('should change button label on successful submission', async () => {
+      const submitButton = wrapper.find('button[type="submit"]')
+      const form = wrapper.find('form')
+      const emailInput = wrapper.find('input[name="email"]')
+
+      await emailInput.setValue('text@abc.de')
+      await form.trigger('submit')
+      await flushPromises()
+
+      expect(globalThis.$fetch).toHaveBeenCalled()
+      expect(submitButton.text()).toBe('Changes saved!')
+    })
+
+    it.todo('should send a POST request with the correct body')
   })
 })
