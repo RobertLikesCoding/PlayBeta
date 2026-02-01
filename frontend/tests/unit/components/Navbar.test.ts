@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import Navbar from '~/components/Navbar.vue'
+import { ref } from 'vue'
 
 const mockIsAuthenticated = ref(false)
 const mockToken = { value: 'test-token' }
