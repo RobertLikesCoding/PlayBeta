@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import ProfilePage from '~/pages/dashboard/profile/index.vue'
 import { flushPromises, VueWrapper } from '@vue/test-utils'
+import { mockToken } from '~/vitest.setup'
 
 vi.stubGlobal(
   '$fetch',
@@ -33,6 +34,7 @@ describe('Profile Page', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
+    vi.clearAllMocks()
     wrapper = await mountSuspended(ProfilePage, {
       props: {
         user: user,
@@ -106,6 +108,25 @@ describe('Profile Page', () => {
       expect(submitButton.text()).toBe('Changes saved!')
     })
 
-    it.todo('should send a POST request with the correct body')
+    it('should send a PATCH request with the correct body', async () => {
+      const form = wrapper.find('form')
+      const emailInput = wrapper.find('input[name="email"]')
+
+      await emailInput.setValue('text@abc.de')
+      await form.trigger('submit')
+      await flushPromises()
+
+      expect(globalThis.$fetch).toHaveBeenCalled()
+      expect(globalThis.$fetch).toHaveBeenCalledWith(
+        '/api/v1/game_developers/me',
+        expect.objectContaining({
+          body: {
+            game_developer: expect.objectContaining({
+              email: 'text@abc.de',
+            }),
+          },
+        }),
+      )
+    })
   })
 })
