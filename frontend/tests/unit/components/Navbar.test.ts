@@ -4,13 +4,14 @@ import Navbar from '~/components/Navbar.vue'
 
 const mockIsAuthenticated = ref(false)
 const mockToken = { value: 'test-token' }
+const clearTokenMock = vi.fn()
 
 vi.mock('~/composables/useAuth', () => ({
   useAuth: () => ({
     isAuthenticated: mockIsAuthenticated,
     token: mockToken,
     setToken: vi.fn(),
-    clearToken: vi.fn(),
+    clearToken: clearTokenMock,
   }),
 }))
 
