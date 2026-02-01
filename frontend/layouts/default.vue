@@ -5,7 +5,7 @@
     </header>
 
     <main class="p-5">
-      <NuxtPage />
+      <slot />
     </main>
 
     <Footer />
