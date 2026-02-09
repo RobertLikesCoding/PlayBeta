@@ -89,7 +89,7 @@
                 :id="field.name"
                 :name="field.name"
                 :value="field.state.value"
-                :items="sortAndCapitalize(genres)"
+                :items="displayGenres"
                 multiple
                 placeholder="Select a genre"
                 @update:modelValue="
@@ -147,7 +147,7 @@
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
                 v-model="field.state.value"
-                :items="sortAndCapitalize(platforms)"
+                :items="displayPlatforms"
                 orientation="horizontal"
                 @update:modelValue="
                   (val: unknown) => field.handleChange(val as string[])
@@ -260,16 +260,20 @@
     },
   )
 
-  function sortAndCapitalize(list: string[]) {
-    return list.toSorted().map((item) => {
-      return item[0].toUpperCase() + item.substring(1)
-    })
+  function capitalizeLists(list: string[]) {
+    return list.toSorted().map((item) => ({
+      label: item[0]?.toUpperCase() + item.substring(1),
+      value: item,
+    }))
   }
+
+  const displayGenres = computed(() => capitalizeLists(genres))
+  const displayPlatforms = computed(() => capitalizeLists(platforms))
 
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-        const response: SubmissionResponse = await $fetch(
+        const response = await $fetch<SubmissionResponse>(
           '/api/v1/submissions',
           {
             baseURL: useRuntimeConfig().public.apiBase,
