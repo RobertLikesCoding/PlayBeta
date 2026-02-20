@@ -37,7 +37,10 @@
                   type="text"
                   :value="field.state.value"
                   variant="outline"
-                  @update:modelValue="field.handleChange"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
                 />
                 <em
                   v-for="error of state.meta.errors"
@@ -64,7 +67,10 @@
                   :name="field.name"
                   variant="outline"
                   :rows="5"
-                  @update:modelValue="field.handleChange"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
                 />
                 <em
                   v-for="error of state.meta.errors"
@@ -94,7 +100,7 @@
                   multiple
                   placeholder="Select a genre"
                   @update:modelValue="
-                    (val: unknown) => field.handleChange(val as string[])
+                    (val: string[]) => field.handleChange(val as string[])
                   "
                 />
 
@@ -124,7 +130,10 @@
                   type="text"
                   :value="field.state.value"
                   variant="outline"
-                  @update:modelValue="field.handleChange"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
                 />
                 <em
                   v-for="error of state.meta.errors"
@@ -213,7 +222,10 @@
                 :value="field.state.value"
                 variant="outline"
                 placeholder="https://example.com"
-                @update:modelValue="field.handleChange"
+                @input="
+                  (e: Event) =>
+                    field.handleChange((e.target as HTMLInputElement).value)
+                "
               />
               <em
                 v-for="error of state.meta.errors"
