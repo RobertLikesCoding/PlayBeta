@@ -7,15 +7,6 @@ describe('Submission New Page', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    globalThis.$fetch = vi.fn().mockImplementation((url) => {
-      if (url === '/api/v1/submissions/constants') {
-        return Promise.resolve({
-          platforms: ['windows', 'mac', 'linux', 'web'],
-          genres: ['action', 'adventure', 'puzzle', 'rpg'],
-        })
-      }
-      return Promise.resolve({})
-    }) as any
     wrapper = await mountSuspended(NewSubmissionPage)
   })
 
@@ -106,46 +97,31 @@ describe('Submission New Page', () => {
 
   describe('when submitting', () => {
     it('should submit successfully if form was filled correctly', async () => {
-      const mockSubmitFetch = vi.fn().mockResolvedValue({ success: true })
-      ;(globalThis.$fetch as any).mockImplementation((url: string) => {
-        if (url === '/api/v1/submissions/constants') {
-          return Promise.resolve({
-            platforms: ['windows', 'mac', 'linux', 'web'],
-            genres: ['action', 'adventure', 'puzzle', 'rpg'],
-          })
-        }
-        if (url === '/api/v1/submissions') {
-          return mockSubmitFetch()
-        }
-        return Promise.resolve({})
+      const titleInput = wrapper.find('input[name="title"]')
+      const descriptionTextarea = wrapper.find('textarea[name="description"]')
+      const genreSelect = wrapper.findComponent({ name: 'USelect' })
+      const versionInput = wrapper.find('input[name="version"]')
+      const platformCheckboxes = wrapper.findComponent({
+        name: 'UCheckboxGroup',
       })
+      const demoUrlInput = wrapper.find('input[name="demo_url"]')
+      const form = wrapper.find('form')
 
-      // Access the form instance
-      const form = (wrapper.vm as any).form
-
-      // Set form values directly
-      form.setFieldValue('title', 'Game Title')
-      form.setFieldValue(
-        'description',
+      await titleInput.setValue('Game Title')
+      await descriptionTextarea.setValue(
         'A detailed description of the game that is long enough to pass validation.',
       )
-      form.setFieldValue('genre', ['action'])
-      form.setFieldValue('version', '1.0.0')
-      form.setFieldValue('platforms', ['windows'])
-      form.setFieldValue('demo_url', 'https://example.com/demo')
+      await genreSelect.vm.$emit('update:modelValue', ['action'])
+      await versionInput.setValue('1.0.0')
+      await platformCheckboxes.vm.$emit('update:modelValue', ['windows'])
+      await demoUrlInput.setValue('https://example.com/demo')
 
-      // Trigger form submission
-      await form.handleSubmit()
-
-      // Wait for async operations
+      await form.trigger('submit.prevent')
       await flushPromises()
 
-      // Check that no errors are shown
       const errors = wrapper.findAll('em')
       expect(errors.length).toBe(0)
-
-      // Check that the API was called
-      expect(mockSubmitFetch).toHaveBeenCalled()
+      expect((globalThis as any).submitSpy).toHaveBeenCalled()
     })
 
     it('should not accept insecure links', async () => {
