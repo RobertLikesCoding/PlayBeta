@@ -1,6 +1,6 @@
 <template>
   <nav class="flex items-center justify-between flex-wrap h-24">
-    <div class="flex items-center flex-shrink-0 text-white mr-6">
+    <div class="flex items-center shrink-0 text-white mr-6">
       <NuxtLink
         to="/"
         class="font-semibold text-xl tracking-tight"
@@ -42,9 +42,9 @@
     <!-- DESKTOP MENU -->
     <div
       data-test="desktop-menu"
-      class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden"
+      class="w-full grow lg:flex lg:items-center lg:w-auto hidden"
     >
-      <div class="text-sm hidden lg:block lg:flex-grow py-5">
+      <div class="text-sm hidden lg:block lg:grow py-5">
         <NuxtLink
           to="#responsive-heNuxtLinkder"
           class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white mr-4"
