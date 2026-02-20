@@ -81,10 +81,6 @@ describe('Submission New Page', () => {
     await form.trigger('submit')
     const error = wrapper.findAll('em')
     const errorMessages = error.map((em) => em.text())
-    console.log(
-      'ERROR',
-      error.map((em) => em.text()),
-    )
 
     expect(error.length).toBe(6)
     expect(errorMessages).toContain('Title is required')

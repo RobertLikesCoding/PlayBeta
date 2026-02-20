@@ -67,7 +67,7 @@
 
       <button
         v-if="isAuthenticated"
-        class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white cursor-pointer mr-5"
+        class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white cursor-pointer px-5"
         @click="logout"
       >
         Logout
