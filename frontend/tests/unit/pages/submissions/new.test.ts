@@ -7,6 +7,15 @@ describe('Submission New Page', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
+    globalThis.$fetch = vi.fn().mockImplementation((url) => {
+      if (url === '/api/v1/submissions/constants') {
+        return Promise.resolve({
+          platforms: ['windows', 'mac', 'linux', 'web'],
+          genres: ['action', 'adventure', 'puzzle', 'rpg'],
+        })
+      }
+      return Promise.resolve({})
+    }) as any
     wrapper = await mountSuspended(NewSubmissionPage)
   })
 
@@ -96,18 +105,6 @@ describe('Submission New Page', () => {
   })
 
   describe('when submitting', () => {
-    beforeEach(() => {
-      globalThis.$fetch = vi.fn().mockImplementation((url) => {
-        if (url === '/api/v1/submissions/constants') {
-          return Promise.resolve({
-            platforms: ['windows', 'mac', 'linux', 'web'],
-            genres: ['action', 'adventure', 'puzzle', 'rpg'],
-          })
-        }
-        return Promise.resolve({})
-      }) as any
-    })
-
     it('should submit successfully if form was filled correctly', async () => {
       const mockSubmitFetch = vi.fn().mockResolvedValue({ success: true })
       ;(globalThis.$fetch as any).mockImplementation((url: string) => {
