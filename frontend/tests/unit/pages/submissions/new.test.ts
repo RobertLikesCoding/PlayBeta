@@ -5,6 +5,7 @@ import { flushPromises, VueWrapper } from '@vue/test-utils'
 
 describe('Submission New Page', () => {
   let wrapper: VueWrapper
+
   beforeEach(async () => {
     wrapper = await mountSuspended(NewSubmissionPage)
   })
@@ -26,7 +27,7 @@ describe('Submission New Page', () => {
       expect(input.exists()).toBe(true)
     })
 
-    it('a description input textarea', async () => {
+    it('a description textarea', async () => {
       const textarea = wrapper.find('textarea[name="description"]')
       expect(textarea.exists()).toBe(true)
     })
@@ -71,10 +72,98 @@ describe('Submission New Page', () => {
     expect(submitButton.attributes('disabled')).not.toBeDefined()
   })
 
-  it('should show info if a required field was not filled out', () => {})
+  it('should show errors if a required field was not filled out', async () => {
+    const title = wrapper.find('input[name="title"]')
+    const form = wrapper.find('form')
 
-  describe('demo link field', () => {
-    it('should accept secure links', () => {})
-    it('should not accept insecure links', () => {})
+    title.setValue('Game Title')
+    title.setValue('')
+    await form.trigger('submit')
+    const error = wrapper.findAll('em')
+    const errorMessages = error.map((em) => em.text())
+    console.log(
+      'ERROR',
+      error.map((em) => em.text()),
+    )
+
+    expect(error.length).toBe(6)
+    expect(errorMessages).toContain('Title is required')
+    expect(errorMessages).toContain('Description is required')
+    expect(errorMessages).toContain('Please select at least 1 genre')
+    expect(errorMessages).toContain('Version is required')
+    expect(errorMessages).toContain('Please select at least 1 platform')
+    expect(errorMessages).toContain('Please provide a link to the demo')
+  })
+
+  describe('when submitting', () => {
+    beforeEach(() => {
+      globalThis.$fetch = vi.fn().mockImplementation((url) => {
+        if (url === '/api/v1/submissions/constants') {
+          return Promise.resolve({
+            platforms: ['windows', 'mac', 'linux', 'web'],
+            genres: ['action', 'adventure', 'puzzle', 'rpg'],
+          })
+        }
+        return Promise.resolve({})
+      }) as any
+    })
+
+    it('should submit successfully if form was filled correctly', async () => {
+      const mockSubmitFetch = vi.fn().mockResolvedValue({ success: true })
+      ;(globalThis.$fetch as any).mockImplementation((url: string) => {
+        if (url === '/api/v1/submissions/constants') {
+          return Promise.resolve({
+            platforms: ['windows', 'mac', 'linux', 'web'],
+            genres: ['action', 'adventure', 'puzzle', 'rpg'],
+          })
+        }
+        if (url === '/api/v1/submissions') {
+          return mockSubmitFetch()
+        }
+        return Promise.resolve({})
+      })
+
+      // Access the form instance
+      const form = (wrapper.vm as any).form
+
+      // Set form values directly
+      form.setFieldValue('title', 'Game Title')
+      form.setFieldValue(
+        'description',
+        'A detailed description of the game that is long enough to pass validation.',
+      )
+      form.setFieldValue('genre', ['action'])
+      form.setFieldValue('version', '1.0.0')
+      form.setFieldValue('platforms', ['windows'])
+      form.setFieldValue('demo_url', 'https://example.com/demo')
+
+      // Trigger form submission
+      await form.handleSubmit()
+
+      // Wait for async operations
+      await flushPromises()
+
+      // Check that no errors are shown
+      const errors = wrapper.findAll('em')
+      expect(errors.length).toBe(0)
+
+      // Check that the API was called
+      expect(mockSubmitFetch).toHaveBeenCalled()
+    })
+
+    it('should not accept insecure links', async () => {
+      const demoLinkInput = wrapper.find('input[name="demo_url"]')
+      const form = wrapper.find('form')
+      await demoLinkInput.setValue('http://example.com')
+
+      await form.trigger('submit')
+
+      const errors = wrapper.findAll('em')
+      expect(errors.length).toBeGreaterThan(0)
+      const errorTexts = errors.map((e) => e.text())
+      expect(errorTexts).toContain(
+        'Please provide only safe URLs starting with https',
+      )
+    })
   })
 })
