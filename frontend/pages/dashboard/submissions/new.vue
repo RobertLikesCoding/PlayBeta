@@ -17,177 +17,188 @@
       @submit.prevent="form.handleSubmit()"
       class="flex flex-col gap-5"
     >
-      <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
-        <h3 class="text-2xl font-bold">Basic Information</h3>
+      <section data-test-id="basic-info-section">
+        <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
+          <h3 class="text-2xl font-bold">Basic Information</h3>
 
-        <div class="flex flex-col gap-2">
-          <form.Field
-            name="title"
-            :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Title is required' : undefined,
-            }"
-          >
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Title</label>
-              <UInput
-                :id="field.name"
-                :name="field.name"
-                type="text"
-                :value="field.state.value"
-                variant="outline"
-                @update:modelValue="field.handleChange"
-              />
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
+          <div class="flex flex-col gap-2">
+            <form.Field
+              name="title"
+              :validators="{
+                onSubmit: ({ value }) =>
+                  !value ? 'Title is required' : undefined,
+              }"
+            >
+              <template v-slot="{ field, state }">
+                <label :htmlFor="field.name">Title</label>
+                <UInput
+                  :id="field.name"
+                  :name="field.name"
+                  type="text"
+                  :value="field.state.value"
+                  variant="outline"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
+                />
+                <em
+                  v-for="error of state.meta.errors"
+                  class="text-red-300"
+                  role="alert"
+                  >{{ error }}
+                </em>
+              </template>
+            </form.Field>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <form.Field
+              name="description"
+              :validators="{
+                onSubmit: ({ value }) =>
+                  !value ? 'Description is required' : undefined,
+              }"
+            >
+              <template v-slot="{ field, state }">
+                <label :htmlFor="field.name">Description</label>
+                <UTextarea
+                  v-model="field.state.value"
+                  :name="field.name"
+                  variant="outline"
+                  :rows="5"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
+                />
+                <em
+                  v-for="error of state.meta.errors"
+                  class="text-red-300"
+                  role="alert"
+                  >{{ error }}
+                </em>
+              </template>
+            </form.Field>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <form.Field
+              name="genre"
+              :validators="{
+                onChange: ({ value }) =>
+                  !value.length && 'Please select at least 1 genre',
+              }"
+            >
+              <template v-slot="{ field, state }">
+                <label :htmlFor="field.name">Genre</label>
+                <USelect
+                  :id="field.name"
+                  :name="field.name"
+                  :value="field.state.value"
+                  :items="displayGenres"
+                  multiple
+                  placeholder="Select a genre"
+                  @update:modelValue="
+                    (val: string[]) => field.handleChange(val as string[])
+                  "
+                />
+
+                <em
+                  v-for="error of state.meta.errors"
+                  class="text-red-300"
+                  role="alert"
+                  >{{ error }}
+                </em>
+              </template>
+            </form.Field>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <form.Field
+              name="version"
+              :validators="{
+                onSubmit: ({ value }) =>
+                  !value ? 'Version is required' : undefined,
+              }"
+            >
+              <template v-slot="{ field, state }">
+                <label :htmlFor="field.name">Version</label>
+                <UInput
+                  :id="field.name"
+                  :name="field.name"
+                  type="text"
+                  :value="field.state.value"
+                  variant="outline"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
+                />
+                <em
+                  v-for="error of state.meta.errors"
+                  class="text-red-300"
+                  role="alert"
+                  >{{ error }}
+                </em>
+              </template>
+            </form.Field>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <form.Field
+              name="platforms"
+              :validators="{
+                onSubmit: ({ value }) =>
+                  !value.length && 'Please select at least 1 platform',
+              }"
+            >
+              <template v-slot="{ field, state }">
+                <label :htmlFor="field.name">Platforms</label>
+                <UCheckboxGroup
+                  v-model="field.state.value"
+                  :items="displayPlatforms"
+                  orientation="horizontal"
+                  @update:modelValue="
+                    (val: unknown) => field.handleChange(val as string[])
+                  "
+                />
+                <em
+                  v-for="error of state.meta.errors"
+                  class="text-red-300"
+                  role="alert"
+                  >{{ error }}
+                </em>
+              </template>
+            </form.Field>
+          </div>
+
+          <!-- <div class="flex flex-col gap-2">
+            <form.Field name="Screenshots">
+              <template v-slot="{ field, state }">
+                <label :htmlFor="field.name">Screenshots</label>
+                <UInput
+                  :id="field.name"
+                  :name="field.name"
+                  type="file"
+                  :value="field.state.value"
+                  variant="outline"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
+                />
+                <em
+                  v-for="error of state.meta.errors"
+                  class="text-red-300"
+                  role="alert"
+                  >{{ error }}
+                </em>
+              </template>
+            </form.Field>
+          </div> -->
         </div>
-
-        <div class="flex flex-col gap-2">
-          <form.Field
-            name="description"
-            :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Description is required' : undefined,
-            }"
-          >
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Description</label>
-              <UTextarea
-                v-model="field.state.value"
-                :name="field.name"
-                variant="outline"
-                :rows="5"
-                @update:modelValue="field.handleChange"
-              />
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <form.Field
-            name="genre"
-            :validators="{
-              onChange: ({ value }) =>
-                !value.length && 'Please select at least 1 genre',
-            }"
-          >
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Genre</label>
-              <USelect
-                :id="field.name"
-                :name="field.name"
-                :value="field.state.value"
-                :items="sortAndCapitalize(genres)"
-                multiple
-                placeholder="Select a genre"
-                @update:modelValue="
-                  (val: unknown) => field.handleChange(val as string[])
-                "
-              />
-
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <form.Field
-            name="version"
-            :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Version is required' : undefined,
-            }"
-          >
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Version</label>
-              <UInput
-                :id="field.name"
-                :name="field.name"
-                type="text"
-                :value="field.state.value"
-                variant="outline"
-                @update:modelValue="field.handleChange"
-              />
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <form.Field
-            name="platforms"
-            :validators="{
-              onSubmit: ({ value }) =>
-                !value.length && 'Please select at least 1 platform',
-            }"
-          >
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Platforms</label>
-              <UCheckboxGroup
-                v-model="field.state.value"
-                :items="sortAndCapitalize(platforms)"
-                orientation="horizontal"
-                @update:modelValue="
-                  (val: unknown) => field.handleChange(val as string[])
-                "
-              />
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
-        </div>
-
-        <!-- <div class="flex flex-col gap-2">
-          <form.Field name="Screenshots">
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Screenshots</label>
-              <UInput
-                :id="field.name"
-                :name="field.name"
-                type="file"
-                :value="field.state.value"
-                variant="outline"
-                @input="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
-              />
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
-        </div> -->
-      </div>
+      </section>
 
       <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
         <h3 class="text-2xl font-bold">Demo Link</h3>
@@ -211,7 +222,10 @@
                 :value="field.state.value"
                 variant="outline"
                 placeholder="https://example.com"
-                @update:modelValue="field.handleChange"
+                @input="
+                  (e: Event) =>
+                    field.handleChange((e.target as HTMLInputElement).value)
+                "
               />
               <em
                 v-for="error of state.meta.errors"
@@ -260,16 +274,20 @@
     },
   )
 
-  function sortAndCapitalize(list: string[]) {
-    return list.toSorted().map((item) => {
-      return item[0].toUpperCase() + item.substring(1)
-    })
+  function capitalizeLists(list: string[]) {
+    return list.toSorted().map((item) => ({
+      label: item[0]?.toUpperCase() + item.substring(1),
+      value: item,
+    }))
   }
+
+  const displayGenres = computed(() => capitalizeLists(genres))
+  const displayPlatforms = computed(() => capitalizeLists(platforms))
 
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-        const response: SubmissionResponse = await $fetch(
+        const response = await $fetch<SubmissionResponse>(
           '/api/v1/submissions',
           {
             baseURL: useRuntimeConfig().public.apiBase,
