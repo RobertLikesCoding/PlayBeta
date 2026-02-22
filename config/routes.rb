@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "passwords/update"
   namespace :api do
     namespace :v1 do
       resources :game_developers, only: [ :index, :create ] do
