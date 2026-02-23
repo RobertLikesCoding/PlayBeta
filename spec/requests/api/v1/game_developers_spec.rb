@@ -24,7 +24,6 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
   describe "GET game_developers/me" do
     context "when authenticated" do
       it "returns the current user" do
-        token = JWT.encode({ user_id: user.id }, jwt_secret, "HS256")
         get "/api/v1/game_developers/me", headers: { "Authorization" => "Bearer #{token}" }
         expect(response).to have_http_status(:ok)
 
