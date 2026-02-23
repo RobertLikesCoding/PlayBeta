@@ -127,7 +127,7 @@
     onSubmit: async ({ value }) => {
       try {
         const response: UpdateGameDeveloperResponse = await $fetch(
-          `/api/v1/game_developers/me`,
+          `/api/v1/passwords/update`,
           {
             baseURL: useRuntimeConfig().public.apiBase,
             method: 'PATCH',
@@ -136,7 +136,7 @@
               Authorization: `Bearer ${token.value}`,
             },
             body: {
-              game_developer: {
+              password_changes: {
                 current_password: value.current_password,
                 new_password: value.new_password,
                 new_password_confirmation: value.new_password_confirmation,
@@ -177,24 +177,35 @@
       new_password_confirmation: '',
     },
     validators: {
-      onSubmit: ({ value }) => {
-        return {
-          fields: {
-            current_password:
-              value.current_password === ''
-                ? 'Please fill in your current password'
-                : undefined,
-            password:
-              value.new_password === ''
-                ? 'Please fill in a new password'
-                : undefined,
-            password_confirmation:
-              value.new_password_confirmation === ''
-                ? 'Please confirm your new password'
-                : undefined,
-          },
-        }
-      },
+      onSubmit: ({ value }) => ({
+        fields: {
+          current_password: validateCurrentPassword(value.current_password),
+          new_password: validateNewPassword(value.new_password),
+          new_password_confirmation: validateNewPasswordConfirm(
+            value.new_password,
+            value.new_password_confirmation,
+          ),
+        },
+      }),
     },
   })
+
+  function validateCurrentPassword(value: string) {
+    !value ? 'Please fill in your current password' : undefined
+  }
+
+  function validateNewPassword(value: string) {
+    if (!value) return 'Please fill in a new password'
+    if (value.length < 8) return 'Password must be at least 8 characters'
+    return undefined
+  }
+
+  function validateNewPasswordConfirm(
+    newPassword: string,
+    confirmPassword: string,
+  ) {
+    if (!confirmPassword) return 'Please confirm your new password'
+    if (newPassword !== confirmPassword) return 'Passwords do not match'
+    return undefined
+  }
 </script>
