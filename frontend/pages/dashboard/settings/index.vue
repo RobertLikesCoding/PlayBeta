@@ -105,22 +105,13 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import type {
-    GameDeveloperAPI,
-    UpdateGameDeveloperResponse,
-  } from '~/types/GameDeveloper'
+  import type { UpdateGameDeveloperResponse } from '~/types/GameDeveloper'
 
   definePageMeta({
     layout: 'dashboard',
   })
 
-  const props = defineProps<{
-    user: GameDeveloperAPI | null
-    isLoading: boolean
-  }>()
-
   const { token } = useAuth()
-
   const toast = useToast()
 
   const form = useForm({
@@ -191,7 +182,7 @@
   })
 
   function validateCurrentPassword(value: string) {
-    !value ? 'Please fill in your current password' : undefined
+    return !value ? 'Please fill in your current password' : undefined
   }
 
   function validateNewPassword(value: string) {
