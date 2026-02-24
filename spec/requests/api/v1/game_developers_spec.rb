@@ -2,8 +2,6 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::GameDevelopers", type: :request do
   let(:user) { create(:game_developer) }
-  let(:jwt_secret) { ENV['JWT_SECRET_KEY'] || 'test_jwt_secret_fallback' }
-  let(:token) { JWT.encode({ user_id: user.id }, jwt_secret, "HS256") }
 
   describe "GET /index" do
     it "returns a list of game developers" do
@@ -24,7 +22,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
   describe "GET game_developers/me" do
     context "when authenticated" do
       it "returns the current user" do
-        get "/api/v1/game_developers/me", headers: { "Authorization" => "Bearer #{token}" }
+        get "/api/v1/game_developers/me", headers: authenticated_header(user)
         expect(response).to have_http_status(:ok)
 
         current_user = JSON.parse(response.body)
@@ -111,7 +109,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     it "should update user" do
       patch "/api/v1/game_developers/me",
         params: update_params,
-        headers: { "Authorization" => "Bearer #{token}" }
+        headers: authenticated_header(user)
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
@@ -121,7 +119,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     it "responds with errors if params are invalid" do
       patch "/api/v1/game_developers/me",
         params: invalid_params,
-        headers: { "Authorization" => "Bearer #{token}" }
+        headers: authenticated_header(user)
 
       expect(response).to have_http_status(:unprocessable_content)
       json = JSON.parse(response.body)

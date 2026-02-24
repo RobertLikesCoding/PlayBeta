@@ -2,16 +2,13 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::Submissions", type: :request do
   let(:game_developer) { create(:game_developer) }
-  let(:jwt_secret) { ENV['JWT_SECRET_KEY'] || 'test_jwt_secret_fallback' }
-  let(:token) { JWT.encode({ user_id: game_developer.id }, jwt_secret, "HS256") }
-  let(:headers) { { "Authorization" => "Bearer #{token}" } }
   let!(:submission) { create(:submission, game_developer: game_developer) }
 
   describe "GET /index" do
     before { create_list(:submission, 3, game_developer:) }
 
     it "should return all submissions for the current user" do
-      get "/api/v1/submissions", headers: headers
+      get "/api/v1/submissions", headers: authenticated_header(game_developer)
 
       expect(response).to have_http_status(:success)
       json = JSON.parse(response.body)
@@ -22,7 +19,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
 
   describe "GET /show" do
     it "should return a submission" do
-      get "/api/v1/submissions/#{submission.s_id}", headers: headers
+      get "/api/v1/submissions/#{submission.s_id}", headers: authenticated_header(game_developer)
       expect(response).to have_http_status(:ok)
 
       json = JSON.parse(response.body)
@@ -36,7 +33,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       submission_params = attributes_for(:submission)
 
       post "/api/v1/submissions",
-        headers: headers,
+        headers: authenticated_header(game_developer),
         params: { submission: submission_params }
 
       expect(response).to have_http_status(:ok)
@@ -48,7 +45,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       submission_params = { title: "" }
 
       post "/api/v1/submissions",
-        headers: headers,
+        headers: authenticated_header(game_developer),
         params: { submission: submission_params }
 
       expect(response).to have_http_status(:unprocessable_content)
@@ -61,7 +58,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
     it "should update a submission" do
       submission_params = { title: 'A new title' }
 
-      patch "/api/v1/submissions/#{submission.s_id}", headers: headers, params: { submission: submission_params }
+      patch "/api/v1/submissions/#{submission.s_id}", headers: authenticated_header(game_developer), params: { submission: submission_params }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
@@ -72,7 +69,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
     it "should render error when update fails" do
       submission_params = { title: '' }
 
-      patch "/api/v1/submissions/#{submission.s_id}", headers: headers, params: { submission: submission_params }
+      patch "/api/v1/submissions/#{submission.s_id}", headers: authenticated_header(game_developer), params: { submission: submission_params }
 
       expect(response).to have_http_status(:unprocessable_content)
       json = JSON.parse(response.body)
@@ -84,7 +81,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
     it "should delete a submission" do
       new_submission = create(:submission, game_developer: game_developer)
 
-      delete "/api/v1/submissions/#{new_submission.s_id}", headers: headers
+      delete "/api/v1/submissions/#{new_submission.s_id}", headers: authenticated_header(game_developer)
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
@@ -96,7 +93,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       new_submission = create(:submission, game_developer: game_developer)
       allow_any_instance_of(Submission).to receive(:destroy).and_return(false)
 
-      delete "/api/v1/submissions/#{new_submission.s_id}", headers: headers
+      delete "/api/v1/submissions/#{new_submission.s_id}", headers: authenticated_header(game_developer)
 
       expect(response).to have_http_status(:unprocessable_content)
       json = JSON.parse(response.body)
