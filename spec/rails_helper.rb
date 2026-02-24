@@ -103,3 +103,16 @@ RSpec.configure do |config|
 
   puts "Rails environment: ", Rails.env
 end
+
+module RequestHelpers
+  # use this to authenticate requests in tests
+  def authenticated_header(user)
+    jwt_secret = ENV['JWT_SECRET_KEY'] || 'test_jwt_secret_fallback'
+    token = JWT.encode({ user_id: user.id }, jwt_secret, "HS256")
+    { "Authorization" => "Bearer #{token}" }
+  end
+end
+
+RSpec.configure do |config|
+  config.include RequestHelpers, type: :request
+end

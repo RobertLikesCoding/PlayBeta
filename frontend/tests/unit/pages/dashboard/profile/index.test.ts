@@ -11,15 +11,7 @@ vi.stubGlobal(
 )
 
 describe('Profile Page', () => {
-  const inputFields = [
-    'email',
-    'avatar',
-    'studio_name',
-    'location',
-    'website',
-    'password',
-    'password_confirmation',
-  ]
+  const inputFields = ['email', 'avatar', 'studio_name', 'location', 'website']
   const user = {
     id: 1,
     email: 'email@abc.de',
@@ -66,15 +58,6 @@ describe('Profile Page', () => {
     const heading = profileSection.find('h3')
     expect(profileSection.exists()).toBe(true)
     expect(heading.text()).toContain('Profile')
-  })
-
-  it('should render the password section', async () => {
-    const passwordSection = wrapper.find(
-      'section[data-test-id="password-section"]',
-    )
-    const heading = passwordSection.find('h3')
-    expect(passwordSection.exists()).toBe(true)
-    expect(heading.text()).toContain('Password')
   })
 
   it('should disable submit button when form is untouched', async () => {

@@ -169,62 +169,6 @@
         </div>
       </section>
 
-      <section
-        class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4"
-        data-test-id="password-section"
-      >
-        <h3 class="text-2xl font-bold">Password Reset</h3>
-        <div class="flex flex-col gap-2">
-          <form.Field name="password">
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Change Your Password</label>
-              <UInput
-                :id="field.name"
-                :name="field.name"
-                type="password"
-                :value="field.state.value"
-                variant="outline"
-                @input="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
-              />
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <form.Field name="password_confirmation">
-            <template v-slot="{ field, state }">
-              <label :htmlFor="field.name">Confirm Your New Password</label>
-              <UInput
-                :id="field.name"
-                :name="field.name"
-                type="password"
-                :value="field.state.value"
-                variant="outline"
-                @input="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
-              />
-              <em
-                v-for="error of state.meta.errors"
-                class="text-red-300"
-                role="alert"
-                >{{ error }}
-              </em>
-            </template>
-          </form.Field>
-        </div>
-      </section>
-
       <form.Subscribe>
         <template v-slot="{ canSubmit, isSubmitting, isSubmitted, isTouched }">
           <UButton
@@ -283,6 +227,7 @@
                 location: value.location,
                 bio: value.bio,
                 avatar: value.avatar,
+                current_password: value.current_password,
                 password: value.password,
                 password_confirmation: value.password_confirmation,
               },
@@ -305,6 +250,7 @@
             location: value.location,
             bio: value.bio,
             avatar: value.avatar,
+            current_password: '',
             password: '',
             password_confirmation: '',
           })
@@ -328,6 +274,7 @@
       location: props.user?.location,
       bio: props.user?.bio,
       avatar: props.user?.avatar,
+      current_password: '',
       password: '',
       password_confirmation: '',
     },
