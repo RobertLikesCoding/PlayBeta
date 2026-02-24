@@ -20,7 +20,7 @@ class Api::V1::GameDevelopersController < ApplicationController
   end
 
   def create
-    user = GameDeveloper.new(user_params)
+    user = GameDeveloper.new(signup_params)
     if user.save
       @token = encode_token(user.id)
 
@@ -34,7 +34,7 @@ class Api::V1::GameDevelopersController < ApplicationController
   end
 
   def update
-    if current_user.update(user_params)
+    if current_user.update(profile_params)
       render json: { message: "Successfully updated user data" }, status: :ok
     else
       render json: { errors: current_user.errors.full_messages }, status: :unprocessable_content
@@ -44,8 +44,12 @@ class Api::V1::GameDevelopersController < ApplicationController
 
   private
 
-    def user_params
+    def signup_params
+      params.require(:game_developer).permit(:email, :password, :password_confirmation)
+    end
+
+    def profile_params
       params.require(:game_developer)
-        .permit(:email, :password, :password_confirmation, :bio, :website, :location, :studio_name, :avatar)
+        .permit(:email, :bio, :website, :location, :studio_name, :avatar)
     end
 end
