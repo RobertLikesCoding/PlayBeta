@@ -8,6 +8,7 @@ export interface Submission {
   version: string
   genre: string[]
   platforms: string[]
+  created_at: string
 }
 
 interface CreateSubmissionResult {
