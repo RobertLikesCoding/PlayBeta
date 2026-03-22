@@ -1,19 +1,29 @@
 <template>
   <div>
-    <h2 class="text-2xl mb-3">Your Submissions</h2>
+    <div class="flex justify-between mb-5">
+      <h2 class="text-2xl">Your Submissions</h2>
 
-    <UButton
-      icon="i-lucide-plus"
-      to="submissions/new/"
-      >Create Submission</UButton
-    >
+      <UButton
+        icon="i-lucide-plus"
+        href="submissions/new/"
+        >Create New Submission</UButton
+      >
+    </div>
+
+    <SubmissionsTable
+      :submissions="data"
+      :loadingSubmissions="loadingSubmissions"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
   import { UButton } from '#components'
+  import SubmissionsTable from './SubmissionsTable.vue'
 
   definePageMeta({
     layout: 'dashboard',
   })
+
+  const { data, pending: loadingSubmissions } = useSubmissionsList()
 </script>
