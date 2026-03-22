@@ -5,7 +5,7 @@ class Api::V1::SubmissionsController < ApplicationController
   def index
     render json: {
       submissions: current_user.submissions,
-      message: "Successfully loaded submissions of #{current_user.studio_name}"
+      message: "Successfully loaded submissions of #{current_user.id}"
     }, status: :ok
   end
 
