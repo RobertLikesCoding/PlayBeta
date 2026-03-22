@@ -1,8 +1,4 @@
-import type { GetSubmissionsListResponse, Submission } from '~/types/Submission'
-
-const submissions = ref<Submission[] | null>(null)
-const isLoading = ref(true)
-const error = ref<string | null>(null)
+import type { GetSubmissionsListResponse } from '~/types/Submission'
 
 export const useSubmissionsList = () => {
   const { token } = useAuth()
@@ -23,7 +19,13 @@ export const useSubmissionsList = () => {
         },
       )
 
-      if (!response.success) {
+      if ('errors' in response) {
+        toast.add({
+          title: 'Error',
+          description: 'Failed to load your submissions.',
+          color: 'error',
+          icon: 'i-lucide-x-circle',
+        })
         throw new Error(response.errors.join(', '))
       }
 
