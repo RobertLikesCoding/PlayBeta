@@ -65,19 +65,22 @@
         </NuxtLink>
       </div>
 
-      <button
-        v-if="isAuthenticated"
-        class="block mt-4 lg:inline-block lg:mt-0 text-primary-300 hover:text-white cursor-pointer px-5"
-        @click="logout"
-      >
-        Logout
-      </button>
+      <div class="flex gap-3">
+        <UButton
+          v-if="isAuthenticated"
+          variant="link"
+          class="cursor-pointer"
+          @click="logout"
+        >
+          Logout
+        </UButton>
 
-      <NuxtLink
-        :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
-        class="text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white"
-        >Account
-      </NuxtLink>
+        <UButton
+          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
+          color="neutral"
+          >Account
+        </UButton>
+      </div>
     </div>
 
     <!-- MOBILE MENU -->
@@ -114,6 +117,13 @@
         >
           Blog
         </NuxtLink>
+
+        <NuxtLink
+          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
+          class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
+          @click="isMenuOpen = false"
+          >Account
+        </NuxtLink>
         <div class="bg-white w-full h-0.5 opacity-5 my-4"></div>
         <button
           v-if="isAuthenticated"
@@ -122,12 +132,6 @@
         >
           Logout
         </button>
-        <NuxtLink
-          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
-          class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
-          @click="isMenuOpen = false"
-          >Account
-        </NuxtLink>
       </div>
     </Transition>
   </nav>

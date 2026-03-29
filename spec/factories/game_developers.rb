@@ -4,7 +4,7 @@ FactoryBot.define do
     password { "password123" }
     password_confirmation { "password123" }
     studio_name { "Awesome Studio" }
-    bio { "This is a short bio about the game developer. They are awesome!" }
+    bio { Faker::Lorem.paragraph }
 
     # Define traits for specific scenarios
     trait :invalid do

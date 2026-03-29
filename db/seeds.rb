@@ -7,3 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# CREATE GAME DEVELOPERS
+FactoryBot.create_list(:game_developer, 3)  do |dev, i|
+  FactoryBot.create_list(:submission, Random.rand(5), game_developer: dev)
+end
+
+puts "created developers with submissions"

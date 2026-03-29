@@ -4,14 +4,14 @@ class Api::V1::SubmissionsController < ApplicationController
 
   def index
     render json: {
-      submissions: current_user.submissions,
-      message: "Successfully loaded submissions of #{current_user.studio_name}"
+      data: current_user.submissions,
+      message: "Successfully loaded submissions"
     }, status: :ok
   end
 
   def show
     render json: {
-      submission: @submission,
+      data: @submission,
       message: "Successfully loaded submission"
     }, status: :ok
   end
@@ -20,7 +20,7 @@ class Api::V1::SubmissionsController < ApplicationController
     submission = current_user.submissions.new(submission_params)
 
     if submission.save
-      render json: { message: "Successfully created new submission", submission: submission }, status: :ok
+      render json: { message: "Successfully created new submission", data: submission }, status: :ok
     else
       render json: {
         message: "Failed to create submission",
@@ -31,7 +31,7 @@ class Api::V1::SubmissionsController < ApplicationController
 
   def update
     if @submission.update(submission_params)
-      render json: { message: "Successfully updated submission", submission: @submission }, status: :ok
+      render json: { message: "Successfully updated submission", data: @submission }, status: :ok
     else
       render json: {
         message: "Failed to update submission",

@@ -257,7 +257,7 @@
   import { useForm } from '@tanstack/vue-form'
   import type {
     SubmissionConstants,
-    SubmissionResponse,
+    CreateSubmissionResponse,
   } from '~/types/Submission'
 
   definePageMeta({
@@ -287,7 +287,7 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-        const response = await $fetch<SubmissionResponse>(
+        const response = await $fetch<CreateSubmissionResponse>(
           '/api/v1/submissions',
           {
             baseURL: useRuntimeConfig().public.apiBase,
@@ -309,7 +309,7 @@
           },
         )
 
-        if (response && response.errors) {
+        if (!response.success && 'errors' in response) {
           console.error('Submission failed', response.errors)
           toast.add({
             title: 'Error',

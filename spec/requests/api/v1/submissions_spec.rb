@@ -12,8 +12,8 @@ RSpec.describe "Api::V1::Submissions", type: :request do
 
       expect(response).to have_http_status(:success)
       json = JSON.parse(response.body)
-      expect(json["message"]).to include("Successfully loaded submissions of")
-      expect(json["submissions"].size).to eq(4)
+      expect(json["message"]).to include("Successfully loaded submissions")
+      expect(json["data"].size).to eq(4)
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
 
       json = JSON.parse(response.body)
       expect(json["message"]).to include("Successfully loaded submission")
-      expect(json["submission"]["s_id"]).to eq(submission.s_id)
+      expect(json["data"]["s_id"]).to eq(submission.s_id)
     end
   end
 
@@ -63,7 +63,7 @@ RSpec.describe "Api::V1::Submissions", type: :request do
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
       expect(json["message"]).to eq("Successfully updated submission")
-      expect(json["submission"]["title"]).to eq("A new title")
+      expect(json["data"]["title"]).to eq("A new title")
     end
 
     it "should render error when update fails" do
