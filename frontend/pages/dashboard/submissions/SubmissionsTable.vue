@@ -4,6 +4,7 @@
     class="flex-1"
     :loading="loadingSubmissions"
     :columns="columns"
+    empty="No Submissions found."
   />
 </template>
 
