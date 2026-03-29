@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section data-test-id="submissions-overview">
     <div class="flex justify-between mb-5">
       <h2 class="text-2xl">Your Submissions</h2>
 
@@ -14,7 +14,7 @@
       :submissions="data"
       :loadingSubmissions="loadingSubmissions"
     />
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
