@@ -5,12 +5,14 @@
     :loading="loadingSubmissions"
     :columns="columns"
     empty="No Submissions found."
+    @select="onSelect"
+    :ui="{ td: 'cursor-pointer' }"
   />
 </template>
 
 <script setup lang="ts">
   import { UCheckbox } from '#components'
-  import type { TableColumn } from '@nuxt/ui'
+  import type { TableColumn, TableRow } from '@nuxt/ui'
   import type { Submission } from '~/types/Submission'
 
   const props = defineProps<{
@@ -69,4 +71,10 @@
       },
     },
   ]
+
+  async function onSelect(e: Event, row: TableRow<Submission>) {
+    const submission_id = row.original.s_id
+
+    await navigateTo(`/dashboard/submissions/${submission_id}`)
+  }
 </script>

@@ -1,6 +1,7 @@
 import type { ApiResponse } from './Api'
 
 export interface Submission {
+  s_id: string
   title: string
   description: string
   demo_url: string
@@ -13,6 +14,7 @@ export interface Submission {
 
 interface CreateSubmissionResult {
   message?: string
+  errors: string[]
 }
 
 export type CreateSubmissionResponse = ApiResponse<CreateSubmissionResult>
