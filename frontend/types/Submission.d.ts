@@ -19,6 +19,7 @@ interface CreateSubmissionResult {
 
 export type CreateSubmissionResponse = ApiResponse<CreateSubmissionResult>
 
+export type GetSubmissionResponse = ApiResponse<Submission>
 export type GetSubmissionsListResponse = ApiResponse<Submission[]>
 
 export interface SubmissionConstants {
