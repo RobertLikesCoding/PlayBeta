@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-  import { UCheckbox } from '#components'
+  import { UBadge, UCheckbox } from '#components'
   import type { TableColumn, TableRow } from '@nuxt/ui'
   import type { Submission } from '~/types/Submission'
 
@@ -50,7 +50,10 @@
     {
       accessorKey: 'status',
       header: 'Status',
-      cell: ({ row }) => row.getValue('status'),
+      cell: ({ row }) =>
+        h(UBadge, {
+          label: getStatusLabel(row.getValue('status')),
+        }),
     },
     {
       accessorKey: 'version',
@@ -76,5 +79,15 @@
     const submission_id = row.original.s_id
 
     await navigateTo(`/dashboard/submissions/${submission_id}`)
+  }
+
+  const statusMap = {
+    in_review: 'in review',
+    approved: 'approved',
+    rejected: 'rejected',
+  }
+
+  function getStatusLabel(backendLabel: 'in_review' | 'approved' | 'rejected') {
+    return statusMap[backendLabel]
   }
 </script>
