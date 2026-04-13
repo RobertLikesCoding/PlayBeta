@@ -56,7 +56,12 @@
 
   type MenuSection = 'submissions' | 'profile' | 'settings'
 
+  const toast = useToast()
   const { user, isLoading, fetchUser } = useCurrentUser()
+
+  watchEffect(() => {
+    !user.value && navigateTo('/auth/login')
+  })
 
   const menu: { section: MenuSection; label: string }[] = [
     { section: 'submissions', label: 'Submissions' },

@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises, VueWrapper } from '@vue/test-utils'
+import { VueWrapper } from '@vue/test-utils'
 import SubmissionsTable from '~/pages/dashboard/submissions/SubmissionsTable.vue'
 import type { Submission } from '~/types/Submission'
 
 const submissions: Submission[] = [
   {
+    s_id: '123456789',
     title: 'A Game',
     description: '',
     demo_url: '',
@@ -78,7 +79,7 @@ describe('SubmissionsTable', () => {
       expect(rowValues).toContain('A Game')
     })
     it('should display the status of a submission', async () => {
-      expect(rowValues).toContain('in_review')
+      expect(rowValues).toContain('in review')
     })
     it('should display the version of a submission', async () => {
       expect(rowValues).toContain('1')

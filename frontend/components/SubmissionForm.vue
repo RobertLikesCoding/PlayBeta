@@ -1,0 +1,332 @@
+<template>
+  <form
+    @submit.prevent="form.handleSubmit()"
+    class="flex flex-col gap-5"
+  >
+    <section data-test-id="basic-info-section">
+      <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
+        <h3 class="text-2xl font-bold">Basic Information</h3>
+
+        <div class="flex flex-col gap-2">
+          <form.Field
+            name="title"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Title is required' : undefined,
+            }"
+          >
+            <template v-slot="{ field, state }">
+              <label :htmlFor="field.name">Title</label>
+              <UInput
+                :id="field.name"
+                :name="field.name"
+                type="text"
+                :value="field.state.value"
+                variant="outline"
+                @input="
+                  (e: Event) =>
+                    field.handleChange((e.target as HTMLInputElement).value)
+                "
+              />
+              <em
+                v-for="error of state.meta.errors"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field
+            name="description"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Description is required' : undefined,
+            }"
+          >
+            <template v-slot="{ field, state }">
+              <label :htmlFor="field.name">Description</label>
+              <UTextarea
+                v-model="field.state.value"
+                :name="field.name"
+                variant="outline"
+                :rows="5"
+                @input="
+                  (e: Event) =>
+                    field.handleChange((e.target as HTMLInputElement).value)
+                "
+              />
+              <em
+                v-for="error of state.meta.errors"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field
+            name="genre"
+            :validators="{
+              onChange: ({ value }) =>
+                !value.length && 'Please select at least 1 genre',
+            }"
+          >
+            <template v-slot="{ field, state }">
+              <label :htmlFor="field.name">Genre</label>
+              <USelect
+                :id="field.name"
+                :name="field.name"
+                :value="field.state.value"
+                :items="displayGenres"
+                multiple
+                placeholder="Select a genre"
+                @update:modelValue="
+                  (val: string[]) => field.handleChange(val as string[])
+                "
+              />
+
+              <em
+                v-for="error of state.meta.errors"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field
+            name="version"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value ? 'Version is required' : undefined,
+            }"
+          >
+            <template v-slot="{ field, state }">
+              <label :htmlFor="field.name">Version</label>
+              <UInput
+                :id="field.name"
+                :name="field.name"
+                type="text"
+                :value="field.state.value"
+                variant="outline"
+                @input="
+                  (e: Event) =>
+                    field.handleChange((e.target as HTMLInputElement).value)
+                "
+              />
+              <em
+                v-for="error of state.meta.errors"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field
+            name="platforms"
+            :validators="{
+              onSubmit: ({ value }) =>
+                !value.length && 'Please select at least 1 platform',
+            }"
+          >
+            <template v-slot="{ field, state }">
+              <label :htmlFor="field.name">Platforms</label>
+              <UCheckboxGroup
+                v-model="field.state.value"
+                :items="displayPlatforms"
+                orientation="horizontal"
+                @update:modelValue="
+                  (val: unknown) => field.handleChange(val as string[])
+                "
+              />
+              <em
+                v-for="error of state.meta.errors"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <!-- <div class="flex flex-col gap-2">
+            <form.Field name="Screenshots">
+              <template v-slot="{ field, state }">
+                <label :htmlFor="field.name">Screenshots</label>
+                <UInput
+                  :id="field.name"
+                  :name="field.name"
+                  type="file"
+                  :value="field.state.value"
+                  variant="outline"
+                  @input="
+                    (e: Event) =>
+                      field.handleChange((e.target as HTMLInputElement).value)
+                  "
+                />
+                <em
+                  v-for="error of state.meta.errors"
+                  class="text-red-300"
+                  role="alert"
+                  >{{ error }}
+                </em>
+              </template>
+            </form.Field>
+          </div> -->
+      </div>
+    </section>
+
+    <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
+      <h3 class="text-2xl font-bold">Demo Link</h3>
+      <div class="flex flex-col gap-2">
+        <form.Field
+          name="demo_url"
+          :validators="{
+            onSubmit: ({ value }) => {
+              if (!value) return 'Please provide a link to the demo'
+              if (!value?.startsWith('https://'))
+                return 'Please provide only safe URLs starting with https'
+            },
+          }"
+        >
+          <template v-slot="{ field, state }">
+            <label :htmlFor="field.name">Demo Link</label>
+            <UInput
+              :id="field.name"
+              :name="field.name"
+              type="url"
+              :value="field.state.value"
+              variant="outline"
+              placeholder="https://example.com"
+              @input="
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
+              "
+            />
+            <em
+              v-for="error of state.meta.errors"
+              class="text-red-300"
+              role="alert"
+              >{{ error }}
+            </em>
+          </template>
+        </form.Field>
+      </div>
+    </div>
+
+    <form.Subscribe>
+      <template v-slot="{ canSubmit, isSubmitting, isTouched }">
+        <UButton
+          type="submit"
+          class="justify-center hover:cursor-pointer w-full mb-5"
+          size="xl"
+          :label="isSubmitting ? 'Submitting' : 'Create Submission'"
+          :loading="isSubmitting"
+          :disabled="isSubmitting || !canSubmit || !isTouched"
+        />
+      </template>
+    </form.Subscribe>
+  </form>
+</template>
+
+<script setup lang="ts">
+  import { useForm } from '@tanstack/vue-form'
+  import type {
+    CreateSubmissionResponse,
+    Submission,
+    SubmissionConstants,
+  } from '~/types/Submission'
+
+  const props = defineProps<{
+    mode: 'edit' | 'create'
+    submission?: Submission
+  }>()
+
+  const { token } = useAuth()
+  const toast = useToast()
+
+  const { platforms, genres } = await $fetch<SubmissionConstants>(
+    '/api/v1/submissions/constants',
+    {
+      baseURL: useRuntimeConfig().public.apiBase,
+    },
+  )
+
+  function capitalizeLists(list: string[]) {
+    return list.toSorted().map((item) => ({
+      label: item[0]?.toUpperCase() + item.substring(1),
+      value: item,
+    }))
+  }
+
+  const displayGenres = computed(() => capitalizeLists(genres))
+  const displayPlatforms = computed(() => capitalizeLists(platforms))
+
+  const form = useForm({
+    onSubmit: async ({ value }) => {
+      try {
+        const response = await $fetch<CreateSubmissionResponse>(
+          '/api/v1/submissions',
+          {
+            baseURL: useRuntimeConfig().public.apiBase,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token.value}`,
+            },
+            body: {
+              submission: {
+                title: value.title,
+                description: value.description,
+                genre: value.genre,
+                platforms: value.platforms,
+                demo_url: value.demo_url,
+                version: value.version,
+              },
+            },
+          },
+        )
+
+        if ('errors' in response) {
+          console.error('Submission failed', response.errors)
+          toast.add({
+            title: 'Error',
+            description: 'Failed to create your submission. Please try again.',
+            color: 'error',
+            icon: 'i-lucide-x-circle',
+          })
+        } else {
+          await navigateTo('/dashboard/submissions')
+          toast.add({
+            title: 'Success',
+            description: 'Your submission was created successfully.',
+            color: 'success',
+            icon: 'i-lucide-check-circle',
+          })
+        }
+      } catch (error) {
+        console.error('An unexpected error occurred:', error)
+      }
+    },
+    defaultValues: {
+      title: props.submission?.title ?? '',
+      description: props.submission?.description ?? '',
+      genre: props.submission?.genre ?? ([] as string[]),
+      platforms: props.submission?.platforms ?? ([] as string[]),
+      demo_url: props.submission?.demo_url ?? '',
+      version: props.submission?.version ?? '',
+    },
+  })
+</script>
+
+<style lang="scss" scoped></style>

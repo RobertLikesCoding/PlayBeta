@@ -7,8 +7,6 @@ export function useCurrentUser() {
   const { token, isAuthenticated } = useAuth()
 
   async function fetchUser() {
-    isLoading.value = true
-
     if (user.value && isAuthenticated.value) {
       isLoading.value = false
       return user.value
@@ -20,7 +18,7 @@ export function useCurrentUser() {
         headers: { Authorization: `Bearer ${token.value}` },
       })
     } catch (error) {
-      console.error('Failed to fetch current user')
+      console.error('Failed to fetch current user.')
     } finally {
       isLoading.value = false
     }
