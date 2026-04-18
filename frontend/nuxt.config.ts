@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   devServer: { port: 3001 },
   debug: true,
+  ssr: false,
   modules: [
     '@nuxt/eslint',
     '@nuxt/fonts',
