@@ -230,7 +230,7 @@
           type="submit"
           class="justify-center hover:cursor-pointer w-full mb-5"
           size="xl"
-          :label="isSubmitting ? 'Submitting' : 'Create Submission'"
+          :label="mode === 'edit' ? 'Update Submission' : 'Create Submission'"
           :loading="isSubmitting"
           :disabled="isSubmitting || !canSubmit || !isTouched"
         />
