@@ -20,3 +20,9 @@ Genre::VALID_GENRES.each do |genre|
 end
 
 puts "created Genres"
+
+Platform::PLATFORMS.each do |genre|
+  Platform.create!(name: genre)
+end
+
+puts "created Platforms"
