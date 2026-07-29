@@ -14,3 +14,9 @@ FactoryBot.create_list(:game_developer, 3)  do |dev, i|
 end
 
 puts "created developers with submissions"
+
+Genre::VALID_GENRES.each do |genre|
+  Genre.create!(name: genre)
+end
+
+puts "created Genres"

@@ -4,6 +4,8 @@ class Submission < ApplicationRecord
 
   belongs_to :game_developer
   has_many :event_logs, as: :loggable, dependent: :destroy
+  has_and_belongs_to_many :genres
+
   before_validation :give_s_id
 
   validates :title, presence: true, length: { maximum: 100 }
@@ -34,7 +36,7 @@ class Submission < ApplicationRecord
   def genres_must_be_valid
     return if genre.blank?
 
-    invalid = genre - SUBMISSION_CONSTANTS[:genres]
+    invalid = genre - Genre::VALID_GENRES
     if invalid.any?
       errors.add(:genre, "contains invalid values: #{invalid.join(', ')}")
     end
