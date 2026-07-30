@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_05_185549) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_30_135745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,6 +39,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_185549) do
     t.string "website"
   end
 
+  create_table "game_tester_platforms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "game_tester_id", null: false
+    t.bigint "platform_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_tester_id"], name: "index_game_tester_platforms_on_game_tester_id"
+    t.index ["platform_id"], name: "index_game_tester_platforms_on_platform_id"
+  end
+
   create_table "game_testers", force: :cascade do |t|
     t.integer "age", null: false
     t.datetime "created_at", null: false
@@ -49,11 +58,50 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_185549) do
     t.string "username"
   end
 
+  create_table "game_testers_platforms", id: false, force: :cascade do |t|
+    t.bigint "game_tester_id", null: false
+    t.bigint "platform_id", null: false
+    t.index ["game_tester_id", "platform_id"], name: "index_game_testers_platforms_on_game_tester_id_and_platform_id"
+    t.index ["platform_id", "game_tester_id"], name: "index_game_testers_platforms_on_platform_id_and_game_tester_id"
+  end
+
   create_table "genres", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_genres_on_name", unique: true
+  end
+
+  create_table "genres_submissions", id: false, force: :cascade do |t|
+    t.bigint "genre_id", null: false
+    t.bigint "submission_id", null: false
+    t.index ["genre_id", "submission_id"], name: "index_genres_submissions_on_genre_id_and_submission_id"
+    t.index ["submission_id", "genre_id"], name: "index_genres_submissions_on_submission_id_and_genre_id"
+  end
+
+  create_table "platforms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_platforms_on_name", unique: true
+  end
+
+  create_table "submission_genres", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "genre_id", null: false
+    t.bigint "submission_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["genre_id"], name: "index_submission_genres_on_genre_id"
+    t.index ["submission_id"], name: "index_submission_genres_on_submission_id"
+  end
+
+  create_table "submission_platforms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "platform_id", null: false
+    t.bigint "submission_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["platform_id"], name: "index_submission_platforms_on_platform_id"
+    t.index ["submission_id"], name: "index_submission_platforms_on_submission_id"
   end
 
   create_table "submissions", force: :cascade do |t|
@@ -72,5 +120,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_185549) do
   end
 
   add_foreign_key "event_logs", "game_developers"
+  add_foreign_key "game_tester_platforms", "game_testers"
+  add_foreign_key "game_tester_platforms", "platforms"
+  add_foreign_key "submission_genres", "genres"
+  add_foreign_key "submission_genres", "submissions"
+  add_foreign_key "submission_platforms", "platforms"
+  add_foreign_key "submission_platforms", "submissions"
   add_foreign_key "submissions", "game_developers"
 end

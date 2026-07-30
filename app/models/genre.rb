@@ -1,5 +1,8 @@
 class Genre < ApplicationRecord
-  has_many :game_submissions
+  GENRES = %w[action adventure rpg simulation strategy sports puzzle horror platformer shooter fighting racing sandbox].freeze
 
-  validates :name, inclusion: { in: SUBMISSION_CONSTANTS }
+  has_many :submission_genres
+  has_many :submissions, through: :submission_genres
+
+  validates :name, presence: true, uniqueness: true, inclusion: { in: GENRES }
 end
