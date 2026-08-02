@@ -6,10 +6,17 @@ FactoryBot.define do
     version { Faker::App.semantic_version }
     association :game_developer
 
-    # add genres after submission is created for association to work
+    # don't save before the after block, so the genres and platforms can be added
+    to_create { |instance| instance.save(validate: false) }
+
     after(:create) do |submission|
-      submission.genres = Genre.all.sample(2)
-      submission.platforms = create_list(:platform, 2)
+      genres = Genre.all.sample(rand(1..3))
+      platforms = Platform.all.sample(rand(1..3))
+      raise "No genres/platforms found — did you seed the DB?" if genres.empty? || platforms.empty?
+
+      submission.genres = genres
+      submission.platforms = platforms
+      submission.save!
     end
   end
 end
