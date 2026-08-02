@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_29_222611) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_02_161229) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,6 +37,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_222611) do
     t.string "studio_name"
     t.datetime "updated_at", null: false
     t.string "website"
+  end
+
+  create_table "game_tester_platforms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "game_tester_id", null: false
+    t.bigint "platform_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_tester_id"], name: "index_game_tester_platforms_on_game_tester_id"
+    t.index ["platform_id"], name: "index_game_tester_platforms_on_platform_id"
   end
 
   create_table "game_testers", force: :cascade do |t|
@@ -77,13 +86,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_222611) do
     t.index ["name"], name: "index_platforms_on_name", unique: true
   end
 
+  create_table "submission_genres", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "genre_id", null: false
+    t.bigint "submission_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["genre_id"], name: "index_submission_genres_on_genre_id"
+    t.index ["submission_id"], name: "index_submission_genres_on_submission_id"
+  end
+
+  create_table "submission_platforms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "platform_id", null: false
+    t.bigint "submission_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["platform_id"], name: "index_submission_platforms_on_platform_id"
+    t.index ["submission_id"], name: "index_submission_platforms_on_submission_id"
+  end
+
   create_table "submissions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "demo_url"
     t.string "description"
     t.bigint "game_developer_id", null: false
-    t.string "genre", default: [], array: true
-    t.string "platforms", default: [], array: true
     t.uuid "s_id", default: -> { "gen_random_uuid()" }
     t.string "status"
     t.string "title"
@@ -93,5 +118,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_222611) do
   end
 
   add_foreign_key "event_logs", "game_developers"
+  add_foreign_key "game_tester_platforms", "game_testers"
+  add_foreign_key "game_tester_platforms", "platforms"
+  add_foreign_key "submission_genres", "genres"
+  add_foreign_key "submission_genres", "submissions"
+  add_foreign_key "submission_platforms", "platforms"
+  add_foreign_key "submission_platforms", "submissions"
   add_foreign_key "submissions", "game_developers"
 end
