@@ -1,0 +1,42 @@
+{
+  "name": "PlayBeta Dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "backend",
+  "workspaceFolder": "/rails",
+
+  "forwardPorts": [3000, 3001, 5433, 24678],
+  "portsAttributes": {
+    "3000": { "label": "Rails API" },
+    "3001": { "label": "Nuxt Frontend" },
+    "5433": { "label": "Postgres" },
+    "24678": { "label": "Vite HMR" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-lsp",
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "rubocop.vscode-rubocop",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  },
+
+  "postCreateCommand": "cd frontend && npm install",
+  "postStartCommand": "bundle check || bundle install",
+
+  "shutdownAction": "stopCompose",
+
+  "features": {
+    "ghcr.io/nils-geistmann/devcontainers-features/zsh": {
+      "plugins": "git rails zsh-syntax-highlighting",
+      "theme": "robbyrussell"
+    },
+    "ghcr.io/devcontainers/features/node:2": {
+      "version": "20"
+    }
+  }
+}
