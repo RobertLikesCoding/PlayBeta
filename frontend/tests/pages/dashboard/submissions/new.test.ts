@@ -118,7 +118,7 @@ describe('Submission New Page', () => {
 
       const errors = wrapper.findAll('em')
       expect(errors.length).toBe(0)
-      expect((globalThis as any).submitSpy).toHaveBeenCalled()
+      expect(globalThis.submitSpy).toHaveBeenCalled()
     })
 
     it('should not accept insecure links', async () => {

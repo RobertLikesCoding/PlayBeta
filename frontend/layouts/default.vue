@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto max-w-6xl">
     <header>
-      <Navbar />
+      <NavBar />
     </header>
 
     <main class="p-5">
@@ -13,5 +13,5 @@
 </template>
 
 <script setup lang="ts">
-  import Navbar from '~/components/Navbar.vue'
+  import NavBar from '~/components/NavBar.vue'
 </script>

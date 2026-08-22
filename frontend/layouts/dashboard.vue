@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto max-w-6xl">
     <header>
-      <Navbar />
+      <NavBar />
     </header>
 
     <h1 class="text-2xl pb-10">
