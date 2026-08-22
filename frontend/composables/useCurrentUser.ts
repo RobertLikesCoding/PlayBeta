@@ -13,10 +13,13 @@ export function useCurrentUser() {
     }
 
     try {
-      user.value = await $fetch('/api/v1/game_developers/me', {
-        baseURL: useRuntimeConfig().public.apiBase,
-        headers: { Authorization: `Bearer ${token.value}` },
-      })
+      user.value = await $fetch<GameDeveloperAPI>(
+        '/api/v1/game_developers/me',
+        {
+          baseURL: useRuntimeConfig().public.apiBase,
+          headers: { Authorization: `Bearer ${token.value}` },
+        },
+      )
     } catch (error) {
       console.error('Failed to fetch current user.')
     } finally {

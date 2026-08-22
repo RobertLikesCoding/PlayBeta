@@ -36,7 +36,7 @@
       "theme": "robbyrussell"
     },
     "ghcr.io/devcontainers/features/node:2": {
-      "version": "20"
+      "version": "22"
     }
   }
 }

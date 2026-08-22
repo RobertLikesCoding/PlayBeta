@@ -1,8 +1,8 @@
 <template>
   <div>
     <form
-      @submit.prevent="form.handleSubmit()"
       class="flex flex-col gap-5"
+      @submit.prevent="form.handleSubmit()"
     >
       <section
         class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4"
@@ -12,7 +12,7 @@
 
         <div class="flex flex-col gap-2">
           <form.Field name="email">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Email</label>
               <UInput
                 :id="field.name"
@@ -26,7 +26,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -37,7 +38,7 @@
 
         <div class="flex flex-col gap-2">
           <form.Field name="avatar">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Avatar</label>
               <UInput
                 :id="field.name"
@@ -51,7 +52,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -62,7 +64,7 @@
 
         <div class="flex flex-col gap-2">
           <form.Field name="studio_name">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Studio Name</label>
               <UInput
                 :id="field.name"
@@ -76,7 +78,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -87,7 +90,7 @@
 
         <div class="flex flex-col gap-2">
           <form.Field name="location">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Located in</label>
               <UInput
                 :id="field.name"
@@ -101,7 +104,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -120,7 +124,7 @@
               },
             }"
           >
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Website</label>
               <UInput
                 :id="field.name"
@@ -135,7 +139,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -146,7 +151,7 @@
 
         <div class="flex flex-col gap-2">
           <form.Field name="bio">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Tell us about your company</label>
               <UTextarea
                 v-model="field.state.value"
@@ -159,7 +164,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -170,7 +176,9 @@
       </section>
 
       <form.Subscribe>
-        <template v-slot="{ canSubmit, isSubmitting, isSubmitted, isTouched }">
+        <template
+          #default="{ canSubmit, isSubmitting, isSubmitted, isTouched }"
+        >
           <UButton
             type="submit"
             class="justify-center hover:cursor-pointer w-full mb-5"

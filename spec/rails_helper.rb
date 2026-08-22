@@ -2,11 +2,11 @@
 require "simplecov"
 SimpleCov.start "rails" do
   # exclude these directories from coverage report
-  add_filter "/spec/"
-  add_filter "/config/"
-  add_filter "/vendor/"
-  add_filter "/app/jobs/"
-  add_filter "/app/mailers/"
+  skip "/spec/"
+  skip "/config/"
+  skip "/vendor/"
+  skip "/app/jobs/"
+  skip "/app/mailers/"
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'

@@ -12,7 +12,7 @@
 
     <SubmissionForm
       mode="edit"
-      :submission="data"
+      :submission="data ?? undefined"
     />
   </div>
 </template>

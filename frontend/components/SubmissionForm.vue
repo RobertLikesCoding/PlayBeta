@@ -1,7 +1,7 @@
 <template>
   <form
-    @submit.prevent="form.handleSubmit()"
     class="flex flex-col gap-5"
+    @submit.prevent="form.handleSubmit()"
   >
     <section data-test-id="basic-info-section">
       <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
@@ -15,7 +15,7 @@
                 !value ? 'Title is required' : undefined,
             }"
           >
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Title</label>
               <UInput
                 :id="field.name"
@@ -29,7 +29,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -46,7 +47,7 @@
                 !value ? 'Description is required' : undefined,
             }"
           >
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Description</label>
               <UTextarea
                 v-model="field.state.value"
@@ -59,7 +60,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -76,7 +78,7 @@
                 !value.length && 'Please select at least 1 genre',
             }"
           >
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Genre</label>
               <USelect
                 :id="field.name"
@@ -85,13 +87,14 @@
                 :items="displayGenres"
                 multiple
                 placeholder="Select a genre"
-                @update:modelValue="
+                @update:model-value="
                   (val: string[]) => field.handleChange(val as string[])
                 "
               />
 
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -108,7 +111,7 @@
                 !value ? 'Version is required' : undefined,
             }"
           >
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Version</label>
               <UInput
                 :id="field.name"
@@ -122,7 +125,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -139,18 +143,19 @@
                 !value.length && 'Please select at least 1 platform',
             }"
           >
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
                 v-model="field.state.value"
                 :items="displayPlatforms"
                 orientation="horizontal"
-                @update:modelValue="
+                @update:model-value="
                   (val: unknown) => field.handleChange(val as string[])
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -199,7 +204,7 @@
             },
           }"
         >
-          <template v-slot="{ field, state }">
+          <template #default="{ field, state }">
             <label :htmlFor="field.name">Demo Link</label>
             <UInput
               :id="field.name"
@@ -214,7 +219,8 @@
               "
             />
             <em
-              v-for="error of state.meta.errors"
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
               class="text-red-300"
               role="alert"
               >{{ error }}
@@ -225,7 +231,7 @@
     </div>
 
     <form.Subscribe>
-      <template v-slot="{ canSubmit, isSubmitting, isTouched }">
+      <template #default="{ canSubmit, isSubmitting, isTouched }">
         <UButton
           type="submit"
           class="justify-center hover:cursor-pointer w-full mb-5"
@@ -328,5 +334,3 @@
     },
   })
 </script>
-
-<style lang="scss" scoped></style>

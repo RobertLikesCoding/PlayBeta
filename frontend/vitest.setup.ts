@@ -14,7 +14,7 @@ globalThis.$fetch = vi.fn((url: string) => {
     })
   }
   if (url === '/api/v1/submissions') {
-    return globalThis.submitSpy()
+    return new globalThis.submitSpy()
   }
   return Promise.resolve({})
 }) as any
