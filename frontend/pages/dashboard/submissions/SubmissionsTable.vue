@@ -28,15 +28,15 @@
           modelValue: table.getIsSomePageRowsSelected()
             ? 'indeterminate'
             : table.getIsAllPageRowsSelected(),
-          'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
-            table.toggleAllPageRowsSelected(!!value),
+          'onUpdate:modelValue': (value: unknown) =>
+            table.toggleAllPageRowsSelected(value === true),
           'aria-label': 'Select all',
         }),
       cell: ({ row }) =>
         h(UCheckbox, {
           modelValue: row.getIsSelected(),
-          'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
-            row.toggleSelected(!!value),
+          'onUpdate:modelValue': (value: unknown) =>
+            row.toggleSelected(value === true),
           'aria-label': 'Select row',
         }),
       enableSorting: false,

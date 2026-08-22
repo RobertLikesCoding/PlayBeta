@@ -145,13 +145,14 @@
           navigateTo('/dashboard/submissions')
         }
       } catch (error) {
-        if (error?.data.errors) {
-          signInErrors.value = error.data.errors
-        } else {
-          signInErrors.value = [
-            'An unexpected error occurred. Please try again.',
-          ]
-        }
+        const errors = error as { data?: { errors?: string[] } }
+        const apiErrors = errors.data?.errors
+
+        signInErrors.value =
+          Array.isArray(apiErrors) && apiErrors.length > 0
+            ? apiErrors
+            : ['An unexpected error occurred. Please try again.']
+
         console.error(error)
       }
     },
