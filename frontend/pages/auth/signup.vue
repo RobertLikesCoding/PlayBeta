@@ -7,8 +7,8 @@
     </p>
 
     <form
-      @submit.prevent="form.handleSubmit()"
       class="flex-col gap-4 flex"
+      @submit.prevent="form.handleSubmit()"
     >
       <div class="flex flex-col gap-1">
         <form.Field
@@ -19,7 +19,7 @@
             },
           }"
         >
-          <template v-slot="{ field, state }">
+          <template #default="{ field, state }">
             <label :htmlFor="field.name">Email</label>
             <UInput
               :id="field.name"
@@ -35,7 +35,8 @@
               @blur="field.handleBlur"
             />
             <em
-              v-for="error of state.meta.errors"
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
               class="text-red-300"
               role="alert"
               >{{ error }}
@@ -53,7 +54,7 @@
             },
           }"
         >
-          <template v-slot="{ field, state }">
+          <template #default="{ field, state }">
             <label :htmlFor="field.name">Password</label>
             <UInput
               :id="field.name"
@@ -69,7 +70,8 @@
               @blur="field.handleBlur"
             />
             <em
-              v-for="error of state.meta.errors"
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
               class="text-red-300"
               role="alert"
               >{{ error }}
@@ -87,7 +89,7 @@
             },
           }"
         >
-          <template v-slot="{ field, state }">
+          <template #default="{ field, state }">
             <label :htmlFor="field.name">Password Confirmation</label>
             <UInput
               :id="field.name"
@@ -103,7 +105,8 @@
               @blur="field.handleBlur"
             />
             <em
-              v-for="error of state.meta.errors"
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
               class="text-red-300"
               role="alert"
               >{{ error }}
@@ -137,8 +140,8 @@
       <p>Sign Up failed because:</p>
       <ul>
         <li
-          v-for="error in signupErrors"
-          key="error"
+          v-for="(error, index) in signupErrors"
+          :key="index"
           class="list-disc list-inside"
         >
           {{ error }}
@@ -169,8 +172,7 @@
   const signupErrors = ref<string[]>([])
 
   type SignUpResponse =
-    | { user_id: number; token: string }
-    | { errors: string[] }
+    { user_id: number; token: string } | { errors: string[] }
 
   const form = useForm({
     onSubmit: async ({ value }) => {
@@ -201,9 +203,7 @@
           navigateTo('/dashboard/submissions')
         }
       } catch (error) {
-        // @ts-expect-error
         if (error?.data.errors) {
-          // @ts-expect-error
           signupErrors.value = error.data.errors
         } else {
           signupErrors.value = [

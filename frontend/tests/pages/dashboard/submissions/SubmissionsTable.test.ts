@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
 import SubmissionsTable from '~/pages/dashboard/submissions/SubmissionsTable.vue'
 import type { Submission } from '~/types/Submission'
 

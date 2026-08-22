@@ -1,7 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import NewSubmissionPage from '~/pages/dashboard/submissions/new.vue'
-import { flushPromises, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { flushPromises } from '@vue/test-utils'
 
 describe('Submission New Page', () => {
   let wrapper: VueWrapper

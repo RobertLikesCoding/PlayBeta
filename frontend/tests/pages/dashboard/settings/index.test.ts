@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import SettingsPage from '~/pages/dashboard/settings/index.vue'
-import { flushPromises, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { flushPromises } from '@vue/test-utils'
 
 vi.stubGlobal(
   '$fetch',

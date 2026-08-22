@@ -5,12 +5,12 @@
     </h1>
 
     <form
-      @submit.prevent="form.handleSubmit()"
       class="flex-col gap-4 flex"
+      @submit.prevent="form.handleSubmit()"
     >
       <div class="flex flex-col gap-1">
         <form.Field name="email">
-          <template v-slot="{ field, state }">
+          <template #default="{ field, state }">
             <label :htmlFor="field.name">Email</label>
             <UInput
               :id="field.name"
@@ -25,7 +25,8 @@
               "
             />
             <em
-              v-for="error of state.meta.errors"
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
               class="text-red-300"
               role="alert"
               >{{ error }}
@@ -36,7 +37,7 @@
 
       <div class="flex flex-col gap-1">
         <form.Field name="password">
-          <template v-slot="{ field, state }">
+          <template #default="{ field, state }">
             <label :htmlFor="field.name">Password</label>
             <UInput
               :id="field.name"
@@ -51,7 +52,8 @@
               "
             />
             <em
-              v-for="error of state.meta.errors"
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
               class="text-red-300"
               role="alert"
               >{{ error }}
@@ -83,8 +85,8 @@
     >
       <ul>
         <li
-          v-for="error in signInErrors"
-          key="error"
+          v-for="(error, index) in signInErrors"
+          :key="index"
           class="list-inside"
         >
           {{ error }}
@@ -116,8 +118,7 @@
   const signInErrors = ref<string[]>([])
 
   type SignInResponse =
-    | { user_id: number; token: string }
-    | { errors: string[] }
+    { user_id: number; token: string } | { errors: string[] }
 
   const form = useForm({
     onSubmit: async ({ value }) => {
@@ -144,9 +145,7 @@
           navigateTo('/dashboard/submissions')
         }
       } catch (error) {
-        // @ts-expect-error
         if (error?.data.errors) {
-          // @ts-expect-error
           signInErrors.value = error.data.errors
         } else {
           signInErrors.value = [

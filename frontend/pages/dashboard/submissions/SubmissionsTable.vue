@@ -5,8 +5,8 @@
     :loading="loadingSubmissions"
     :columns="columns"
     empty="No Submissions found."
-    @select="onSelect"
     :ui="{ td: 'cursor-pointer' }"
+    @select="onSelect"
   />
 </template>
 
@@ -15,7 +15,7 @@
   import type { TableColumn, TableRow } from '@nuxt/ui'
   import type { Submission } from '~/types/Submission'
 
-  const props = defineProps<{
+  defineProps<{
     submissions: Submission[] | undefined
     loadingSubmissions: boolean
   }>()
