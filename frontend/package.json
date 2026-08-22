@@ -15,7 +15,7 @@
     "test:docker": "docker compose exec frontend npm test"
   },
   "dependencies": {
-    "@nuxt/icon": "^2.2.1",
+    "@nuxt/icon": "^2.5.0",
     "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.4.0",
     "@tanstack/vue-form": "^1.28.3",
