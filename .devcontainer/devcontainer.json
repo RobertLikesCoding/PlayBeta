@@ -32,7 +32,7 @@
 
   "features": {
     "ghcr.io/nils-geistmann/devcontainers-features/zsh": {
-      "plugins": "git rails zsh-syntax-highlighting",
+      "plugins": "git rails",
       "theme": "robbyrussell"
     },
     "ghcr.io/devcontainers/features/node:2": {
