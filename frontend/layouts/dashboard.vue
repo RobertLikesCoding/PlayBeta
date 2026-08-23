@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto max-w-6xl">
     <header>
-      <Navbar />
+      <NavBar />
     </header>
 
     <h1 class="text-2xl pb-10">
@@ -35,9 +35,9 @@
         <section class="px-5 w-full h-fit">
           <LoadingSpinner v-if="isLoading" />
           <NuxtPage
-            :user="user"
-            :isLoading="isLoading"
             v-else
+            :user="user"
+            :is-loading="isLoading"
           />
         </section>
       </main>
@@ -56,12 +56,9 @@
 
   type MenuSection = 'submissions' | 'profile' | 'settings'
 
-  const toast = useToast()
   const { user, isLoading, fetchUser } = useCurrentUser()
 
-  watchEffect(() => {
-    !user.value && navigateTo('/auth/login')
-  })
+  watchEffect(() => !user.value && navigateTo('/auth/login'))
 
   const menu: { section: MenuSection; label: string }[] = [
     { section: 'submissions', label: 'Submissions' },

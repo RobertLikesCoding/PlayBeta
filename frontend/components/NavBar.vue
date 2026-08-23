@@ -11,8 +11,8 @@
     <!-- HAMBURGER BUTTON -->
     <div class="block lg:hidden py-5 z-10">
       <UButton
-        @click="isMenuOpen = !isMenuOpen"
         class="flex items-center px-3 py-2 border rounded hover:text-white hover:border-white cursor-pointer"
+        @click="isMenuOpen = !isMenuOpen"
       >
         <svg
           v-if="!isMenuOpen"
@@ -93,8 +93,8 @@
       leave-to-class="-translate-y-80"
     >
       <div
-        class="absolute top-0 right-0 bg-neutral-900 w-full text-sm lg:hidden p-5 z-9"
         v-show="isMenuOpen"
+        class="absolute top-0 right-0 bg-neutral-900 w-full text-sm lg:hidden p-5 z-9"
       >
         <NuxtLink
           to="#responsive-header"

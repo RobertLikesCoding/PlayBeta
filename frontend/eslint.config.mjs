@@ -1,13 +1,11 @@
-import nuxtConfig from './.nuxt/eslint.config.mjs'
-import prettier from 'eslint-config-prettier'
+import withNuxt from './.nuxt/eslint.config.mjs'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
-export default [
-  nuxtConfig,
-  ...prettier(),
+export default withNuxt([
+  eslintPluginPrettierRecommended,
   {
     rules: {
-      'prettier/prettier': 'warn', // shows Prettier issues in ESLint
-      // your other rules here...
+      '@typescript-eslint/no-unused-vars': 'warn',
     },
   },
-]
+])

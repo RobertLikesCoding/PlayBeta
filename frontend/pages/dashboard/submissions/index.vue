@@ -12,7 +12,7 @@
 
     <SubmissionsTable
       :submissions="data"
-      :loadingSubmissions="loadingSubmissions"
+      :loading-submissions="loadingSubmissions"
     />
   </section>
 </template>

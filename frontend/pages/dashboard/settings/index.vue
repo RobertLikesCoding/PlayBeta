@@ -1,8 +1,8 @@
 <template>
   <div>
     <form
-      @submit.prevent="form.handleSubmit()"
       class="flex flex-col gap-5"
+      @submit.prevent="form.handleSubmit()"
     >
       <section
         class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4"
@@ -11,7 +11,7 @@
         <h3 class="text-2xl font-bold">Set new password</h3>
         <div class="flex flex-col gap-2">
           <form.Field name="current_password">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Current Password</label>
               <UInput
                 :id="field.name"
@@ -25,7 +25,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -36,7 +37,7 @@
 
         <div class="flex flex-col gap-2">
           <form.Field name="new_password">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">New Password</label>
               <UInput
                 :id="field.name"
@@ -50,7 +51,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -61,7 +63,7 @@
 
         <div class="flex flex-col gap-2">
           <form.Field name="new_password_confirmation">
-            <template v-slot="{ field, state }">
+            <template #default="{ field, state }">
               <label :htmlFor="field.name">Confirm Your New Password</label>
               <UInput
                 :id="field.name"
@@ -75,7 +77,8 @@
                 "
               />
               <em
-                v-for="error of state.meta.errors"
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
                 class="text-red-300"
                 role="alert"
                 >{{ error }}
@@ -86,7 +89,9 @@
       </section>
 
       <form.Subscribe>
-        <template v-slot="{ canSubmit, isSubmitting, isSubmitted, isTouched }">
+        <template
+          #default="{ canSubmit, isSubmitting, isSubmitted, isTouched }"
+        >
           <UButton
             type="submit"
             class="justify-center hover:cursor-pointer w-full mb-5"

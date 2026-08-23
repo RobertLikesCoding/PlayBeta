@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import ProfilePage from '~/pages/dashboard/profile/index.vue'
-import { flushPromises, mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { flushPromises } from '@vue/test-utils'
 
 describe('Profile Page', () => {
   const user = {
