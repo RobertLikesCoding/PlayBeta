@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :platform do
-    name { "MyString" }
-    string { "MyString" }
+    name { Platform::PLATFORMS.sample }
   end
 end
