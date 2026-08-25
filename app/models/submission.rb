@@ -8,17 +8,17 @@ class Submission < ApplicationRecord
   has_many :genres, through: :submission_genres
   has_many :submission_platforms, dependent: :destroy
   has_many :platforms, through: :submission_platforms
-  before_validation :give_s_id
 
+  before_validation :give_s_id
   validates :title, presence: true, length: { maximum: 100 }
   validates :s_id, presence: true, uniqueness: true
   validates :description, presence: true, length: { maximum: 1000 }
   validates :genres, presence: true
   validates :platforms, presence: true
   validates :demo_url, presence: true, format: { with: /\Ahttps:\/\/.+\z/, message: "must start with https://" }
-  validates :version, presence: true, length: { maximum: 20 }
+  validates :version, presence: true
   attribute :status, :string, default: "in_review"
-  validates :status, presence: true, inclusion: { in: STATUS }
+  validates :status, inclusion: { in: STATUS }
 
   def give_s_id
     self.s_id ||= SecureRandom.uuid
