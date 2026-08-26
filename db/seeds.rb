@@ -8,6 +8,19 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# Create Genres and Platforms first
+Genre::GENRES.each do |genre|
+  Genre.create!(name: genre)
+end
+
+puts "created Genres"
+
+Platform::PLATFORMS.each do |platform|
+  Platform.create!(name: platform)
+end
+
+puts "created Platforms"
+
 # CREATE GAME DEVELOPERS
 FactoryBot.create_list(:game_developer, 3)  do |dev, i|
   FactoryBot.create_list(:submission, Random.rand(5), game_developer: dev)

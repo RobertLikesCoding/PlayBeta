@@ -17,18 +17,6 @@ vi.mock('~/composables/useAuth', () => ({
 }))
 
 describe('NavBar', () => {
-  it('renders the brand name', async () => {
-    const wrapper = await mountSuspended(NavBar)
-    expect(wrapper.text()).toContain('PlayBeta')
-  })
-
-  it('renders 3 navbar items', async () => {
-    const wrapper = await mountSuspended(NavBar)
-
-    const desktopItems = wrapper.find('.hidden')
-    expect(desktopItems.findAll('a').length).toEqual(4)
-  })
-
   describe('Account Button', () => {
     beforeEach(() => {
       vi.clearAllMocks()

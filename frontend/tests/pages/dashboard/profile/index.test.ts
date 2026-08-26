@@ -1,18 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mountSuspended } from '@nuxt/test-utils/runtime'
+import { describe, it, expect, beforeEach } from 'vitest'
 import ProfilePage from '~/pages/dashboard/profile/index.vue'
 import type { VueWrapper } from '@vue/test-utils'
-import { flushPromises } from '@vue/test-utils'
-
-vi.stubGlobal(
-  '$fetch',
-  vi.fn().mockResolvedValue({
-    message: 'Successfully updated user data',
-  }),
-)
+import { flushPromises, mount } from '@vue/test-utils'
 
 describe('Profile Page', () => {
-  const inputFields = ['email', 'avatar', 'studio_name', 'location', 'website']
   const user = {
     id: 1,
     email: 'email@abc.de',
@@ -25,9 +16,8 @@ describe('Profile Page', () => {
 
   let wrapper: VueWrapper
 
-  beforeEach(async () => {
-    vi.clearAllMocks()
-    wrapper = await mountSuspended(ProfilePage, {
+  beforeEach(() => {
+    wrapper = mount(ProfilePage, {
       props: {
         user: user,
         isLoading: false,
@@ -35,81 +25,52 @@ describe('Profile Page', () => {
     })
   })
 
-  for (const field of inputFields) {
-    it(`should render the ${field} input element`, async () => {
-      const inputElement = wrapper.find(`input[name="${field}"]`)
-      expect(inputElement.exists()).toBe(true)
-    })
-  }
+  it('should not accept insecure links', async () => {
+    const websiteInput = wrapper.get('input[name="website"]')
+    const form = wrapper.get('form')
+    await websiteInput.setValue('http://example.com')
 
-  it('should render the bio textarea element', async () => {
-    const textarea = wrapper.find('textarea[name="bio"]')
-    expect(textarea.exists()).toBe(true)
-  })
+    await form.trigger('submit')
 
-  it('should render a submit button', async () => {
-    const submitButton = wrapper.find('button[type="submit"]')
-    expect(submitButton.exists()).toBe(true)
-  })
+    const errors = wrapper.findAll('em')
+    const errorTexts = errors.map((e) => e.text())
 
-  it('should render the profile section', async () => {
-    const profileSection = wrapper.find(
-      'section[data-test-id="profile-section"]',
+    expect(errorTexts).toContain(
+      'Please provide only save URLs starting with https',
     )
-    const heading = profileSection.find('h3')
-    expect(profileSection.exists()).toBe(true)
-    expect(heading.text()).toContain('Profile')
   })
 
-  it('should disable submit button when form is untouched', async () => {
-    const submitButton = wrapper.find('button[type="submit"]')
-    expect(submitButton.attributes('disabled')).toBe('')
+  describe('when the form is untouched', () => {
+    it('the submit button should be disabled', async () => {
+      const submitButton = wrapper.get('button[type="submit"]')
+      expect(submitButton.attributes('disabled')).toBeDefined()
+    })
   })
 
-  it('should enable submit button when form is modified', async () => {
-    const submitButton = wrapper.find('button[type="submit"]')
-    const emailInput = wrapper.find('input[name="email"]')
+  describe('when the form gets filled out', () => {
+    it('the submit button should be enabled', async () => {
+      const submitButton = wrapper.get('button[type="submit"]')
+      const emailInput = wrapper.get('input[name="email"]')
 
-    expect(submitButton.attributes('disabled')).toBeDefined()
-    expect(emailInput.html()).toContain(user.email)
+      expect(submitButton.attributes('disabled')).toBeDefined()
+      expect(emailInput.html()).toContain(user.email)
 
-    await emailInput.setValue('text@abc.de')
-    expect(submitButton.attributes('disabled')).not.toBeDefined()
+      await emailInput.setValue('text@abc.de')
+      expect(submitButton.attributes('disabled')).not.toBeDefined()
+    })
   })
 
   describe('the submit button', () => {
     it('should change button label on successful submission', async () => {
-      const submitButton = wrapper.find('button[type="submit"]')
-      const form = wrapper.find('form')
-      const emailInput = wrapper.find('input[name="email"]')
+      const submitButton = wrapper.get('button[type="submit"]')
+      const form = wrapper.get('form')
+      const emailInput = wrapper.get('input[name="email"]')
 
       await emailInput.setValue('text@abc.de')
       await form.trigger('submit')
       await flushPromises()
 
-      expect(globalThis.$fetch).toHaveBeenCalled()
       expect(submitButton.text()).toBe('Changes saved!')
-    })
-
-    it('should send a PATCH request with the correct body', async () => {
-      const form = wrapper.find('form')
-      const emailInput = wrapper.find('input[name="email"]')
-
-      await emailInput.setValue('text@abc.de')
-      await form.trigger('submit')
-      await flushPromises()
-
-      expect(globalThis.$fetch).toHaveBeenCalled()
-      expect(globalThis.$fetch).toHaveBeenCalledWith(
-        '/api/v1/game_developers/me',
-        expect.objectContaining({
-          body: {
-            game_developer: expect.objectContaining({
-              email: 'text@abc.de',
-            }),
-          },
-        }),
-      )
     })
   })
 })

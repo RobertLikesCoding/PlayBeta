@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Submissions", type: :request do
+  let!(:windows_platform) { create(:platform) }
+  let!(:action_genre) { create(:genre) }
   let(:game_developer) { create(:game_developer) }
   let!(:submission) { create(:submission, game_developer: game_developer) }
 
@@ -31,6 +33,9 @@ RSpec.describe "Api::V1::Submissions", type: :request do
   describe "POST /create" do
     it "should create a new submission" do
       submission_params = attributes_for(:submission)
+      submission_params = submission_params
+                          .merge(genre_ids: [ action_genre.id ])
+                          .merge(platform_ids: [ windows_platform.id ])
 
       post "/api/v1/submissions",
         headers: authenticated_header(game_developer),
