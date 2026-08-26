@@ -50,6 +50,6 @@ class Api::V1::GameDevelopersController < ApplicationController
 
     def profile_params
       params.require(:game_developer)
-        .permit(:email, :bio, :website, :location, :studio_name, :avatar)
+            .permit(:email, :bio, :website, :location, :studio_name, :avatar)
     end
 end
