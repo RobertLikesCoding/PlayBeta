@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { VueWrapper } from '@vue/test-utils'
+import { shallowMount, type VueWrapper } from '@vue/test-utils'
 import SubmissionsPage from '~/pages/dashboard/submissions/index.vue'
 import SubmissionsTable from '~/pages/dashboard/submissions/SubmissionsTable.vue'
 
