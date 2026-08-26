@@ -61,8 +61,8 @@ class Api::V1::SubmissionsController < ApplicationController
         :demo_url,
         :status,
         :version,
-        genre: [],
-        platforms: []
+        genre_ids: [],
+        platform_ids: []
       )
     end
 
