@@ -22,11 +22,11 @@ class Api::V1::GameDevelopersController < ApplicationController
   def create
     user = GameDeveloper.new(signup_params)
     if user.save
-      @token = encode_token(user.id)
+      access_token = encode_token(user.id)
 
       render json: {
         user_id: user.id,
-        token: @token
+        token: access_token
       }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_content

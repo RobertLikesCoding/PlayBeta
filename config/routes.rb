@@ -8,6 +8,13 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :game_testers, only: [ :index, :create ] do
+        collection do
+          get "me", to: "game_developers#show"
+          patch "me", to: "game_developers#update"
+        end
+      end
+
       patch "passwords/update", to: "passwords#update"
       post "auth/login", to: "auth#login"
 
