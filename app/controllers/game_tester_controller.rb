@@ -11,7 +11,7 @@ class GameTesterController < ApplicationController
     game_tester = GameTester.new(signup_params)
 
     if game_tester.save
-      acces_token = encode_token(game_tester.id)
+      acces_token = encode_token(game_tester)
 
       render json: {
         user_id: user.id,

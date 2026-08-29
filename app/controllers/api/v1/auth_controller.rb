@@ -1,13 +1,13 @@
 class Api::V1::AuthController < ApplicationController
   def login
-    @user = GameDeveloper.find_by(email: login_params[:email])
+    user = GameDeveloper.find_by(email: login_params[:email])
 
     # Check if the user exists and authenticate
-    if @user&.authenticate(login_params[:password])
-      @token = encode_token(@user.id)
+    if user&.authenticate(login_params[:password])
+      token = encode_token(user)
       render json: {
-        email: @user.email,
-        token: @token
+        email: user.email,
+        token: token
       }, status: :accepted
     else
       # Generic error message for both cases

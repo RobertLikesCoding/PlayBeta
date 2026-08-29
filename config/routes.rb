@@ -10,8 +10,8 @@ Rails.application.routes.draw do
 
       resources :game_testers, only: [ :index, :create ] do
         collection do
-          get "me", to: "game_developers#show"
-          patch "me", to: "game_developers#update"
+          get "me", to: "game_testers#show"
+          patch "me", to: "game_testers#update"
         end
       end
 

@@ -22,7 +22,7 @@ class Api::V1::GameDevelopersController < ApplicationController
   def create
     user = GameDeveloper.new(signup_params)
     if user.save
-      access_token = encode_token(user.id)
+      access_token = encode_token(user)
 
       render json: {
         user_id: user.id,
