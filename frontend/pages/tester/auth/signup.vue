@@ -14,7 +14,7 @@
     middleware: ['redirect-if-auth'],
   })
 
-  const { setToken } = useAuth()
+  const { setTokenCookie } = useAuth()
 
   const signupErrors = ref<string[]>([])
 
@@ -46,7 +46,7 @@
 
         form.reset()
         if ('token' in response) {
-          setToken(response.token)
+          setTokenCookie(response.token)
           navigateTo('/dev/dashboard/submissions')
         }
       } catch (error) {

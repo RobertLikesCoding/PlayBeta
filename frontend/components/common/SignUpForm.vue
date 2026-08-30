@@ -173,7 +173,7 @@
       : 'Create a Tester account'
   })
 
-  const { setToken } = useAuth()
+  const { setTokenCookie } = useAuth()
   const signupErrors = ref<string[]>([])
 
   type SignUpResponse =
@@ -209,7 +209,7 @@
 
         form.reset()
         if ('token' in response) {
-          setToken(response.token)
+          setTokenCookie(response.token)
           navigateTo(redirectPath)
         }
       } catch (error) {

@@ -153,11 +153,20 @@
 
 <script setup lang="ts">
   const isMenuOpen = ref(false)
-  const { isAuthenticated, clearToken } = useAuth()
+  const { isAuthenticated, clearTokenCookie } = useAuth()
   const router = useRouter()
+  const toast = useToast()
 
   function logout() {
-    clearToken()
+    clearTokenCookie()
     router.push('/')
+
+    toast.add({
+      title: 'Success',
+      description: 'You have been logged out.',
+      color: 'success',
+      icon: 'i-lucide-check-circle',
+      duration: 2000,
+    })
   }
 </script>

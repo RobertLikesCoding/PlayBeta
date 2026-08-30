@@ -5,14 +5,14 @@ import { ref } from 'vue'
 
 const mockIsAuthenticated = ref(false)
 const mockToken = { value: 'test-token' }
-const clearTokenMock = vi.fn()
+const clearTokenCookieMock = vi.fn()
 
 vi.mock('~/composables/useAuth', () => ({
   useAuth: () => ({
     isAuthenticated: mockIsAuthenticated,
     token: mockToken,
-    setToken: vi.fn(),
-    clearToken: clearTokenMock,
+    setTokenCookie: vi.fn(),
+    clearTokenCookie: clearTokenCookieMock,
   }),
 }))
 
@@ -44,7 +44,7 @@ describe('NavBar', () => {
   })
 
   describe('Logout button', () => {
-    it('should call clearToken when logging out', async () => {
+    it('should call clearTokenCookie when logging out', async () => {
       const wrapper = await mountSuspended(NavBar)
       const logoutButton = wrapper
         .findAll('button')
@@ -52,7 +52,7 @@ describe('NavBar', () => {
 
       await logoutButton?.trigger('click')
 
-      expect(clearTokenMock).toHaveBeenCalled()
+      expect(clearTokenCookieMock).toHaveBeenCalled()
     })
   })
 })
