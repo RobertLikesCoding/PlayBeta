@@ -166,14 +166,14 @@
     infoText: string
   }>()
 
+  const isDev = computed(() => props.mode === 'dev')
   const heading = computed(() => {
-    return props.mode === 'dev'
+    return isDev.value
       ? 'Create a Developer account'
       : 'Create a Tester account'
   })
 
   const { setToken } = useAuth()
-
   const signupErrors = ref<string[]>([])
 
   type SignUpResponse =
@@ -182,30 +182,35 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       signupErrors.value = []
+      const path = isDev.value
+        ? '/api/v1/game_developers'
+        : '/api/v1/game_testers'
+
+      const redirectPath = isDev.value
+        ? '/dev/dashboard/submissions'
+        : '/tester/dashboard'
+
       try {
-        const response: SignUpResponse = await $fetch(
-          '/api/v1/game_developers',
-          {
-            baseURL: useRuntimeConfig().public.apiBase,
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: {
-              game_developer: {
-                email: value.email,
-                password: value.password,
-                password_confirmation: value.password_confirmation,
-              },
-            },
-            throw: false,
+        const response: SignUpResponse = await $fetch(path, {
+          baseURL: useRuntimeConfig().public.apiBase,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
+          body: {
+            signup_payload: {
+              email: value.email,
+              password: value.password,
+              password_confirmation: value.password_confirmation,
+            },
+          },
+          throw: false,
+        })
 
         form.reset()
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/dev/dashboard/submissions')
+          navigateTo(redirectPath)
         }
       } catch (error) {
         const errors = error as { data?: { errors?: string[] } }
