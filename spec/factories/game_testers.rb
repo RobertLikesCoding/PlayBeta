@@ -4,7 +4,7 @@ FactoryBot.define do
     email { Faker::Internet.email }
     password { "password123" }
     password_confirmation { "password123" }
-    age { rand(16..100) }
+    birthdate { rand(16..40).years.ago.to_date }
     gender { rand(0..3) }
   end
 end

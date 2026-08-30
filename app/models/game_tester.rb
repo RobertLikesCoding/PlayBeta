@@ -7,7 +7,8 @@ class GameTester < ApplicationRecord
   validates :password, presence: true, length: { minimum: 8 }, on: :create
   enum :gender, { prefer_not_to_say: 0, male: 1, female: 2, non_binary: 3 }
   validates :gender, presence: true
-  validates :age, presence: true, inclusion: { in: 16..100, message: "must be between 16 and 100" }
+  validates :birthdate, presence: true
+  validate :is_age_above_16
 
   def validate_current_password(current_password_params)
     unless authenticate(current_password_params)
@@ -16,5 +17,10 @@ class GameTester < ApplicationRecord
     end
 
     true
+  end
+
+  def is_age_above_16
+    threshold_date = 16.years.ago.to_date
+    birthdate <= threshold_date
   end
 end
