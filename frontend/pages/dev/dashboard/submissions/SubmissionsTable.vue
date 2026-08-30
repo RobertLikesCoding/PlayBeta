@@ -78,7 +78,7 @@
   async function onSelect(e: Event, row: TableRow<Submission>) {
     const submission_id = row.original.s_id
 
-    await navigateTo(`/dashboard/submissions/${submission_id}`)
+    await navigateTo(`/dev/dashboard/submissions/${submission_id}`)
   }
 
   const statusMap = {

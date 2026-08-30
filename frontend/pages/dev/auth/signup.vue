@@ -151,7 +151,7 @@
     <p class="text-center pt-10">
       Already have an account?
       <NuxtLink
-        to="/auth/login"
+        to="/dev/auth/login"
         class="text-primary cursor-pointer hover:text-primary-300"
         >Sign in</NuxtLink
       >
@@ -200,7 +200,7 @@
         form.reset()
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/dashboard/submissions')
+          navigateTo('/dev/dashboard/submissions')
         }
       } catch (error) {
         const errors = error as { data?: { errors?: string[] } }

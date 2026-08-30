@@ -76,7 +76,9 @@
         </UButton>
 
         <UButton
-          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
+          :to="
+            isAuthenticated ? '/dev/dashboard/submissions' : '/dev/auth/signup'
+          "
           color="neutral"
           >Account
         </UButton>
@@ -119,7 +121,9 @@
         </NuxtLink>
 
         <NuxtLink
-          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
+          :to="
+            isAuthenticated ? '/dev/dashboard/submissions' : '/dev/auth/signup'
+          "
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
           @click="isMenuOpen = false"
           >Account

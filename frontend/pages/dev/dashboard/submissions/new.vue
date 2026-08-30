@@ -7,7 +7,7 @@
         variant="outline"
         color="neutral"
         class="w-fit"
-        to="/dashboard/submissions"
+        to="/dev/dashboard/submissions"
         >Back</UButton
       >
       <h2 class="text-3xl font-bold">Create a new submission</h2>

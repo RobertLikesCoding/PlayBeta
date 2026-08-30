@@ -96,7 +96,7 @@
     <p class="text-center pt-10">
       Don't have an account yet?
       <NuxtLink
-        to="/auth/signup"
+        to="/dev/auth/signup"
         class="text-primary cursor-pointer hover:text-primary-300"
         >Sign up</NuxtLink
       >
@@ -142,7 +142,7 @@
 
         if ('token' in response) {
           setToken(response.token)
-          navigateTo('/dashboard/submissions')
+          navigateTo('/dev/dashboard/submissions')
         }
       } catch (error) {
         const errors = error as { data?: { errors?: string[] } }

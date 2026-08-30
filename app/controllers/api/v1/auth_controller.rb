@@ -1,6 +1,20 @@
 class Api::V1::AuthController < ApplicationController
-  def login
-    user = GameDeveloper.find_by(email: login_params[:email])
+  def developer_login
+    login_with_user_class(GameDeveloper)
+  end
+
+  def tester_login
+    login_with_user_class(GameTester)
+  end
+
+  private
+
+    def login_params
+      params.require(:auth).permit(:email, :password)
+    end
+
+    def login_with_user_class(user_class)
+      user = user_class.find_by(email: login_params[:email])
 
     # Check if the user exists and authenticate
     if user&.authenticate(login_params[:password])
@@ -13,11 +27,5 @@ class Api::V1::AuthController < ApplicationController
       # Generic error message for both cases
       render json: { errors: [ "Invalid email or password" ] }, status: :unauthorized
     end
-  end
-
-  private
-
-    def login_params
-      params.require(:auth).permit(:email, :password)
     end
 end

@@ -28,7 +28,7 @@ describe('NavBar', () => {
         .findAllComponents({ name: 'NuxtLink' })
         .find((link) => link.text() === 'Account')
 
-      expect(accountLink?.props('to')).toBe('/auth/signup')
+      expect(accountLink?.props('to')).toBe('/dev/auth/signup')
     })
 
     it('should link to dashboard if user is logged in', async () => {
@@ -39,7 +39,7 @@ describe('NavBar', () => {
         .findAllComponents({ name: 'NuxtLink' })
         .find((link) => link.text() === 'Account')
 
-      expect(accountLink?.props('to')).toBe('/dashboard/submissions')
+      expect(accountLink?.props('to')).toBe('/dev/dashboard/submissions')
     })
   })
 

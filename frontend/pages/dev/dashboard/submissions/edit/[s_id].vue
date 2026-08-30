@@ -6,7 +6,7 @@
       variant="outline"
       color="neutral"
       class="w-fit"
-      to="/dashboard/submissions"
+      to="/dev/dashboard/submissions"
       >Back</UButton
     >
 
