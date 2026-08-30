@@ -79,8 +79,18 @@
           :to="
             isAuthenticated ? '/dev/dashboard/submissions' : '/dev/auth/signup'
           "
+          color="primary"
+          >Devs
+        </UButton>
+        /
+        <UButton
+          :to="
+            isAuthenticated
+              ? '/tester/dashboard/submissions'
+              : '/tester/auth/signup'
+          "
           color="neutral"
-          >Account
+          >Testers
         </UButton>
       </div>
     </div>
