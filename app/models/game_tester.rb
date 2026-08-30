@@ -20,7 +20,9 @@ class GameTester < ApplicationRecord
   end
 
   def is_age_above_16
-    threshold_date = 16.years.ago.to_date
-    birthdate <= threshold_date
+    return if birthdate.blank?
+
+    threshold_date = 16.years.ago
+    errors.add(:birthdate, "must indicate an age of 16 or older") if birthdate > threshold_date
   end
 end
