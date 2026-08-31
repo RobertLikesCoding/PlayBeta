@@ -29,6 +29,8 @@ updates:
         update-types:
           - "minor"
           - "patch"
+        exclude-patterns:
+          - "nuxt"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
