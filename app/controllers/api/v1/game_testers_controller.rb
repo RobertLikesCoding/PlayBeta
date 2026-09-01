@@ -1,4 +1,4 @@
-class GameTesterController < ApplicationController
+class Api::V1::GameTestersController < ApplicationController
   before_action :authenticate_user!, except: [ :create, :index ]
 
   def index
