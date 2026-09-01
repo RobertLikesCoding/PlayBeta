@@ -15,8 +15,14 @@ RSpec.describe "Api::V1::Auths", type: :request do
         }
       end
 
-      it "authenticates the user and returns a token" do
-        post "/api/v1/auth/login", params: valid_params
+      it "authenticates a game_developer and returns a token" do
+        post "/api/v1/dev/auth/login", params: valid_params
+
+        expect(response).to have_http_status(:accepted)
+      end
+
+      it "authenticates a game_tester and returns a token" do
+        post "/api/v1/tester/auth/login", params: valid_params
 
         expect(response).to have_http_status(:accepted)
       end
@@ -32,8 +38,14 @@ RSpec.describe "Api::V1::Auths", type: :request do
         }
       end
 
-      it "authenticates the user and returns a token" do
-        post "/api/v1/auth/login", params: invalid_params
+      it "does not authenticate a game_developer" do
+        post "/api/v1/dev/auth/login", params: invalid_params
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "does not authenticate a game_tester" do
+        post "/api/v1/tester/auth/login", params: invalid_params
 
         expect(response).to have_http_status(:unauthorized)
       end
