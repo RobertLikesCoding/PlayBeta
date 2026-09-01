@@ -1,23 +1,15 @@
 <template>
-  <div class="max-w-md px-4">
-    <h1 class="text-3xl font-semibold mb-8 text-center">{{ heading }}</h1>
-    <p class="pb-5 text-center">
-      {{ infoText }}
-    </p>
+  <div class="max-w-md w-full px-4">
+    <h1 class="text-3xl font-semibold mb-8 text-center">
+      Sign in to your account
+    </h1>
 
     <form
       class="flex-col gap-4 flex"
       @submit.prevent="form.handleSubmit()"
     >
       <div class="flex flex-col gap-1">
-        <form.Field
-          name="email"
-          :validators="{
-            onBlur: ({ value }) => {
-              return validateEmail(value)
-            },
-          }"
-        >
+        <form.Field name="email">
           <template #default="{ field, state }">
             <label :htmlFor="field.name">Email</label>
             <UInput
@@ -31,7 +23,6 @@
                 (e: Event) =>
                   field.handleChange((e.target as HTMLInputElement).value)
               "
-              @blur="field.handleBlur"
             />
             <em
               v-for="(error, index) of state.meta.errors"
@@ -45,14 +36,7 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <form.Field
-          name="password"
-          :validators="{
-            onBlur: ({ value }) => {
-              return validatePassword(value)
-            },
-          }"
-        >
+        <form.Field name="password">
           <template #default="{ field, state }">
             <label :htmlFor="field.name">Password</label>
             <UInput
@@ -66,7 +50,6 @@
                 (e: Event) =>
                   field.handleChange((e.target as HTMLInputElement).value)
               "
-              @blur="field.handleBlur"
             />
             <em
               v-for="(error, index) of state.meta.errors"
@@ -79,40 +62,6 @@
         </form.Field>
       </div>
 
-      <div class="flex flex-col gap-1">
-        <form.Field
-          name="password_confirmation"
-          :validators="{
-            onBlur: ({ value }) => {
-              return validatePasswordConfirm(value)
-            },
-          }"
-        >
-          <template #default="{ field, state }">
-            <label :htmlFor="field.name">Password Confirmation</label>
-            <UInput
-              :id="field.name"
-              :name="field.name"
-              type="password"
-              :value="field.state.value"
-              trailing-icon="lucide:lock-keyhole"
-              variant="subtle"
-              @input="
-                (e: Event) =>
-                  field.handleChange((e.target as HTMLInputElement).value)
-              "
-              @blur="field.handleBlur"
-            />
-            <em
-              v-for="(error, index) of state.meta.errors"
-              :key="index"
-              class="text-red-300"
-              role="alert"
-              >{{ error }}
-            </em>
-          </template>
-        </form.Field>
-      </div>
       <UButton
         type="submit"
         class="mt-2 justify-center hover:cursor-pointer"
@@ -124,35 +73,32 @@
     </form>
     <div
       v-if="
-        form.useStore((meta) => meta.isSubmitted).value && !signupErrors.length
+        form.useStore((meta) => meta.isSubmitted).value && !signInErrors.length
       "
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
-      <p>
-        Sign Up was successful. We've sent you an activation link to your inbox
-      </p>
+      <p>Successfully Signed In. You're being redirected.</p>
     </div>
     <div
-      v-if="signupErrors.length"
+      v-if="signInErrors.length"
       class="border-2 rounded-md mt-5 p-2 border-red-400"
     >
-      <p>Sign Up failed because:</p>
       <ul>
         <li
-          v-for="(error, index) in signupErrors"
+          v-for="(error, index) in signInErrors"
           :key="index"
-          class="list-disc list-inside"
+          class="list-inside"
         >
           {{ error }}
         </li>
       </ul>
     </div>
     <p class="text-center pt-10">
-      Already have an account?
+      Don't have an account yet?
       <NuxtLink
-        :to="isDev ? '/dev/auth/login' : '/tester/auth/login'"
+        :to="isDev ? '/dev/auth/signup' : '/tester/auth/signup'"
         class="text-primary cursor-pointer hover:text-primary-300"
-        >Sign in</NuxtLink
+        >Sign up</NuxtLink
       >
     </p>
   </div>
@@ -160,54 +106,48 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
+  import { useAuth } from '#imports'
 
   const props = defineProps<{
     mode: 'dev' | 'tester'
     infoText: string
   }>()
 
-  const isDev = computed(() => props.mode === 'dev')
-  const heading = computed(() => {
-    return isDev.value
-      ? 'Create a Developer account'
-      : 'Create a Tester account'
-  })
-
+  const isDev = props.mode === 'dev'
   const { setTokenCookie } = useAuth()
-  const signupErrors = ref<string[]>([])
 
-  type SignUpResponse =
+  const signInErrors = ref<string[]>([])
+
+  type SignInResponse =
     { user_id: number; token: string } | { errors: string[] }
 
   const form = useForm({
     onSubmit: async ({ value }) => {
-      signupErrors.value = []
-      const path = isDev.value
-        ? '/api/v1/game_developers'
-        : '/api/v1/game_testers'
+      signInErrors.value = []
+      const requestPath = isDev
+        ? '/api/v1/auth/developer_login'
+        : '/api/v1/auth/tester_login'
 
-      const redirectPath = isDev.value
+      const redirectPath = isDev
         ? '/dev/dashboard/submissions'
         : '/tester/dashboard'
-
       try {
-        const response: SignUpResponse = await $fetch(path, {
+        const response: SignInResponse = await $fetch(requestPath, {
           baseURL: useRuntimeConfig().public.apiBase,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: {
-            signup_payload: {
+            auth: {
               email: value.email,
               password: value.password,
-              password_confirmation: value.password_confirmation,
             },
           },
-          throw: false,
         })
 
         form.reset()
+
         if ('token' in response) {
           setTokenCookie(response.token)
           navigateTo(redirectPath)
@@ -216,7 +156,7 @@
         const errors = error as { data?: { errors?: string[] } }
         const apiErrors = errors.data?.errors
 
-        signupErrors.value =
+        signInErrors.value =
           Array.isArray(apiErrors) && apiErrors.length > 0
             ? apiErrors
             : ['An unexpected error occurred. Please try again.']
@@ -227,39 +167,6 @@
     defaultValues: {
       email: '',
       password: '',
-      password_confirmation: '',
     },
   })
-
-  function validateEmail(value: string): string | undefined {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-    if (value && !emailRegex.test(value)) {
-      return 'Please provide a valid email address'
-    }
-    if (value === '') {
-      return 'Email is required'
-    }
-    return undefined
-  }
-
-  function validatePassword(value: string): string | undefined {
-    if (value && value.length < 8) {
-      return 'Minimum length is 8 characters'
-    }
-    if (value.length === 0) {
-      return 'Password is required'
-    }
-    return undefined
-  }
-
-  function validatePasswordConfirm(value: string): string | undefined {
-    if (value && value !== form.getFieldValue('password')) {
-      return "Passwords don't match"
-    }
-    if (value.length === 0) {
-      return 'Please confirm your password'
-    }
-    return undefined
-  }
 </script>

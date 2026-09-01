@@ -16,8 +16,8 @@ Rails.application.routes.draw do
       end
 
       patch "passwords/update", to: "passwords#update"
-      post "dev/auth/login", to: "auth#developer_login"
-      post "tester/auth/login", to: "auth#tester_login"
+      post "auth/developer_login", to: "auth#developer_login"
+      post "auth/tester_login", to: "auth#tester_login"
 
       resources :submissions, param: :s_id do # use :s_id instead of :id in URLs and route params
         collection do

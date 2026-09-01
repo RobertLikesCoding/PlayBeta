@@ -14,11 +14,11 @@ class Api::V1::GameTestersController < ApplicationController
       acces_token = encode_token(game_tester)
 
       render json: {
-        user_id: user.id,
+        user_id: game_tester.id,
         token: acces_token
       }, status: :created
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_content
+      render json: { errors: game_tester.errors.full_messages }, status: :unprocessable_content
     end
   end
 
