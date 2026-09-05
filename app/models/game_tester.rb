@@ -5,7 +5,7 @@ class GameTester < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
   validates :password, presence: true, length: { minimum: 8 }, on: :create
-  enum :gender, { prefer_not_to_say: 0, male: 1, female: 2, non_binary: 3 }
+  enum :gender,  [ :prefer_not_to_say, :male, :female, :non_binary ]
   validates :gender, presence: true
   validates :birthdate, presence: true
   validate :is_age_above_16
