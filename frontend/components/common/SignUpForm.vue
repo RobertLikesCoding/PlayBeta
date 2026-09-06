@@ -113,13 +113,85 @@
           </template>
         </form.Field>
       </div>
+
+      <div
+        v-if="!isDev"
+        class="flex flex-col gap-1"
+      >
+        <form.Field
+          name="birthdate"
+          :validators="{
+            onBlur: ({ value }) => {
+              console.log(value)
+              return validateBirthday(value)
+            },
+          }"
+        >
+          <template #default="{ field, state }">
+            <label :htmlFor="field.name">Birth Date</label>
+            <UInput
+              :id="field.name"
+              :name="field.name"
+              type="date"
+              :value="field.state.value"
+              variant="subtle"
+              @input="
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
+              "
+              @blur="field.handleBlur"
+            />
+            <em
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
+              class="text-red-300"
+              role="alert"
+              >{{ error }}
+            </em>
+          </template>
+        </form.Field>
+      </div>
+
+      <div
+        v-if="!isDev"
+        class="flex flex-col gap-1"
+      >
+        <form.Field
+          name="gender"
+          :validators="{
+            onBlur: ({ value }) => {
+              return validatePasswordConfirm(value)
+            },
+          }"
+        >
+          <template #default="{ field, state }">
+            <label :htmlFor="field.name">Gender</label>
+            <USelect
+              :model-value="field.state.value"
+              :items="genderOptionsFormatted"
+              @update:model-value="field.handleChange"
+            />
+            <em
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
+              class="text-red-300"
+              role="alert"
+              >{{ error }}
+            </em>
+          </template>
+        </form.Field>
+      </div>
+
       <UButton
         type="submit"
         class="mt-2 justify-center hover:cursor-pointer"
         size="xl"
         label="Submit"
         :loading="form.useSelector((meta) => meta.isSubmitting).value"
-        :disabled="form.useSelector((meta) => meta.isSubmitting).value"
+        :disabled="
+          form.useSelector((meta) => meta.isSubmitting).value ||
+          form.useSelector((meta) => meta.errors.length !== 0).value
+        "
       />
     </form>
     <div
@@ -167,6 +239,13 @@
     infoText: string
   }>()
 
+  const GENDEROPTIONS = ['prefer_not_to_say', 'male', 'female', 'non_binary']
+  const genderOptionsFormatted = computed(() =>
+    GENDEROPTIONS.map((option: string) => ({
+      label: option.replaceAll('_', ' '),
+      value: option,
+    })),
+  )
   const isDev = computed(() => props.mode === 'dev')
   const heading = computed(() => {
     return isDev.value
@@ -203,6 +282,8 @@
               email: value.email,
               password: value.password,
               password_confirmation: value.password_confirmation,
+              birthdate: value.birthdate,
+              gender: value.gender,
             },
           },
           throw: false,
@@ -229,6 +310,8 @@
       email: '',
       password: '',
       password_confirmation: '',
+      birthdate: '',
+      gender: '',
     },
   })
 
@@ -262,5 +345,27 @@
       return 'Please confirm your password'
     }
     return undefined
+  }
+
+  function validateBirthday(value: string): string | undefined {
+    if (!value) return 'Please enter your birthdate'
+
+    const MINIMUM_AGE = 16
+    const birthDate = new Date(value)
+    const currentDate = new Date()
+    let userAge = currentDate.getFullYear() - birthDate.getFullYear()
+
+    if (birthDate.getMonth() > currentDate.getMonth()) {
+      userAge = userAge - 1
+    } else if (
+      birthDate.getMonth() === currentDate.getMonth() &&
+      birthDate.getDate() > currentDate.getDate()
+    ) {
+      userAge = userAge - 1
+    }
+
+    if (userAge < MINIMUM_AGE) {
+      return `You need to be at least ${MINIMUM_AGE} to sign up as a tester.`
+    }
   }
 </script>
