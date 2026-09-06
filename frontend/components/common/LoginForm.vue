@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useSelector } from '@tanstack/vue-form'
+  import { useForm } from '@tanstack/vue-form'
   import { useAuth } from '#imports'
 
   const props = defineProps<{
@@ -122,7 +122,7 @@
   type SignInResponse =
     { user_id: number; token: string } | { errors: string[] }
 
-  const form = useSelector({
+  const form = useForm({
     onSubmit: async ({ value }) => {
       signInErrors.value = []
       const requestPath = isDev

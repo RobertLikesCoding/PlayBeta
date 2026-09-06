@@ -1,28 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Auths", type: :request do
-  let(:user) { create(:game_developer) }
+  let(:developer) { create(:game_developer) }
+  let(:tester) { create(:game_tester) }
   let(:invalid_token) { "invalid.token.here" }
 
-  describe "POST /login" do
+  describe "POST /developer_login" do
     context "with valid credentials" do
       let(:valid_params) do
         {
           auth: {
-            email: user.email,
-            password: user.password
+            email: developer.email,
+            password: developer.password
           }
         }
       end
 
       it "authenticates a game_developer and returns a token" do
-        post "/api/v1/dev/auth/login", params: valid_params
-
-        expect(response).to have_http_status(:accepted)
-      end
-
-      it "authenticates a game_tester and returns a token" do
-        post "/api/v1/tester/auth/login", params: valid_params
+        post "/api/v1/auth/developer_login", params: valid_params
 
         expect(response).to have_http_status(:accepted)
       end
@@ -32,20 +27,55 @@ RSpec.describe "Api::V1::Auths", type: :request do
       let(:invalid_params) do
         {
           auth: {
-            email: user.email,
+            email: developer.email,
             password: ""
           }
         }
       end
 
       it "does not authenticate a game_developer" do
-        post "/api/v1/dev/auth/login", params: invalid_params
+        post "/api/v1/auth/developer_login", params: invalid_params
 
         expect(response).to have_http_status(:unauthorized)
       end
 
       it "does not authenticate a game_tester" do
-        post "/api/v1/tester/auth/login", params: invalid_params
+        post "/api/v1/auth/tester_login", params: invalid_params
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+  describe "POST /tester_login" do
+    context "with valid credentials" do
+      let(:valid_params) do
+        {
+          auth: {
+            email: tester.email,
+            password: tester.password
+          }
+        }
+      end
+
+      it "authenticates a game_tester and returns a token" do
+        post "/api/v1/auth/tester_login", params: valid_params
+
+        expect(response).to have_http_status(:accepted)
+      end
+    end
+
+    context "with invalid credentials" do
+      let(:invalid_params) do
+        {
+          auth: {
+            email: tester.email,
+            password: ""
+          }
+        }
+      end
+
+      it "does not authenticate a game_tester" do
+        post "/api/v1/auth/tester_login", params: invalid_params
 
         expect(response).to have_http_status(:unauthorized)
       end
