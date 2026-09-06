@@ -109,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useForm } from '@tanstack/vue-form'
+  import { useSelector } from '@tanstack/vue-form'
   import type { UpdateGameDeveloperResponse } from '~/types/GameDeveloper'
 
   definePageMeta({
@@ -119,7 +119,7 @@
   const { token } = useAuth()
   const toast = useToast()
 
-  const form = useForm({
+  const form = useSelector({
     onSubmit: async ({ value }) => {
       try {
         const response: UpdateGameDeveloperResponse = await $fetch(
