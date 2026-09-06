@@ -67,13 +67,14 @@
         class="mt-2 justify-center hover:cursor-pointer"
         size="xl"
         label="Submit"
-        :loading="form.useStore((meta) => meta.isSubmitting).value"
-        :disabled="form.useStore((meta) => meta.isSubmitting).value"
+        :loading="form.useSelector((meta) => meta.isSubmitting).value"
+        :disabled="form.useSelector((meta) => meta.isSubmitting).value"
       />
     </form>
     <div
       v-if="
-        form.useStore((meta) => meta.isSubmitted).value && !signInErrors.length
+        form.useSelector((meta) => meta.isSubmitted).value &&
+        !signInErrors.length
       "
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
