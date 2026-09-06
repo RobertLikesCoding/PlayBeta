@@ -16,7 +16,6 @@ class Api::V1::AuthController < ApplicationController
     def login_with_user_class(user_class)
       user = user_class.find_by(email: login_params[:email])
 
-    # Check if the user exists and authenticate
     if user&.authenticate(login_params[:password])
       token = encode_token(user)
       render json: {
@@ -24,7 +23,6 @@ class Api::V1::AuthController < ApplicationController
         token: token
       }, status: :accepted
     else
-      # Generic error message for both cases
       render json: { errors: [ "Invalid email or password" ] }, status: :unauthorized
     end
     end

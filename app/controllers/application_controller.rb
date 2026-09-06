@@ -25,8 +25,8 @@ class ApplicationController < ActionController::API
   def current_user
     token_data = decode_token
     if token_data
-      user_class = token_data[:user_class].constantize
-      unless ALLOWED_USERS.include?(user_class)
+      user_class = token_data[:user_class].safe_constantize
+      unless user_class && ALLOWED_USERS.include?(user_class)
         Rails.logger.warn("Unexpected user_class in token: #{user_class}")
         return nil
       end

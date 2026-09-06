@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Auths", type: :request do
   let(:developer) { create(:game_developer) }
   let(:tester) { create(:game_tester) }
-  let(:invalid_token) { "invalid.token.here" }
 
   describe "POST /developer_login" do
     context "with valid credentials" do
@@ -82,7 +81,9 @@ RSpec.describe "Api::V1::Auths", type: :request do
     end
   end
 
-  describe "JWT Decode Error Logging" do
+  describe "JWT decode error logging" do
+    let(:invalid_token) { "invalid.token.here" }
+
     it "logs an error when decoding an invalid token" do
       # Mock the logger
       allow(Rails.logger).to receive(:error)
@@ -93,6 +94,21 @@ RSpec.describe "Api::V1::Auths", type: :request do
 
       # Verify that Rails.logger.error was called with the expected message
       expect(Rails.logger).to have_received(:error).with(/JWT Decode Error: /)
+    end
+  end
+
+  describe "Unallowed user class error logging" do
+    invalid_class_token = JWT.encode({ user_id: 1, user_class: 'not_a_class' }, ENV["JWT_SECRET_KEY"])
+
+    it "logs an error when logging in with unallowred user class" do
+      # Mock the logger
+      allow(Rails.logger).to receive(:warn)
+
+      # Set an invalid Authorization header
+      headers = { "Authorization" => "Bearer #{invalid_class_token}" }
+      get "/api/v1/game_developers/me", headers: headers
+
+      expect(Rails.logger).to have_received(:warn)
     end
   end
 end
