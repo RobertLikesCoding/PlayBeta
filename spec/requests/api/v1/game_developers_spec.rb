@@ -44,7 +44,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     end
   end
 
-  describe "POST /signup" do
+  describe "POST /create" do
     context "with valid params" do
       let(:valid_params) do
         {
