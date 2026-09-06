@@ -152,36 +152,6 @@
         </form.Field>
       </div>
 
-      <div
-        v-if="!isDev"
-        class="flex flex-col gap-1"
-      >
-        <form.Field
-          name="gender"
-          :validators="{
-            onBlur: ({ value }) => {
-              return validatePasswordConfirm(value)
-            },
-          }"
-        >
-          <template #default="{ field, state }">
-            <label :htmlFor="field.name">Gender</label>
-            <USelect
-              :model-value="field.state.value"
-              :items="genderOptionsFormatted"
-              @update:model-value="field.handleChange"
-            />
-            <em
-              v-for="(error, index) of state.meta.errors"
-              :key="index"
-              class="text-red-300"
-              role="alert"
-              >{{ error }}
-            </em>
-          </template>
-        </form.Field>
-      </div>
-
       <UButton
         type="submit"
         class="mt-2 justify-center hover:cursor-pointer"
@@ -239,13 +209,13 @@
     infoText: string
   }>()
 
-  const GENDEROPTIONS = ['prefer_not_to_say', 'male', 'female', 'non_binary']
-  const genderOptionsFormatted = computed(() =>
-    GENDEROPTIONS.map((option: string) => ({
-      label: option.replaceAll('_', ' '),
-      value: option,
-    })),
-  )
+  // const GENDEROPTIONS = ['prefer_not_to_say', 'male', 'female', 'non_binary']
+  // const genderOptionsFormatted = computed(() =>
+  //   GENDEROPTIONS.map((option: string) => ({
+  //     label: option.replaceAll('_', ' '),
+  //     value: option,
+  //   })),
+  // )
   const isDev = computed(() => props.mode === 'dev')
   const heading = computed(() => {
     return isDev.value
@@ -283,7 +253,6 @@
               password: value.password,
               password_confirmation: value.password_confirmation,
               birthdate: value.birthdate,
-              gender: value.gender,
             },
           },
           throw: false,

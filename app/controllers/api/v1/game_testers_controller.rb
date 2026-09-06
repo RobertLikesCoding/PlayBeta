@@ -31,6 +31,6 @@ class Api::V1::GameTestersController < ApplicationController
   private
 
     def signup_params
-      params.require(:signup_payload).permit(:email, :password, :password_confirmation, :gender, :birthdate)
+      params.require(:signup_payload).permit(:email, :password, :password_confirmation, :birthdate)
     end
 end
