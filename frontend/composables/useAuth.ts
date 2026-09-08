@@ -10,18 +10,18 @@ export const useAuth = () => {
     return !!token.value
   })
 
-  const setToken = (newToken: string) => {
+  const setTokenCookie = (newToken: string) => {
     token.value = newToken
   }
 
-  const clearToken = () => {
+  const clearTokenCookie = () => {
     token.value = null
   }
 
   return {
     token,
     isAuthenticated,
-    setToken,
-    clearToken,
+    setTokenCookie,
+    clearTokenCookie,
   }
 }

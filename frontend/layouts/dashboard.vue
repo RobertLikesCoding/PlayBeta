@@ -19,7 +19,7 @@
             :key="index"
           >
             <NuxtLink
-              :to="`/dashboard/${item.section}`"
+              :to="`/dev/dashboard/${item.section}`"
               :class="[
                 'block cursor-pointer hover:bg-accented rounded p-2 h-full',
                 { 'bg-accented': $route.path.includes(item.section) },
@@ -58,7 +58,7 @@
 
   const { user, isLoading, fetchUser } = useCurrentUser()
 
-  watchEffect(() => !user.value && navigateTo('/auth/login'))
+  watchEffect(() => !user.value && navigateTo('/dev/auth/login'))
 
   const menu: { section: MenuSection; label: string }[] = [
     { section: 'submissions', label: 'Submissions' },

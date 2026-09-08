@@ -76,9 +76,21 @@
         </UButton>
 
         <UButton
-          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
+          :to="
+            isAuthenticated ? '/dev/dashboard/submissions' : '/dev/auth/signup'
+          "
+          color="primary"
+          >Devs
+        </UButton>
+        /
+        <UButton
+          :to="
+            isAuthenticated
+              ? '/tester/dashboard/submissions'
+              : '/tester/auth/signup'
+          "
           color="neutral"
-          >Account
+          >Testers
         </UButton>
       </div>
     </div>
@@ -119,7 +131,9 @@
         </NuxtLink>
 
         <NuxtLink
-          :to="isAuthenticated ? '/dashboard/submissions' : '/auth/signup'"
+          :to="
+            isAuthenticated ? '/dev/dashboard/submissions' : '/dev/auth/signup'
+          "
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0"
           @click="isMenuOpen = false"
           >Account
@@ -139,11 +153,20 @@
 
 <script setup lang="ts">
   const isMenuOpen = ref(false)
-  const { isAuthenticated, clearToken } = useAuth()
+  const { isAuthenticated, clearTokenCookie } = useAuth()
   const router = useRouter()
+  const toast = useToast()
 
   function logout() {
-    clearToken()
+    clearTokenCookie()
     router.push('/')
+
+    toast.add({
+      title: 'Success',
+      description: 'You have been logged out.',
+      color: 'success',
+      icon: 'i-lucide-check-circle',
+      duration: 2000,
+    })
   }
 </script>

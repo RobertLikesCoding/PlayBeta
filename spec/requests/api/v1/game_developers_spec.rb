@@ -44,11 +44,11 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     end
   end
 
-  describe "POST /signup" do
+  describe "POST /create" do
     context "with valid params" do
       let(:valid_params) do
         {
-          game_developer: {
+          signup_payload: {
             email: "developer@example.com",
             password: "password123",
             password_confirmation: "password123"
@@ -70,7 +70,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     context "with invalid params" do
       let(:invalid_params) do
         {
-          game_developer: {
+          signup_payload: {
             email: "",
             password: "",
             password_confirmation: "",

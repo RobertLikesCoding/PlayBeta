@@ -67,13 +67,14 @@
         class="mt-2 justify-center hover:cursor-pointer"
         size="xl"
         label="Submit"
-        :loading="form.useStore((meta) => meta.isSubmitting).value"
-        :disabled="form.useStore((meta) => meta.isSubmitting).value"
+        :loading="form.useSelector((meta) => meta.isSubmitting).value"
+        :disabled="form.useSelector((meta) => meta.isSubmitting).value"
       />
     </form>
     <div
       v-if="
-        form.useStore((meta) => meta.isSubmitted).value && !signInErrors.length
+        form.useSelector((meta) => meta.isSubmitted).value &&
+        !signInErrors.length
       "
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
@@ -96,7 +97,7 @@
     <p class="text-center pt-10">
       Don't have an account yet?
       <NuxtLink
-        to="/auth/signup"
+        :to="isDev ? '/dev/auth/signup' : '/tester/auth/signup'"
         class="text-primary cursor-pointer hover:text-primary-300"
         >Sign up</NuxtLink
       >
@@ -107,13 +108,14 @@
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
   import { useAuth } from '#imports'
-  definePageMeta({
-    // this is for setting the layout for the auth pages seperatly from the default layout
-    layout: 'auth',
-    middleware: ['redirect-if-auth'],
-  })
 
-  const { setToken } = useAuth()
+  const props = defineProps<{
+    mode: 'dev' | 'tester'
+    infoText: string
+  }>()
+
+  const isDev = props.mode === 'dev'
+  const { setTokenCookie } = useAuth()
 
   const signInErrors = ref<string[]>([])
 
@@ -123,8 +125,15 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       signInErrors.value = []
+      const requestPath = isDev
+        ? '/api/v1/auth/developer_login'
+        : '/api/v1/auth/tester_login'
+
+      const redirectPath = isDev
+        ? '/dev/dashboard/submissions'
+        : '/tester/dashboard'
       try {
-        const response: SignInResponse = await $fetch('/api/v1/auth/login', {
+        const response: SignInResponse = await $fetch(requestPath, {
           baseURL: useRuntimeConfig().public.apiBase,
           method: 'POST',
           headers: {
@@ -141,8 +150,8 @@
         form.reset()
 
         if ('token' in response) {
-          setToken(response.token)
-          navigateTo('/dashboard/submissions')
+          setTokenCookie(response.token)
+          navigateTo(redirectPath)
         }
       } catch (error) {
         const errors = error as { data?: { errors?: string[] } }

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import SubmissionsTable from '~/pages/dashboard/submissions/SubmissionsTable.vue'
+import SubmissionsTable from '~/pages/dev/dashboard/submissions/SubmissionsTable.vue'
 
 // const submissions: Submission[] = [
 //   {

@@ -312,7 +312,7 @@
             icon: 'i-lucide-x-circle',
           })
         } else {
-          await navigateTo('/dashboard/submissions')
+          await navigateTo('/dev/dashboard/submissions')
           toast.add({
             title: 'Success',
             description: 'Your submission was created successfully.',

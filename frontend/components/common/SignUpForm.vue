@@ -1,9 +1,8 @@
 <template>
   <div class="max-w-md px-4">
-    <h1 class="text-3xl font-semibold mb-8 text-center">Create an account</h1>
-    <p class="pb-5">
-      By signing up, you can upload your demos, connect with dedicated
-      playtesters, and gather insights to improve your game.
+    <h1 class="text-3xl font-semibold mb-8 text-center">{{ heading }}</h1>
+    <p class="pb-5 text-center">
+      {{ infoText }}
     </p>
 
     <form
@@ -114,18 +113,61 @@
           </template>
         </form.Field>
       </div>
+
+      <div
+        v-if="!isDev"
+        class="flex flex-col gap-1"
+      >
+        <form.Field
+          name="birthdate"
+          :validators="{
+            onBlur: ({ value }) => {
+              console.log(value)
+              return validateBirthday(value)
+            },
+          }"
+        >
+          <template #default="{ field, state }">
+            <label :htmlFor="field.name">Birth Date</label>
+            <UInput
+              :id="field.name"
+              :name="field.name"
+              type="date"
+              :value="field.state.value"
+              variant="subtle"
+              @input="
+                (e: Event) =>
+                  field.handleChange((e.target as HTMLInputElement).value)
+              "
+              @blur="field.handleBlur"
+            />
+            <em
+              v-for="(error, index) of state.meta.errors"
+              :key="index"
+              class="text-red-300"
+              role="alert"
+              >{{ error }}
+            </em>
+          </template>
+        </form.Field>
+      </div>
+
       <UButton
         type="submit"
         class="mt-2 justify-center hover:cursor-pointer"
         size="xl"
         label="Submit"
-        :loading="form.useStore((meta) => meta.isSubmitting).value"
-        :disabled="form.useStore((meta) => meta.isSubmitting).value"
+        :loading="form.useSelector((meta) => meta.isSubmitting).value"
+        :disabled="
+          form.useSelector((meta) => meta.isSubmitting).value ||
+          form.useSelector((meta) => meta.errors.length !== 0).value
+        "
       />
     </form>
     <div
       v-if="
-        form.useStore((meta) => meta.isSubmitted).value && !signupErrors.length
+        form.useSelector((meta) => meta.isSubmitted).value &&
+        !signupErrors.length
       "
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
@@ -151,7 +193,7 @@
     <p class="text-center pt-10">
       Already have an account?
       <NuxtLink
-        to="/auth/login"
+        :to="isDev ? '/dev/auth/login' : '/tester/auth/login'"
         class="text-primary cursor-pointer hover:text-primary-300"
         >Sign in</NuxtLink
       >
@@ -161,14 +203,27 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  // this is for setting the layout for the auth pages seperatly from the default layout
-  definePageMeta({
-    layout: 'auth',
-    middleware: ['redirect-if-auth'],
+
+  const props = defineProps<{
+    mode: 'dev' | 'tester'
+    infoText: string
+  }>()
+
+  // const GENDEROPTIONS = ['prefer_not_to_say', 'male', 'female', 'non_binary']
+  // const genderOptionsFormatted = computed(() =>
+  //   GENDEROPTIONS.map((option: string) => ({
+  //     label: option.replaceAll('_', ' '),
+  //     value: option,
+  //   })),
+  // )
+  const isDev = computed(() => props.mode === 'dev')
+  const heading = computed(() => {
+    return isDev.value
+      ? 'Create a Developer account'
+      : 'Create a Tester account'
   })
 
-  const { setToken } = useAuth()
-
+  const { setTokenCookie } = useAuth()
   const signupErrors = ref<string[]>([])
 
   type SignUpResponse =
@@ -177,30 +232,36 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       signupErrors.value = []
+      const path = isDev.value
+        ? '/api/v1/game_developers'
+        : '/api/v1/game_testers'
+
+      const redirectPath = isDev.value
+        ? '/dev/dashboard/submissions'
+        : '/tester/dashboard'
+
       try {
-        const response: SignUpResponse = await $fetch(
-          '/api/v1/game_developers',
-          {
-            baseURL: useRuntimeConfig().public.apiBase,
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: {
-              game_developer: {
-                email: value.email,
-                password: value.password,
-                password_confirmation: value.password_confirmation,
-              },
-            },
-            throw: false,
+        const response: SignUpResponse = await $fetch(path, {
+          baseURL: useRuntimeConfig().public.apiBase,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
+          body: {
+            signup_payload: {
+              email: value.email,
+              password: value.password,
+              password_confirmation: value.password_confirmation,
+              birthdate: value.birthdate,
+            },
+          },
+          throw: false,
+        })
 
         form.reset()
         if ('token' in response) {
-          setToken(response.token)
-          navigateTo('/dashboard/submissions')
+          setTokenCookie(response.token)
+          navigateTo(redirectPath)
         }
       } catch (error) {
         const errors = error as { data?: { errors?: string[] } }
@@ -218,6 +279,8 @@
       email: '',
       password: '',
       password_confirmation: '',
+      birthdate: '',
+      gender: '',
     },
   })
 
@@ -251,5 +314,27 @@
       return 'Please confirm your password'
     }
     return undefined
+  }
+
+  function validateBirthday(value: string): string | undefined {
+    if (!value) return 'Please enter your birthdate'
+
+    const MINIMUM_AGE = 16
+    const birthDate = new Date(value)
+    const currentDate = new Date()
+    let userAge = currentDate.getFullYear() - birthDate.getFullYear()
+
+    if (birthDate.getMonth() > currentDate.getMonth()) {
+      userAge = userAge - 1
+    } else if (
+      birthDate.getMonth() === currentDate.getMonth() &&
+      birthDate.getDate() > currentDate.getDate()
+    ) {
+      userAge = userAge - 1
+    }
+
+    if (userAge < MINIMUM_AGE) {
+      return `You need to be at least ${MINIMUM_AGE} to sign up as a tester.`
+    }
   }
 </script>

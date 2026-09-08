@@ -1,7 +1,7 @@
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import SettingsPage from '~/pages/dashboard/settings/index.vue'
+import SettingsPage from '~/pages/dev/dashboard/settings/index.vue'
 
 describe('Settings Page', () => {
   let wrapper: VueWrapper

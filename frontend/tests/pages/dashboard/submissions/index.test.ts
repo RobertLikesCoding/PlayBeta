@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { shallowMount, type VueWrapper } from '@vue/test-utils'
-import SubmissionsPage from '~/pages/dashboard/submissions/index.vue'
-import SubmissionsTable from '~/pages/dashboard/submissions/SubmissionsTable.vue'
+import SubmissionsPage from '~/pages/dev/dashboard/submissions/index.vue'
+import SubmissionsTable from '~/pages/dev/dashboard/submissions/SubmissionsTable.vue'
 
 const mockData = [
   {

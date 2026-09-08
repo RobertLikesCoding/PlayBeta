@@ -1,0 +1,36 @@
+class Api::V1::GameTestersController < ApplicationController
+  before_action :authenticate_user!, except: [ :create, :index ]
+
+  def index
+  end
+
+  def show
+  end
+
+  def create
+    game_tester = GameTester.new(signup_params)
+
+    if game_tester.save
+      acces_token = encode_token(game_tester)
+
+      render json: {
+        user_id: game_tester.id,
+        token: acces_token
+      }, status: :created
+    else
+      render json: { errors: game_tester.errors.full_messages }, status: :unprocessable_content
+    end
+  end
+
+  def update
+  end
+
+  def delete
+  end
+
+  private
+
+    def signup_params
+      params.require(:signup_payload).permit(:email, :password, :password_confirmation, :birthdate)
+    end
+end

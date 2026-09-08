@@ -6,7 +6,7 @@
       variant="outline"
       color="neutral"
       class="w-fit"
-      to="/dashboard/submissions"
+      to="/dev/dashboard/submissions"
       >Back</UButton
     >
     <LoadingSpinner v-if="isLoading" />
@@ -17,7 +17,7 @@
 
         <UButton
           label="Edit Submission"
-          :href="`/dashboard/submissions/edit/${s_id}`"
+          :href="`/dev/dashboard/submissions/edit/${s_id}`"
         />
       </div>
 

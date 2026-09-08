@@ -4,11 +4,15 @@ RSpec.describe GameTester, type: :model do
   context 'is valid' do
     subject(:valid_game_tester) { build(:game_tester) }
 
-    context 'with a specified gender value' do
+    context 'with a valid gender value' do
       it { is_expected.to be_valid }
     end
-    context 'with a specified age of the allowed age range' do
+    context 'with a birthdate above 16' do
       it { is_expected.to be_valid }
+    end
+    it 'with an age of exactly 16' do
+      valid_age_tester = build(:game_tester, birthdate: 16.years.ago)
+    expect(valid_age_tester).to be_valid
     end
     context 'with a password longer than 8 characters' do
       it { is_expected.to be_valid }
@@ -37,20 +41,15 @@ RSpec.describe GameTester, type: :model do
       subject { build(:game_tester, password: '1234567') }
       it { is_expected.to be_invalid }
     end
-    context 'without a specified gender value' do
-      subject { build(:game_tester, gender: nil) }
+    context 'with an invalid gender value' do
+      it { expect { build(:game_tester, gender: 'alien') }.to raise_error(ArgumentError) }
+    end
+    context 'without a specified birthdate' do
+      subject { build(:game_tester, birthdate: nil) }
       it { is_expected.to be_invalid }
     end
-    context 'without a specified age' do
-      subject { build(:game_tester, age: nil) }
-      it { is_expected.to be_invalid }
-    end
-    context 'when age is below allowed range' do
-      subject { build(:game_tester, age: 15) }
-      it { is_expected.to be_invalid }
-    end
-    context 'when age is above allowed range' do
-      subject { build(:game_tester, age: 101) }
+    context 'when birthdate is below 16' do
+      subject { build(:game_tester, birthdate: 15.years.ago) }
       it { is_expected.to be_invalid }
     end
   end

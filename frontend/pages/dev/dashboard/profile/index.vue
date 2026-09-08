@@ -186,7 +186,7 @@
             :label="
               isSubmitted && !isTouched ? 'Changes saved!' : 'Save changes'
             "
-            :loading="form.useStore((meta) => meta.isSubmitting).value"
+            :loading="form.useSelector((meta) => meta.isSubmitting).value"
             :disabled="isSubmitting || !canSubmit || !isTouched"
           />
         </template>
