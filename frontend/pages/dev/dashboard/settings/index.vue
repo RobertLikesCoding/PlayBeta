@@ -185,23 +185,4 @@
       }),
     },
   })
-
-  function validateCurrentPassword(value: string) {
-    return !value ? 'Please fill in your current password' : undefined
-  }
-
-  function validateNewPassword(value: string) {
-    if (!value) return 'Please fill in a new password'
-    if (value.length < 8) return 'Password must be at least 8 characters'
-    return undefined
-  }
-
-  function validateNewPasswordConfirm(
-    newPassword: string,
-    confirmPassword: string,
-  ) {
-    if (!confirmPassword) return 'Please confirm your new password'
-    if (newPassword !== confirmPassword) return 'Passwords do not match'
-    return undefined
-  }
 </script>

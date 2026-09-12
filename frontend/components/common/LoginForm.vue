@@ -131,7 +131,7 @@
 
       const redirectPath = isDev
         ? '/dev/dashboard/submissions'
-        : '/tester/dashboard'
+        : '/tester/dashboard/profile'
       try {
         const response: SignInResponse = await $fetch(requestPath, {
           baseURL: useRuntimeConfig().public.apiBase,
