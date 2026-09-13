@@ -5,6 +5,14 @@ class Api::V1::GameTestersController < ApplicationController
   end
 
   def show
+    if current_user
+      render json: {
+        id: current_user.id,
+        email: current_user.email,
+        birthdate: current_user.birthdate,
+        gender: current_user.gender
+      }, status: :ok
+    end
   end
 
   def create
@@ -32,5 +40,9 @@ class Api::V1::GameTestersController < ApplicationController
 
     def signup_params
       params.require(:signup_payload).permit(:email, :password, :password_confirmation, :birthdate)
+    end
+
+    def tester_params
+      params.require(game_tester).permit(:email, :birthdate, :gender, :avatar)
     end
 end
