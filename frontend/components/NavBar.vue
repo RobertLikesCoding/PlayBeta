@@ -75,23 +75,28 @@
           Logout
         </UButton>
 
+        <template v-if="!isAuthenticated">
+          <UButton
+            to="/dev/auth/signup"
+            color="primary"
+            >Devs
+          </UButton>
+          /
+          <UButton
+            to="/tester/auth/signup"
+            color="neutral"
+            >Testers
+          </UButton>
+        </template>
+
         <UButton
+          v-else
           :to="
-            isAuthenticated ? '/dev/dashboard/submissions' : '/dev/auth/signup'
-          "
-          color="primary"
-          >Devs
-        </UButton>
-        /
-        <UButton
-          :to="
-            isAuthenticated
-              ? '/tester/dashboard/submissions'
-              : '/tester/auth/signup'
+            isDev ? '/dev/dashboard/submissions' : '/tester/dashboard/profile'
           "
           color="neutral"
-          >Testers
-        </UButton>
+          label="Account"
+        />
       </div>
     </div>
 
@@ -154,6 +159,7 @@
 <script setup lang="ts">
   const isMenuOpen = ref(false)
   const { isAuthenticated, clearTokenCookie } = useAuth()
+  const { isDev } = useCurrentUser()
   const router = useRouter()
   const toast = useToast()
 

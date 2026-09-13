@@ -1,6 +1,11 @@
 import type { GameDeveloperAPI } from '~/types/GameDeveloper'
+import type { GameTesterAPI } from '~/types/GameTesterAPI'
 
-const user = ref<GameDeveloperAPI | null>(null)
+type UserType = GameDeveloperAPI | GameTesterAPI
+const user = ref<UserType | null>(null)
+const route = useRoute()
+const isDev = route.path.includes('dev')
+
 const isLoading = ref(true)
 
 export function useCurrentUser() {
@@ -11,22 +16,22 @@ export function useCurrentUser() {
       isLoading.value = false
       return user.value
     }
+    const queryPath = isDev
+      ? '/api/v1/game_developers/me'
+      : '/api/v1/game_testers/me'
 
     try {
-      user.value = await $fetch<GameDeveloperAPI>(
-        '/api/v1/game_developers/me',
-        {
-          baseURL: useRuntimeConfig().public.apiBase,
-          headers: { Authorization: `Bearer ${token.value}` },
-        },
-      )
+      user.value = await $fetch<UserType>(queryPath, {
+        baseURL: useRuntimeConfig().public.apiBase,
+        headers: { Authorization: `Bearer ${token.value}` },
+      })
     } catch (error) {
-      console.error('Failed to fetch current user.')
+      console.error('Failed to fetch current user.', error)
     } finally {
       isLoading.value = false
     }
     return user.value
   }
 
-  return { user, isLoading, fetchUser }
+  return { user, isLoading, fetchUser, isDev }
 }
