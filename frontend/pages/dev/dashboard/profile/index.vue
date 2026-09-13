@@ -218,7 +218,7 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-        const response: UpdateGameDeveloperResponse = await $fetch(
+        const response = await $fetch<UpdateGameDeveloperResponse>(
           `/api/v1/game_developers/me`,
           {
             baseURL: useRuntimeConfig().public.apiBase,

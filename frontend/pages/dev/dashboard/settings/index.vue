@@ -122,7 +122,7 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-        const response: UpdateGameDeveloperResponse = await $fetch(
+        const response = await $fetch<UpdateGameDeveloperResponse>(
           `/api/v1/passwords/update`,
           {
             baseURL: useRuntimeConfig().public.apiBase,

@@ -145,6 +145,7 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
+  import type { GameTesterAPI } from '~/types/GameTesterAPI'
 
   definePageMeta({
     layout: 'dashboard',

@@ -243,7 +243,7 @@
         : '/tester/dashboard/profile'
 
       try {
-        const response: SignUpResponse = await $fetch(path, {
+        const response = await $fetch<SignUpResponse>(path, {
           baseURL: useRuntimeConfig().public.apiBase,
           method: 'POST',
           headers: {
@@ -257,7 +257,6 @@
               birthdate: value.birthdate,
             },
           },
-          throw: false,
         })
 
         form.reset()
