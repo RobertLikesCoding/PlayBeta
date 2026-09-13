@@ -56,9 +56,10 @@
 
   type MenuSection = 'submissions' | 'profile' | 'settings'
 
-  const { user, isLoading, fetchUser } = useCurrentUser()
+  const { user, isLoading, fetchUser, isDev } = useCurrentUser()
+  const redirectPath = isDev ? '/dev/auth/login' : '/tester/auth/login'
 
-  watchEffect(() => !user.value && navigateTo('/dev/auth/login'))
+  watchEffect(() => !user.value && navigateTo(redirectPath))
 
   const menu: { section: MenuSection; label: string }[] = [
     { section: 'submissions', label: 'Submissions' },
