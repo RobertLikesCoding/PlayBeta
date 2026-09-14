@@ -96,6 +96,34 @@
           </form.Field>
         </div>
 
+        <div class="flex flex-col gap-2">
+          <form.Field name="gender">
+            <template #default="{ field, state }">
+              <label :htmlFor="field.name">Gender</label>
+              <USelect
+                :id="field.name"
+                :name="field.name"
+                :value="field.state.value"
+                :items="genderOptions"
+                placeholder="Select a gender option"
+                variant="subtle"
+                @change="
+                  (e: Event) =>
+                    field.handleChange((e.target as HTMLInputElement).value)
+                "
+                @blur="field.handleBlur"
+              />
+              <em
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
         <!-- <div class="flex flex-col gap-2">
           <form.Field name="location">
             <template #default="{ field, state }">
@@ -145,7 +173,10 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import type { GameTesterAPI } from '~/types/GameTesterAPI'
+  import {
+    ALLOWED_GENDER_OPTIONS,
+    type GameTesterAPI,
+  } from '~/types/GameTesterAPI'
 
   definePageMeta({
     layout: 'dashboard',
@@ -178,6 +209,7 @@
                 birthdate: value.birthdate,
                 // location: value.location,
                 avatar: value.avatar,
+                gender: value.gender,
               },
             },
           },
@@ -196,6 +228,7 @@
             birthdate: value.birthdate,
             // location: value.location,
             avatar: value.avatar,
+            gender: value.gender,
           })
 
           toast.add({
@@ -215,8 +248,13 @@
       birthdate: props.user?.birthdate,
       // location: props.user?.location,
       avatar: props.user?.avatar,
+      gender: props.user?.gender,
     },
   })
+
+  const genderOptions = ALLOWED_GENDER_OPTIONS.map((option) =>
+    option.replaceAll('_', ' '),
+  )
 </script>
 
 <style lang="css" scoped></style>
