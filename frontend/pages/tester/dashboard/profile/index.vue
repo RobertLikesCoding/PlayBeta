@@ -102,15 +102,14 @@
               <label :htmlFor="field.name">Gender</label>
               <USelect
                 :id="field.name"
+                :model-value="field.state.value"
                 :name="field.name"
-                :value="field.state.value"
+                label-key="label"
+                value-key="value"
                 :items="genderOptions"
                 placeholder="Select a gender option"
                 variant="subtle"
-                @change="
-                  (e: Event) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                "
+                @update:model-value="field.handleChange"
                 @blur="field.handleBlur"
               />
               <em
@@ -176,6 +175,7 @@
   import {
     ALLOWED_GENDER_OPTIONS,
     type GameTesterAPI,
+    type UpdateGameTesterResponse,
   } from '~/types/GameTesterAPI'
 
   definePageMeta({
@@ -195,7 +195,7 @@
     onSubmit: async ({ value }) => {
       try {
         const response: UpdateGameTesterResponse = await $fetch(
-          `/api/v1/game_developers/me`,
+          `/api/v1/game_testers/me`,
           {
             baseURL: useRuntimeConfig().public.apiBase,
             method: 'PATCH',
@@ -204,7 +204,7 @@
               Authorization: `Bearer ${token.value}`,
             },
             body: {
-              game_developer: {
+              game_tester: {
                 email: value.email,
                 birthdate: value.birthdate,
                 // location: value.location,
@@ -224,11 +224,11 @@
           })
         } else {
           form.reset({
-            email: value.email,
-            birthdate: value.birthdate,
-            // location: value.location,
-            avatar: value.avatar,
-            gender: value.gender,
+            email: props.user?.email,
+            birthdate: props.user?.birthdate,
+            // location: props.user?.location,
+            avatar: props.user?.avatar,
+            gender: props.user?.gender,
           })
 
           toast.add({
@@ -252,9 +252,12 @@
     },
   })
 
-  const genderOptions = ALLOWED_GENDER_OPTIONS.map((option) =>
-    option.replaceAll('_', ' '),
-  )
+  const genderOptions = ALLOWED_GENDER_OPTIONS.map((option) => {
+    return {
+      label: option.replaceAll('_', ' '),
+      value: option,
+    }
+  })
 </script>
 
 <style lang="css" scoped></style>

@@ -31,6 +31,11 @@ class Api::V1::GameTestersController < ApplicationController
   end
 
   def update
+    if current_user.update(tester_params)
+      render json: { message: "Successfully updated user data" }, status: :ok
+    else
+      render json: { errors: current_user.errors.full_messages }, status: :unprocessable_content
+    end
   end
 
   def delete
@@ -43,6 +48,6 @@ class Api::V1::GameTestersController < ApplicationController
     end
 
     def tester_params
-      params.require(game_tester).permit(:email, :birthdate, :gender, :avatar)
+      params.require(:game_tester).permit(:email, :birthdate, :gender, :avatar)
     end
 end

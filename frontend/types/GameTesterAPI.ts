@@ -5,6 +5,11 @@ export interface GameTesterAPI {
   gender: Gender
 }
 
+export interface UpdateGameTesterResponse {
+  message?: string
+  errors?: string[]
+}
+
 export const ALLOWED_GENDER_OPTIONS = [
   'prefer_not_to_say',
   'male',
