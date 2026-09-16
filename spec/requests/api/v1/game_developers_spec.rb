@@ -90,7 +90,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     end
   end
 
-  describe "POST /update" do
+  describe "PATCH /update" do
     let(:update_params) do
       {
         game_developer: {
