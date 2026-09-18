@@ -2,8 +2,8 @@ export interface GameTesterAPI {
   id: number
   email: string
   birthdate: string
-  gender: Gender
-  username: string
+  gender?: Gender
+  username?: string
 }
 
 export interface UpdateGameTesterResponse {

@@ -11,7 +11,14 @@
         <h3 class="text-2xl font-bold">Profile</h3>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="email">
+          <form.Field
+            name="email"
+            :validators="{
+              onBlur: ({ value }) => {
+                validateEmail(value)
+              },
+            }"
+          >
             <template #default="{ field, state }">
               <label :htmlFor="field.name">Email</label>
               <UInput
@@ -235,9 +242,6 @@
                 location: value.location,
                 bio: value.bio,
                 avatar: value.avatar,
-                current_password: value.current_password,
-                password: value.password,
-                password_confirmation: value.password_confirmation,
               },
             },
           },
@@ -258,9 +262,6 @@
             location: value.location,
             bio: value.bio,
             avatar: value.avatar,
-            current_password: '',
-            password: '',
-            password_confirmation: '',
           })
 
           toast.add({
@@ -276,17 +277,12 @@
       }
     },
     defaultValues: {
-      email: props.user?.email,
-      studio_name: props.user?.studio_name,
-      website: props.user?.website,
-      location: props.user?.location,
-      bio: props.user?.bio,
-      avatar: props.user?.avatar,
-      current_password: '',
-      password: '',
-      password_confirmation: '',
+      email: props.user?.email ?? '',
+      studio_name: props.user?.studio_name ?? '',
+      website: props.user?.website ?? '',
+      location: props.user?.location ?? '',
+      bio: props.user?.bio ?? '',
+      avatar: props.user?.avatar ?? '',
     },
   })
 </script>
-
-<style lang="css" scoped></style>

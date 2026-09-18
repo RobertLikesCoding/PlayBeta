@@ -11,13 +11,46 @@
         <h3 class="text-2xl font-bold">Profile</h3>
 
         <div class="flex flex-col gap-2">
-          <form.Field name="email">
+          <form.Field
+            name="email"
+            :validators="{
+              onBlur: ({ value }) => {
+                validateEmail(value)
+              },
+            }"
+          >
             <template #default="{ field, state }">
               <label :htmlFor="field.name">Email</label>
               <UInput
                 :id="field.name"
                 :name="field.name"
                 type="email"
+                :value="field.state.value"
+                variant="outline"
+                @input="
+                  (e: Event) =>
+                    field.handleChange((e.target as HTMLInputElement).value)
+                "
+              />
+              <em
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field name="username">
+            <template #default="{ field, state }">
+              <label :htmlFor="field.name">Username</label>
+              <UInput
+                :id="field.name"
+                :name="field.name"
+                type="text"
                 :value="field.state.value"
                 variant="outline"
                 @input="
@@ -194,7 +227,7 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-        const response: UpdateGameTesterResponse = await $fetch(
+        const response = await $fetch<UpdateGameTesterResponse>(
           `/api/v1/game_testers/me`,
           {
             baseURL: useRuntimeConfig().public.apiBase,
@@ -208,8 +241,9 @@
                 email: value.email,
                 birthdate: value.birthdate,
                 // location: value.location,
-                avatar: value.avatar,
+                // avatar: value.avatar,
                 gender: value.gender,
+                username: value.username,
               },
             },
           },
@@ -224,11 +258,12 @@
           })
         } else {
           form.reset({
-            email: props.user?.email,
-            birthdate: props.user?.birthdate,
-            // location: props.user?.location,
-            avatar: props.user?.avatar,
-            gender: props.user?.gender,
+            email: response?.email ?? '',
+            birthdate: response?.birthdate ?? '',
+            // location: response?.location ?? '',
+            avatar: response?.avatar ?? '',
+            gender: response?.gender ?? '',
+            username: response?.username ?? '',
           })
 
           toast.add({
@@ -244,11 +279,12 @@
       }
     },
     defaultValues: {
-      email: props.user?.email,
-      birthdate: props.user?.birthdate,
-      // location: props.user?.location,
-      avatar: props.user?.avatar,
-      gender: props.user?.gender,
+      email: props.user?.email ?? '',
+      birthdate: props.user?.birthdate ?? '',
+      // location: props.user?.location ?? '',
+      avatar: props.user?.avatar ?? '',
+      gender: props.user?.gender ?? '',
+      username: props.user?.username ?? '',
     },
   })
 
