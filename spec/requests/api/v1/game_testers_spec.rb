@@ -21,7 +21,7 @@ RSpec.describe "GameTesters", type: :request do
         expect(Date.parse(current_user["birthdate"])).to eq(user.birthdate)
         expect(current_user["email"]).to eq(user.email)
         expect(current_user['gender']).to eq(user.gender)
-        expect(current_user["password_digest"]).to_not be_present
+        expect(current_user['username']).to eq(user.username)
       end
     end
 
@@ -55,8 +55,8 @@ RSpec.describe "GameTesters", type: :request do
         expect(response).to have_http_status(:created)
 
         json = JSON.parse(response.body)
-        expect(json["user_id"]).to be_present
-        expect(json["token"]).to be_present
+        expect(json["data"]["id"]).to be_present
+        expect(json["data"]["token"]).to be_present
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe "GameTesters", type: :request do
     let(:existing_user) { create(:game_tester, email: 'test@mail.de') }
 
     context 'when authenticated' do
-      it "returns http success" do
+      it "returns updated user" do
         patch "/api/v1/game_testers/me",
           headers: authenticated_header(existing_user),
           params: { game_tester: { email: 'newMail@mail.de' } }
@@ -96,7 +96,11 @@ RSpec.describe "GameTesters", type: :request do
         existing_user.reload
         expect(existing_user.email).to eq('newMail@mail.de')
         json = JSON.parse(response.body)
-        expect(json["message"]).to eq("Successfully updated user data")
+        expect(json["data"]["id"]).to eq(existing_user.id)
+        expect(Date.parse(json["data"]["birthdate"])).to eq(existing_user.birthdate)
+        expect(json["data"]["email"]).to eq(existing_user.email)
+        expect(json["data"]['gender']).to eq(existing_user.gender)
+        expect(json["data"]['username']).to eq(existing_user.username)
       end
 
       it "returns unprocessable content for invalid email" do

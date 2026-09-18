@@ -7,7 +7,7 @@
     <h1 class="text-2xl pb-10">
       {{
         user && 'username' in user && user.username
-          ? `Welcome back, Studio ${user.username}!`
+          ? `Welcome back, ${user.username}!`
           : 'Welcome back!'
       }}
     </h1>

@@ -248,7 +248,8 @@
             },
           },
         )
-        if (response && response.errors) {
+
+        if (response && 'errors' in response) {
           console.error('Update failed:', response.errors)
           toast.add({
             title: 'Error',
@@ -257,13 +258,15 @@
             icon: 'i-lucide-x-circle',
           })
         } else {
+          const updatedUser = response.data
+
           form.reset({
-            email: response?.email ?? '',
-            birthdate: response?.birthdate ?? '',
-            // location: response?.location ?? '',
-            avatar: response?.avatar ?? '',
-            gender: response?.gender ?? '',
-            username: response?.username ?? '',
+            email: updatedUser.email ?? '',
+            birthdate: updatedUser.birthdate ?? '',
+            // location: updatedUser.location ?? '',
+            avatar: updatedUser.avatar ?? '',
+            gender: updatedUser.gender ?? '',
+            username: updatedUser.username ?? '',
           })
 
           toast.add({

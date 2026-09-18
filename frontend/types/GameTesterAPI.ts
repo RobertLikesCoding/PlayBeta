@@ -1,3 +1,5 @@
+import type { ApiResponse } from './Api'
+
 export interface GameTesterAPI {
   id: number
   email: string
@@ -6,10 +8,12 @@ export interface GameTesterAPI {
   username?: string
 }
 
-export interface UpdateGameTesterResponse {
-  message?: string
-  errors?: string[]
-}
+export type GameTesterCreateResponse = ApiResponse<{
+  id: number
+  token: string
+}>
+
+export type UpdateGameTesterResponse = ApiResponse<GameTesterAPI>
 
 export const ALLOWED_GENDER_OPTIONS = [
   'prefer_not_to_say',
