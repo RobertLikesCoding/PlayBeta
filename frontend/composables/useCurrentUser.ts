@@ -1,6 +1,10 @@
 import type { GameDeveloperAPI } from '~/types/GameDeveloper'
 import type { GameTesterAPI } from '~/types/GameTesterAPI'
 
+type CurrentUserResponse = {
+  data: UserType
+}
+
 type UserType = GameDeveloperAPI | GameTesterAPI
 const user = ref<UserType | null>(null)
 const route = useRoute()
@@ -21,10 +25,12 @@ export function useCurrentUser() {
       : '/api/v1/game_testers/me'
 
     try {
-      user.value = await $fetch<UserType>(queryPath, {
+      const response = await $fetch<CurrentUserResponse>(queryPath, {
         baseURL: useRuntimeConfig().public.apiBase,
         headers: { Authorization: `Bearer ${token.value}` },
       })
+
+      user.value = response.data
     } catch (error) {
       console.error('Failed to fetch current user.', error)
     } finally {

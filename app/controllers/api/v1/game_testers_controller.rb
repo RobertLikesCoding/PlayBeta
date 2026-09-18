@@ -5,9 +5,7 @@ class Api::V1::GameTestersController < ApplicationController
   end
 
   def show
-    if current_user
-      render json: tester_json(current_user), status: :ok
-    end
+    render json: { data: tester_json(current_user) }, status: :ok
   end
 
   def create

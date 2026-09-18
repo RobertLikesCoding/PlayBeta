@@ -241,12 +241,12 @@
                 website: value.website,
                 location: value.location,
                 bio: value.bio,
-                avatar: value.avatar,
+                // avatar: value.avatar,
               },
             },
           },
         )
-        if (response && response.errors) {
+        if (response && 'errors' in response) {
           console.error('Update failed:', response.errors)
           toast.add({
             title: 'Error',
@@ -255,13 +255,15 @@
             icon: 'i-lucide-x-circle',
           })
         } else {
+          const updatedUser = response.data
+
           form.reset({
-            email: value.email,
-            studio_name: value.studio_name,
-            website: value.website,
-            location: value.location,
-            bio: value.bio,
-            avatar: value.avatar,
+            email: updatedUser.email,
+            studio_name: updatedUser.studio_name,
+            website: updatedUser.website,
+            location: updatedUser.location,
+            bio: updatedUser.bio,
+            avatar: updatedUser.avatar ?? null,
           })
 
           toast.add({

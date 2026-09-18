@@ -1,3 +1,5 @@
+import type { ApiResponse } from './Api'
+
 export interface GameDeveloperAPI {
   id: number
   email: string
@@ -8,7 +10,8 @@ export interface GameDeveloperAPI {
   avatar: string
 }
 
-export interface UpdateGameDeveloperResponse {
-  message?: string
-  errors?: string[]
-}
+export type CreateGameDeveloperResponse = ApiResponse<{
+  id: number
+  token: string
+}>
+export type UpdateGameDeveloperResponse = ApiResponse<GameDeveloperAPI>
