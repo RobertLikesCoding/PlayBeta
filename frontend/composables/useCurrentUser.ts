@@ -8,7 +8,7 @@ type CurrentUserResponse = {
 type UserType = GameDeveloperAPI | GameTesterAPI
 const user = ref<UserType | null>(null)
 const route = useRoute()
-const isDev = route.path.includes('dev')
+const isDev = computed(() => route.path.startsWith('/dev/'))
 
 const isLoading = ref(true)
 
