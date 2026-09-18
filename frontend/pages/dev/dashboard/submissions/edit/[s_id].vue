@@ -21,7 +21,7 @@
   import SubmissionForm from '~/components/SubmissionForm.vue'
 
   definePageMeta({
-    layout: 'dashboard',
+    layout: 'dashboardDeveloper',
   })
 
   const route = useRoute()

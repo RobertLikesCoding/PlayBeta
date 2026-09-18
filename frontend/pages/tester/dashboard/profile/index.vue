@@ -179,7 +179,7 @@
   } from '~/types/GameTesterAPI'
 
   definePageMeta({
-    layout: 'dashboard',
+    layout: 'dashboardDeveloper',
   })
 
   const props = defineProps<{
