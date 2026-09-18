@@ -6,8 +6,8 @@
 
     <h1 class="text-2xl pb-10">
       {{
-        user?.studio_name
-          ? `Welcome back, Studio ${user?.studio_name}!`
+        user && 'studio_name' in user && user.studio_name
+          ? `Welcome back, Studio ${user.studio_name}!`
           : 'Welcome back!'
       }}
     </h1>

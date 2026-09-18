@@ -203,7 +203,7 @@
   } from '~/types/GameDeveloper'
 
   definePageMeta({
-    layout: 'dashboardDeveloper',
+    layout: 'dashboard-developer',
   })
 
   const props = defineProps<{

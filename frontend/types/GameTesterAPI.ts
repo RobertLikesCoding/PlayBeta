@@ -3,6 +3,7 @@ export interface GameTesterAPI {
   email: string
   birthdate: string
   gender: Gender
+  username: string
 }
 
 export interface UpdateGameTesterResponse {

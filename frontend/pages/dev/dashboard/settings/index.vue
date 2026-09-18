@@ -113,7 +113,7 @@
   import type { UpdateGameDeveloperResponse } from '~/types/GameDeveloper'
 
   definePageMeta({
-    layout: 'dashboardDeveloper',
+    layout: 'dashboard-developer',
   })
 
   const { token } = useAuth()

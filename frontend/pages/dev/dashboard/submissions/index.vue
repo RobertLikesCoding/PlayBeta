@@ -22,7 +22,7 @@
   import SubmissionsTable from './SubmissionsTable.vue'
 
   definePageMeta({
-    layout: 'dashboardDeveloper',
+    layout: 'dashboard-developer',
   })
 
   const { data, pending: loadingSubmissions } = useSubmissionsList()

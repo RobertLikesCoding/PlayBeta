@@ -20,6 +20,6 @@
   import SubmissionForm from '~/components/SubmissionForm.vue'
 
   definePageMeta({
-    layout: 'dashboardDeveloper',
+    layout: 'dashboard-developer',
   })
 </script>
