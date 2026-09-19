@@ -221,8 +221,8 @@
   }>()
 
   const { token } = useAuth()
-
   const toast = useToast()
+  const { updateUser } = useCurrentUser()
 
   const form = useForm({
     onSubmit: async ({ value }) => {
@@ -259,6 +259,7 @@
           })
         } else {
           const updatedUser = response.data
+          updateUser(updatedUser)
 
           form.reset({
             email: updatedUser.email ?? '',
@@ -298,5 +299,3 @@
     }
   })
 </script>
-
-<style lang="css" scoped></style>

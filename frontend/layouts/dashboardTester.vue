@@ -57,7 +57,7 @@
   type MenuSection = 'invitations' | 'profile' | 'settings'
 
   const { user, isLoading, fetchUser, isDev } = useCurrentUser()
-  const redirectPath = isDev ? '/dev/auth/login' : '/tester/auth/login'
+  const redirectPath = isDev.value ? '/dev/auth/login' : '/tester/auth/login'
 
   watchEffect(() => !user.value && navigateTo(redirectPath))
 

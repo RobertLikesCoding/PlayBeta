@@ -20,7 +20,7 @@ export function useCurrentUser() {
       isLoading.value = false
       return user.value
     }
-    const queryPath = isDev
+    const queryPath = isDev.value
       ? '/api/v1/game_developers/me'
       : '/api/v1/game_testers/me'
 
@@ -39,5 +39,9 @@ export function useCurrentUser() {
     return user.value
   }
 
-  return { user, isLoading, fetchUser, isDev }
+  function updateUser(updatedUser: UserType) {
+    user.value = updatedUser
+  }
+
+  return { user, isLoading, isDev, fetchUser, updateUser }
 }
