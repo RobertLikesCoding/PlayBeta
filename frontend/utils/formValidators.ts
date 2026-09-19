@@ -7,7 +7,6 @@ export function validateEmail(value: string): string | undefined {
   if (value === '') {
     return 'Email is required'
   }
-  return undefined
 }
 
 export function validatePassword(value: string): string | undefined {
@@ -16,7 +15,6 @@ export function validatePassword(value: string): string | undefined {
   if (value.length === 0) {
     return 'Password is required'
   }
-  return undefined
 }
 
 export function validatePasswordConfirm(
@@ -29,7 +27,6 @@ export function validatePasswordConfirm(
   if (value.length === 0) {
     return 'Please confirm your password'
   }
-  return undefined
 }
 
 export function validateBirthday(value: string): string | undefined {
@@ -60,8 +57,7 @@ export function validateCurrentPassword(value: string) {
 
 export function validateNewPassword(value: string) {
   if (!value) return 'Please fill in a new password'
-  validatePasswordLength(value)
-  return undefined
+  return validatePasswordLength(value)
 }
 
 export function validateNewPasswordConfirm(
@@ -70,7 +66,6 @@ export function validateNewPasswordConfirm(
 ) {
   if (!confirmPassword) return 'Please confirm your new password'
   if (newPassword !== confirmPassword) return 'Passwords do not match'
-  return undefined
 }
 
 function validatePasswordLength(value: string, minLength: number = 8) {

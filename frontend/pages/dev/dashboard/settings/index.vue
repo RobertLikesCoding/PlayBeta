@@ -140,7 +140,7 @@
             },
           },
         )
-        if (response && response.errors) {
+        if (response && 'errors' in response) {
           console.error('Update failed:', response.errors)
           toast.add({
             title: 'Error',
