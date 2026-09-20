@@ -1,27 +1,25 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import ProfilePage from '~/pages/dev/dashboard/profile/index.vue'
+import ProfilePage from '~/pages/tester/dashboard/profile/index.vue'
 import type { VueWrapper } from '@vue/test-utils'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 vi.mock('~/composables/useCurrentUser', () => ({
   useCurrentUser: () => ({
     // user: ref(null),
     // isLoading: ref(false),
-    isDev: ref(true),
+    isDev: ref(false),
     // fetchUser: vi.fn(),
     // updateUser: vi.fn(),
   }),
 }))
 
 describe('Profile Page', () => {
-  const user = {
+  const tester = {
     id: 1,
     email: 'email@abc.de',
-    bio: '',
-    website: '',
-    location: 'Berlin',
-    studio_name: 'GameStudio',
-    avatar: '',
+    username: 'Robert',
+    gender: undefined,
+    birthdate: '13.04.1988',
   }
 
   let wrapper: VueWrapper
@@ -29,25 +27,28 @@ describe('Profile Page', () => {
   beforeEach(() => {
     wrapper = mount(ProfilePage, {
       props: {
-        user: user,
+        user: tester,
         isLoading: false,
       },
     })
   })
 
-  it('should not accept insecure links', async () => {
-    const websiteInput = wrapper.get('input[name="website"]')
-    const form = wrapper.get('form')
-    await websiteInput.setValue('http://example.com')
+  describe('validators', () => {
+    it('should validate email field', async () => {
+      const emailInput = wrapper.get('input[name="email"]')
+      await emailInput.setValue(' ')
+      await emailInput.trigger('blur')
 
-    await form.trigger('submit')
+      expect(wrapper.find('em').exists()).toBeTruthy()
+    })
 
-    const errors = wrapper.findAll('em')
-    const errorTexts = errors.map((e) => e.text())
+    it('should validate birthdate field', async () => {
+      const birthdateInput = wrapper.get('input[name="birthdate"]')
+      await birthdateInput.setValue('123')
+      await birthdateInput.trigger('blur')
 
-    expect(errorTexts).toContain(
-      'Please provide only save URLs starting with https',
-    )
+      expect(wrapper.find('em').exists()).toBeTruthy()
+    })
   })
 
   describe('when the form is untouched', () => {
@@ -63,7 +64,7 @@ describe('Profile Page', () => {
       const emailInput = wrapper.get('input[name="email"]')
 
       expect(submitButton.attributes('disabled')).toBeDefined()
-      expect(emailInput.html()).toContain(user.email)
+      expect(emailInput.html()).toContain(tester.email)
 
       await emailInput.setValue('text@abc.de')
       expect(submitButton.attributes('disabled')).not.toBeDefined()

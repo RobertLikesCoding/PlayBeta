@@ -34,7 +34,7 @@ export function validatePasswordConfirm(
 export function validateBirthday(
   value: string | undefined,
 ): string | undefined {
-  if (!value) return 'Please enter your birthdate'
+  if (!value?.trim()) return 'Please enter your birthdate'
 
   const MINIMUM_AGE = 16
   const birthDate = new Date(value)
