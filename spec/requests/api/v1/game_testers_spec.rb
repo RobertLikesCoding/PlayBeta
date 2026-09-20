@@ -17,11 +17,11 @@ RSpec.describe "GameTesters", type: :request do
         expect(response).to have_http_status(:success)
 
         current_user = JSON.parse(response.body)
-        expect(current_user["id"]).to eq(user.id)
-        expect(Date.parse(current_user["birthdate"])).to eq(user.birthdate)
-        expect(current_user["email"]).to eq(user.email)
-        expect(current_user['gender']).to eq(user.gender)
-        expect(current_user['username']).to eq(user.username)
+        expect(current_user["data"]["id"]).to eq(user.id)
+        expect(Date.parse(current_user["data"]["birthdate"])).to eq(user.birthdate)
+        expect(current_user["data"]["email"]).to eq(user.email)
+        expect(current_user["data"]['gender']).to eq(user.gender)
+        expect(current_user["data"]['username']).to eq(user.username)
       end
     end
 
