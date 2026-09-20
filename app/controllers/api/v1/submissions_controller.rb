@@ -11,6 +11,7 @@ class Api::V1::SubmissionsController < ApplicationController
 
   def show
     render json: {
+      # TODO include genres and submissions with as_json
       data: @submission,
       message: "Successfully loaded submission"
     }, status: :ok
@@ -49,7 +50,10 @@ class Api::V1::SubmissionsController < ApplicationController
   end
 
   def constants
-    render json: SUBMISSION_CONSTANTS
+    render json: {
+      genres: Genre.select(:id, :name),
+      platforms: Platform.select(:id, :name)
+    }
   end
 
   private

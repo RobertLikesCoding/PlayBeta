@@ -81,13 +81,11 @@
               <USelect
                 :id="field.name"
                 :name="field.name"
-                :value="field.state.value"
-                :items="displayGenres"
+                :model-value="field.state.value"
+                :items="genreList"
                 multiple
                 placeholder="Select a genre"
-                @update:model-value="
-                  (val: string[]) => field.handleChange(val as string[])
-                "
+                @update:model-value="field.handleChange"
               />
 
               <em
@@ -144,7 +142,7 @@
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
                 v-model="field.state.value"
-                :items="displayPlatforms"
+                :items="platformList"
                 orientation="horizontal"
                 @update:model-value="
                   (val: unknown) => field.handleChange(val as string[])
@@ -260,15 +258,18 @@
     },
   )
 
-  function capitalizeLists(list: string[]) {
-    return list.toSorted().map((item) => ({
-      label: item[0]?.toUpperCase() + item.substring(1),
-      value: item,
+  const genreList = computed(() => {
+    return genres.map((genre) => ({
+      label: genre.name[0]?.toUpperCase() + genre.name.substring(1),
+      value: String(genre.id),
     }))
-  }
-
-  const displayGenres = computed(() => capitalizeLists(genres))
-  const displayPlatforms = computed(() => capitalizeLists(platforms))
+  })
+  const platformList = computed(() => {
+    return platforms.map((platform) => ({
+      label: platform.name[0]?.toUpperCase() + platform.name.substring(1),
+      value: String(platform.id),
+    }))
+  })
 
   const form = useForm({
     onSubmit: async ({ value }) => {
@@ -286,8 +287,8 @@
               submission: {
                 title: value.title,
                 description: value.description,
-                genre: value.genre,
-                platforms: value.platforms,
+                genre_ids: value.genre,
+                platform_ids: value.platforms,
                 demo_url: value.demo_url,
                 version: value.version,
               },

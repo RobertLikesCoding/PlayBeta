@@ -23,6 +23,6 @@ export type GetSubmissionResponse = ApiResponse<Submission>
 export type GetSubmissionsListResponse = ApiResponse<Submission[]>
 
 export interface SubmissionConstants {
-  platforms: string[]
-  genres: string[]
+  platforms: { id: number; name: string }[]
+  genres: { id: number; name: string }[]
 }
