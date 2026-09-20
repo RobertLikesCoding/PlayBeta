@@ -11,8 +11,7 @@
           <form.Field
             name="title"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Title is required' : undefined,
+              onSubmit: ({ value }) => !value.trim() && PRESENCE_ERROR,
             }"
           >
             <template #default="{ field, state }">
@@ -43,8 +42,7 @@
           <form.Field
             name="description"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Description is required' : undefined,
+              onSubmit: ({ value }) => !value.trim() && PRESENCE_ERROR,
             }"
           >
             <template #default="{ field, state }">
@@ -107,8 +105,7 @@
           <form.Field
             name="version"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Version is required' : undefined,
+              onSubmit: ({ value }) => !value.trim() && PRESENCE_ERROR,
             }"
           >
             <template #default="{ field, state }">
@@ -197,11 +194,7 @@
         <form.Field
           name="demo_url"
           :validators="{
-            onSubmit: ({ value }) => {
-              if (!value) return 'Please provide a link to the demo'
-              if (!value?.startsWith('https://'))
-                return 'Please provide only save URLs starting with https'
-            },
+            onSubmit: ({ value }) => validateDemoUrl(value),
           }"
         >
           <template #default="{ field, state }">
@@ -209,7 +202,6 @@
             <UInput
               :id="field.name"
               :name="field.name"
-              type="url"
               :value="field.state.value"
               variant="outline"
               placeholder="https://example.com"
