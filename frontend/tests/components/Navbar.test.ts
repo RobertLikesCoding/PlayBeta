@@ -16,6 +16,16 @@ vi.mock('~/composables/useAuth', () => ({
   }),
 }))
 
+vi.mock('~/composables/useCurrentUser', () => ({
+  useCurrentUser: () => ({
+    // user: ref(null),
+    // isLoading: ref(false),
+    isDev: ref(true),
+    // fetchUser: vi.fn(),
+    // updateUser: vi.fn(),
+  }),
+}))
+
 describe('NavBar', () => {
   describe('Account Button', () => {
     beforeEach(() => {

@@ -183,16 +183,12 @@
       </section>
 
       <form.Subscribe>
-        <template
-          #default="{ canSubmit, isSubmitting, isSubmitted, isTouched }"
-        >
+        <template #default="{ canSubmit, isSubmitting, isTouched }">
           <UButton
             type="submit"
             class="justify-center hover:cursor-pointer w-full mb-5"
             size="xl"
-            :label="
-              isSubmitted && !isTouched ? 'Changes saved!' : 'Save changes'
-            "
+            label="Save changes"
             :loading="form.useSelector((meta) => meta.isSubmitting).value"
             :disabled="isSubmitting || !canSubmit || !isTouched"
           />

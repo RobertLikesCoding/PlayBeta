@@ -1,7 +1,17 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import ProfilePage from '~/pages/dev/dashboard/profile/index.vue'
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
+
+vi.mock('~/composables/useCurrentUser', () => ({
+  useCurrentUser: () => ({
+    // user: ref(null),
+    // isLoading: ref(false),
+    isDev: ref(true),
+    // fetchUser: vi.fn(),
+    // updateUser: vi.fn(),
+  }),
+}))
 
 describe('Profile Page', () => {
   const user = {
@@ -57,20 +67,6 @@ describe('Profile Page', () => {
 
       await emailInput.setValue('text@abc.de')
       expect(submitButton.attributes('disabled')).not.toBeDefined()
-    })
-  })
-
-  describe('the submit button', () => {
-    it('should change button label on successful submission', async () => {
-      const submitButton = wrapper.get('button[type="submit"]')
-      const form = wrapper.get('form')
-      const emailInput = wrapper.get('input[name="email"]')
-
-      await emailInput.setValue('text@abc.de')
-      await form.trigger('submit')
-      await flushPromises()
-
-      expect(submitButton.text()).toBe('Changes saved!')
     })
   })
 })
