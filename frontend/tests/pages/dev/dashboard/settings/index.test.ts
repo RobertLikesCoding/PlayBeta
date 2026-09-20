@@ -67,23 +67,5 @@ describe('Settings Page', () => {
 
       expect(submitButton.attributes('disabled')).not.toBeDefined()
     })
-
-    it('should change button label on successful submission', async () => {
-      const submitButton = wrapper.get('button[type="submit"]')
-      const form = wrapper.get('form')
-      const currentPasswordInput = wrapper.get('input[name="current_password"]')
-      const newPassword = wrapper.get('input[name="new_password"]')
-      const newPasswordConfirmation = wrapper.get(
-        'input[name="new_password_confirmation"]',
-      )
-
-      await currentPasswordInput.setValue('oldPassword')
-      await newPassword.setValue('newPassword')
-      await newPasswordConfirmation.setValue('newPassword')
-      await form.trigger('submit')
-      await flushPromises()
-
-      expect(submitButton.text()).toBe('Changes saved!')
-    })
   })
 })

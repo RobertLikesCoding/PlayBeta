@@ -89,16 +89,12 @@
       </section>
 
       <form.Subscribe>
-        <template
-          #default="{ canSubmit, isSubmitting, isSubmitted, isTouched }"
-        >
+        <template #default="{ canSubmit, isSubmitting, isTouched }">
           <UButton
             type="submit"
             class="justify-center hover:cursor-pointer w-full mb-5"
             size="xl"
-            :label="
-              isSubmitted && !isTouched ? 'Changes saved!' : 'Save changes'
-            "
+            label="Save changes"
             :loading="form.useSelector((meta) => meta.isSubmitting).value"
             :disabled="isSubmitting || !canSubmit || !isTouched"
           />
@@ -113,7 +109,7 @@
   import type { UpdateGameDeveloperResponse } from '~/types/GameDeveloper'
 
   definePageMeta({
-    layout: 'dashboard',
+    layout: 'dashboard-developer',
   })
 
   const { token } = useAuth()
@@ -122,7 +118,7 @@
   const form = useForm({
     onSubmit: async ({ value }) => {
       try {
-        const response: UpdateGameDeveloperResponse = await $fetch(
+        const response = await $fetch<UpdateGameDeveloperResponse>(
           `/api/v1/passwords/update`,
           {
             baseURL: useRuntimeConfig().public.apiBase,
@@ -140,7 +136,7 @@
             },
           },
         )
-        if (response && response.errors) {
+        if (response && 'errors' in response) {
           console.error('Update failed:', response.errors)
           toast.add({
             title: 'Error',
@@ -185,23 +181,4 @@
       }),
     },
   })
-
-  function validateCurrentPassword(value: string) {
-    return !value ? 'Please fill in your current password' : undefined
-  }
-
-  function validateNewPassword(value: string) {
-    if (!value) return 'Please fill in a new password'
-    if (value.length < 8) return 'Password must be at least 8 characters'
-    return undefined
-  }
-
-  function validateNewPasswordConfirm(
-    newPassword: string,
-    confirmPassword: string,
-  ) {
-    if (!confirmPassword) return 'Please confirm your new password'
-    if (newPassword !== confirmPassword) return 'Passwords do not match'
-    return undefined
-  }
 </script>

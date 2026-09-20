@@ -9,12 +9,7 @@ class Api::V1::GameDevelopersController < ApplicationController
   def show
     if current_user
       render json: {
-        id: current_user.id,
-        email: current_user.email,
-        bio: current_user.bio,
-        website: current_user.website,
-        location: current_user.location,
-        studio_name: current_user.studio_name
+        data: developer_json(current_user)
       }, status: :ok
     end
   end
@@ -25,8 +20,11 @@ class Api::V1::GameDevelopersController < ApplicationController
       access_token = encode_token(user)
 
       render json: {
-        user_id: user.id,
-        token: access_token
+        data: {
+          user_id: user.id,
+          token: access_token
+        },
+        message: "Successfully created user"
       }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_content
@@ -35,7 +33,10 @@ class Api::V1::GameDevelopersController < ApplicationController
 
   def update
     if current_user.update(profile_params)
-      render json: { message: "Successfully updated user data" }, status: :ok
+      render json: {
+        data: developer_json(current_user),
+        message: "Successfully updated user data"
+      }, status: :ok
     else
       render json: { errors: current_user.errors.full_messages }, status: :unprocessable_content
     end
@@ -51,5 +52,16 @@ class Api::V1::GameDevelopersController < ApplicationController
     def profile_params
       params.require(:game_developer)
             .permit(:email, :bio, :website, :location, :studio_name, :avatar)
+    end
+
+    def developer_json(developer)
+      developer.slice(
+        :id,
+        :email,
+        :bio,
+        :website,
+        :location,
+        :studio_name
+      )
     end
 end

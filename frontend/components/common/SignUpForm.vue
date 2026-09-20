@@ -84,7 +84,10 @@
           name="password_confirmation"
           :validators="{
             onBlur: ({ value }) => {
-              return validatePasswordConfirm(value)
+              return validatePasswordConfirm(
+                value,
+                form.getFieldValue('password'),
+              )
             },
           }"
         >
@@ -122,7 +125,6 @@
           name="birthdate"
           :validators="{
             onBlur: ({ value }) => {
-              console.log(value)
               return validateBirthday(value)
             },
           }"
@@ -209,13 +211,6 @@
     infoText: string
   }>()
 
-  // const GENDEROPTIONS = ['prefer_not_to_say', 'male', 'female', 'non_binary']
-  // const genderOptionsFormatted = computed(() =>
-  //   GENDEROPTIONS.map((option: string) => ({
-  //     label: option.replaceAll('_', ' '),
-  //     value: option,
-  //   })),
-  // )
   const isDev = computed(() => props.mode === 'dev')
   const heading = computed(() => {
     return isDev.value
@@ -238,10 +233,10 @@
 
       const redirectPath = isDev.value
         ? '/dev/dashboard/submissions'
-        : '/tester/dashboard'
+        : '/tester/dashboard/profile'
 
       try {
-        const response: SignUpResponse = await $fetch(path, {
+        const response = await $fetch<SignUpResponse>(path, {
           baseURL: useRuntimeConfig().public.apiBase,
           method: 'POST',
           headers: {
@@ -255,7 +250,6 @@
               birthdate: value.birthdate,
             },
           },
-          throw: false,
         })
 
         form.reset()
@@ -283,58 +277,4 @@
       gender: '',
     },
   })
-
-  function validateEmail(value: string): string | undefined {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-    if (value && !emailRegex.test(value)) {
-      return 'Please provide a valid email address'
-    }
-    if (value === '') {
-      return 'Email is required'
-    }
-    return undefined
-  }
-
-  function validatePassword(value: string): string | undefined {
-    if (value && value.length < 8) {
-      return 'Minimum length is 8 characters'
-    }
-    if (value.length === 0) {
-      return 'Password is required'
-    }
-    return undefined
-  }
-
-  function validatePasswordConfirm(value: string): string | undefined {
-    if (value && value !== form.getFieldValue('password')) {
-      return "Passwords don't match"
-    }
-    if (value.length === 0) {
-      return 'Please confirm your password'
-    }
-    return undefined
-  }
-
-  function validateBirthday(value: string): string | undefined {
-    if (!value) return 'Please enter your birthdate'
-
-    const MINIMUM_AGE = 16
-    const birthDate = new Date(value)
-    const currentDate = new Date()
-    let userAge = currentDate.getFullYear() - birthDate.getFullYear()
-
-    if (birthDate.getMonth() > currentDate.getMonth()) {
-      userAge = userAge - 1
-    } else if (
-      birthDate.getMonth() === currentDate.getMonth() &&
-      birthDate.getDate() > currentDate.getDate()
-    ) {
-      userAge = userAge - 1
-    }
-
-    if (userAge < MINIMUM_AGE) {
-      return `You need to be at least ${MINIMUM_AGE} to sign up as a tester.`
-    }
-  }
 </script>

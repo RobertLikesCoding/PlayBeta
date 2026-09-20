@@ -26,10 +26,10 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         expect(response).to have_http_status(:ok)
 
         current_user = JSON.parse(response.body)
-        expect(current_user["id"]).to eq(user.id)
-        expect(current_user["bio"]).to eq(user.bio)
-        expect(current_user["email"]).to eq(user.email)
-        expect(current_user["password_digest"]).to_not be_present
+        expect(current_user["data"]["id"]).to eq(user.id)
+        expect(current_user["data"]["bio"]).to eq(user.bio)
+        expect(current_user["data"]["email"]).to eq(user.email)
+        expect(current_user["data"]["password_digest"]).to_not be_present
       end
     end
 
@@ -62,8 +62,8 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
         expect(response).to have_http_status(:created)
 
         json = JSON.parse(response.body)
-        expect(json["user_id"]).to be_present
-        expect(json["token"]).to be_present
+        expect(json["data"]["user_id"]).to be_present
+        expect(json["data"]["token"]).to be_present
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.describe "Api::V1::GameDevelopers", type: :request do
     end
   end
 
-  describe "POST /update" do
+  describe "PATCH /update" do
     let(:update_params) do
       {
         game_developer: {

@@ -6,8 +6,8 @@
 
     <h1 class="text-2xl pb-10">
       {{
-        user?.studio_name
-          ? `Welcome back, Studio ${user?.studio_name}!`
+        user && 'username' in user && user.username
+          ? `Welcome back, ${user.username}!`
           : 'Welcome back!'
       }}
     </h1>
@@ -19,7 +19,7 @@
             :key="index"
           >
             <NuxtLink
-              :to="`/dev/dashboard/${item.section}`"
+              :to="`/tester/dashboard/${item.section}`"
               :class="[
                 'block cursor-pointer hover:bg-accented rounded p-2 h-full',
                 { 'bg-accented': $route.path.includes(item.section) },
@@ -54,14 +54,15 @@
     middleware: ['auth'],
   })
 
-  type MenuSection = 'submissions' | 'profile' | 'settings'
+  type MenuSection = 'invitations' | 'profile' | 'settings'
 
-  const { user, isLoading, fetchUser } = useCurrentUser()
+  const { user, isLoading, fetchUser, isDev } = useCurrentUser()
+  const redirectPath = isDev.value ? '/dev/auth/login' : '/tester/auth/login'
 
-  watchEffect(() => !user.value && navigateTo('/dev/auth/login'))
+  watchEffect(() => !user.value && navigateTo(redirectPath))
 
   const menu: { section: MenuSection; label: string }[] = [
-    { section: 'submissions', label: 'Submissions' },
+    { section: 'invitations', label: 'Invitations' },
     { section: 'profile', label: 'Profile' },
     { section: 'settings', label: 'Settings' },
   ]
