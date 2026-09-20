@@ -15,7 +15,7 @@
             name="email"
             :validators="{
               onBlur: ({ value }) => {
-                validateEmail(value)
+                return validateEmail(value)
               },
             }"
           >
@@ -31,6 +31,7 @@
                   (e: Event) =>
                     field.handleChange((e.target as HTMLInputElement).value)
                 "
+                @blur="field.handleBlur"
               />
               <em
                 v-for="(error, index) of state.meta.errors"
@@ -125,9 +126,8 @@
           <form.Field
             name="website"
             :validators="{
-              onSubmit: ({ value }) => {
-                if (value && !value?.startsWith('https://'))
-                  return 'Please provide only save URLs starting with https'
+              onBlur: ({ value }) => {
+                return validateUrl(value)
               },
             }"
           >
@@ -144,6 +144,7 @@
                   (e: Event) =>
                     field.handleChange((e.target as HTMLInputElement).value)
                 "
+                @blur="field.handleBlur"
               />
               <em
                 v-for="(error, index) of state.meta.errors"

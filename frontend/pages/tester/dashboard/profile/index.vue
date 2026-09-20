@@ -15,7 +15,7 @@
             name="email"
             :validators="{
               onBlur: ({ value }) => {
-                validateEmail(value)
+                return validateEmail(value)
               },
             }"
           >
@@ -31,6 +31,7 @@
                   (e: Event) =>
                     field.handleChange((e.target as HTMLInputElement).value)
                 "
+                @blur="field.handleBlur()"
               />
               <em
                 v-for="(error, index) of state.meta.errors"

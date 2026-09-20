@@ -211,13 +211,6 @@
     infoText: string
   }>()
 
-  // const GENDEROPTIONS = ['prefer_not_to_say', 'male', 'female', 'non_binary']
-  // const genderOptionsFormatted = computed(() =>
-  //   GENDEROPTIONS.map((option: string) => ({
-  //     label: option.replaceAll('_', ' '),
-  //     value: option,
-  //   })),
-  // )
   const isDev = computed(() => props.mode === 'dev')
   const heading = computed(() => {
     return isDev.value

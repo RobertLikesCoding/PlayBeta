@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import ProfilePage from '~/pages/dev/dashboard/profile/index.vue'
 import type { VueWrapper } from '@vue/test-utils'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 vi.mock('~/composables/useCurrentUser', () => ({
   useCurrentUser: () => ({
@@ -14,7 +14,7 @@ vi.mock('~/composables/useCurrentUser', () => ({
 }))
 
 describe('Profile Page', () => {
-  const user = {
+  const developer = {
     id: 1,
     email: 'email@abc.de',
     bio: '',
@@ -29,25 +29,28 @@ describe('Profile Page', () => {
   beforeEach(() => {
     wrapper = mount(ProfilePage, {
       props: {
-        user: user,
+        user: developer,
         isLoading: false,
       },
     })
   })
 
-  it('should not accept insecure links', async () => {
-    const websiteInput = wrapper.get('input[name="website"]')
-    const form = wrapper.get('form')
-    await websiteInput.setValue('http://example.com')
+  describe('validators', () => {
+    it('should validate email field', async () => {
+      const emailInput = wrapper.get('input[name="email"]')
+      await emailInput.setValue(' ')
+      await emailInput.trigger('blur')
 
-    await form.trigger('submit')
+      expect(wrapper.find('em').exists()).toBeTruthy()
+    })
 
-    const errors = wrapper.findAll('em')
-    const errorTexts = errors.map((e) => e.text())
+    it('should validate website field', async () => {
+      const websiteInput = wrapper.get('input[name="website"]')
+      await websiteInput.setValue('hello')
+      await websiteInput.trigger('blur')
 
-    expect(errorTexts).toContain(
-      'Please provide only save URLs starting with https',
-    )
+      expect(wrapper.find('em').exists()).toBeTruthy()
+    })
   })
 
   describe('when the form is untouched', () => {
@@ -63,7 +66,7 @@ describe('Profile Page', () => {
       const emailInput = wrapper.get('input[name="email"]')
 
       expect(submitButton.attributes('disabled')).toBeDefined()
-      expect(emailInput.html()).toContain(user.email)
+      expect(emailInput.html()).toContain(developer.email)
 
       await emailInput.setValue('text@abc.de')
       expect(submitButton.attributes('disabled')).not.toBeDefined()
