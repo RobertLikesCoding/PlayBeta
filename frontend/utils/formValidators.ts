@@ -16,7 +16,7 @@ export function validatePassword(
     return 'Password is required'
   }
 
-  validatePasswordLength(value)
+  return validatePasswordLength(value)
 }
 
 export function validatePasswordConfirm(
