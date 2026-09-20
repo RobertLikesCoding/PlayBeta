@@ -1,35 +1,39 @@
-export function validateEmail(value: string): string | undefined {
+export function validateEmail(value: string | undefined): string | undefined {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-  if (value && !emailRegex.test(value)) {
-    return 'Please provide a valid email address'
-  }
-  if (value === '') {
+  if (!value?.trim()) {
     return 'Email is required'
+  }
+  if (!emailRegex.test(value)) {
+    return 'Please provide a valid email address'
   }
 }
 
-export function validatePassword(value: string): string | undefined {
-  validatePasswordLength(value)
-
-  if (value.length === 0) {
+export function validatePassword(
+  value: string | undefined,
+): string | undefined {
+  if (!value?.trim()) {
     return 'Password is required'
   }
+
+  validatePasswordLength(value)
 }
 
 export function validatePasswordConfirm(
   value: string,
   password: string,
 ): string | undefined {
+  if (!value.trim()) {
+    return 'Please confirm your password'
+  }
   if (value && value !== password) {
     return "Passwords don't match"
   }
-  if (value.length === 0) {
-    return 'Please confirm your password'
-  }
 }
 
-export function validateBirthday(value: string): string | undefined {
+export function validateBirthday(
+  value: string | undefined,
+): string | undefined {
   if (!value) return 'Please enter your birthdate'
 
   const MINIMUM_AGE = 16
@@ -51,12 +55,12 @@ export function validateBirthday(value: string): string | undefined {
   }
 }
 
-export function validateCurrentPassword(value: string) {
-  return !value ? 'Please fill in your current password' : undefined
+export function validateCurrentPassword(value: string | undefined) {
+  return !value?.trim() && 'Please fill in your current password'
 }
 
-export function validateNewPassword(value: string) {
-  if (!value) return 'Please fill in a new password'
+export function validateNewPassword(value: string | undefined) {
+  if (!value?.trim()) return 'Please fill in a new password'
   return validatePasswordLength(value)
 }
 
@@ -64,8 +68,23 @@ export function validateNewPasswordConfirm(
   newPassword: string,
   confirmPassword: string,
 ) {
-  if (!confirmPassword) return 'Please confirm your new password'
+  if (!confirmPassword.trim()) return 'Please confirm your new password'
   if (newPassword !== confirmPassword) return 'Passwords do not match'
+}
+
+export function validateUrl(value: string | undefined) {
+  if (!value?.trim()) return
+
+  try {
+    const url = new URL(value)
+    if (url.protocol !== 'https:') {
+      return 'Please provide only save URLs starting with https'
+    }
+
+    return
+  } catch (error) {
+    return 'Please provide a valid URL'
+  }
 }
 
 function validatePasswordLength(value: string, minLength: number = 8) {
