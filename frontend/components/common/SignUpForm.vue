@@ -205,13 +205,14 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
+  import type { AccountType } from '~/types/misc'
 
   const props = defineProps<{
-    mode: 'dev' | 'tester'
+    accountType: AccountType
     infoText: string
   }>()
 
-  const isDev = computed(() => props.mode === 'dev')
+  const isDev = computed(() => props.accountType === 'dev')
   const heading = computed(() => {
     return isDev.value
       ? 'Create a Developer account'
@@ -254,7 +255,7 @@
 
         form.reset()
         if ('token' in response) {
-          setTokenCookie(response.token)
+          setTokenCookie(response.token, props.accountType)
           navigateTo(redirectPath)
         }
       } catch (error) {

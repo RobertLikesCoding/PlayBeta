@@ -50,9 +50,9 @@
 <script setup lang="ts">
   import LoadingSpinner from '~/components/common/LoadingSpinner.vue'
 
-  type MenuSection = 'invitations' | 'profile' | 'settings'
-
   const { user, isLoading, fetchUser } = useCurrentUser()
+
+  type MenuSection = 'invitations' | 'profile' | 'settings'
 
   const menu: { section: MenuSection; label: string }[] = [
     { section: 'invitations', label: 'Invitations' },

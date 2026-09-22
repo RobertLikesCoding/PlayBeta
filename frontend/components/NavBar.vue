@@ -158,13 +158,15 @@
 
 <script setup lang="ts">
   const isMenuOpen = ref(false)
-  const { isAuthenticated, clearTokenCookie } = useAuth()
-  const { isDev } = useCurrentUser()
+  const { isAuthenticated, clearTokenCookie, isDev } = useAuth()
+  const { clearUser } = useCurrentUser()
+
   const router = useRouter()
   const toast = useToast()
 
   function logout() {
     clearTokenCookie()
+    clearUser()
     router.push('/')
 
     toast.add({

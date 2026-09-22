@@ -1,6 +1,6 @@
 <template>
   <SignUpForm
-    mode="tester"
+    account-type="tester"
     info-text="By signing up, you create an account an can start getting invititations to game demos"
   />
 </template>

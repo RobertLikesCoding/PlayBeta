@@ -108,13 +108,14 @@
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
   import { useAuth } from '#imports'
+  import type { AccountType } from '~/types/misc'
 
   const props = defineProps<{
-    mode: 'dev' | 'tester'
+    accountType: AccountType
     infoText: string
   }>()
 
-  const isDev = props.mode === 'dev'
+  const isDev = props.accountType === 'dev'
   const { setTokenCookie } = useAuth()
 
   const signInErrors = ref<string[]>([])
@@ -150,7 +151,7 @@
         form.reset()
 
         if ('token' in response) {
-          setTokenCookie(response.token)
+          setTokenCookie(response.token, props.accountType)
           navigateTo(redirectPath)
         }
       } catch (error) {
