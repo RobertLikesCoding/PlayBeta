@@ -50,16 +50,9 @@
 <script setup lang="ts">
   import LoadingSpinner from '~/components/common/LoadingSpinner.vue'
 
-  definePageMeta({
-    middleware: ['auth'],
-  })
-
   type MenuSection = 'invitations' | 'profile' | 'settings'
 
-  const { user, isLoading, fetchUser, isDev } = useCurrentUser()
-  const redirectPath = isDev.value ? '/dev/auth/login' : '/tester/auth/login'
-
-  watchEffect(() => !user.value && navigateTo(redirectPath))
+  const { user, isLoading, fetchUser } = useCurrentUser()
 
   const menu: { section: MenuSection; label: string }[] = [
     { section: 'invitations', label: 'Invitations' },
