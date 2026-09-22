@@ -13,16 +13,7 @@ vi.mock('~/composables/useAuth', () => ({
     token: mockToken,
     setTokenCookie: vi.fn(),
     clearTokenCookie: clearTokenCookieMock,
-  }),
-}))
-
-vi.mock('~/composables/useCurrentUser', () => ({
-  useCurrentUser: () => ({
-    // user: ref(null),
-    // isLoading: ref(false),
     isDev: ref(true),
-    // fetchUser: vi.fn(),
-    // updateUser: vi.fn(),
   }),
 }))
 

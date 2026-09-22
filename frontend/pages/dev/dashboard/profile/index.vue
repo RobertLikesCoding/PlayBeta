@@ -255,15 +255,6 @@
           const updatedUser = response.data
           updateUser(updatedUser)
 
-          form.reset({
-            email: updatedUser.email,
-            studio_name: updatedUser.studio_name,
-            website: updatedUser.website,
-            location: updatedUser.location,
-            bio: updatedUser.bio,
-            avatar: updatedUser.avatar ?? null,
-          })
-
           toast.add({
             title: 'Success',
             description: 'Your changes were saved successfully.',
@@ -285,4 +276,21 @@
       avatar: props.user?.avatar ?? '',
     },
   })
+
+  // this updates the form whenever the user props change
+  watch(
+    () => props.user,
+    (user) => {
+      if (!user) return
+      form.reset({
+        email: user.email,
+        studio_name: user.studio_name,
+        website: user.website,
+        location: user.location,
+        bio: user.bio,
+        avatar: user.avatar ?? '',
+      })
+    },
+    { immediate: true },
+  )
 </script>
