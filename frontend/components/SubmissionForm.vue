@@ -271,28 +271,29 @@
 
   const form = useForm({
     onSubmit: async ({ value }) => {
+      const isCreate = props.mode === 'create'
+      const requestPath = isCreate
+        ? '/api/v1/submissions'
+        : `/api/v1/submissions/${props.submission?.s_id}`
       try {
-        const response = await $fetch<CreateSubmissionResponse>(
-          '/api/v1/submissions',
-          {
-            baseURL: useRuntimeConfig().public.apiBase,
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token.value}`,
-            },
-            body: {
-              submission: {
-                title: value.title,
-                description: value.description,
-                genre_ids: value.genre,
-                platform_ids: value.platforms,
-                demo_url: value.demo_url,
-                version: value.version,
-              },
+        const response = await $fetch<CreateSubmissionResponse>(requestPath, {
+          baseURL: useRuntimeConfig().public.apiBase,
+          method: props.mode === 'create' ? 'POST' : 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token.value}`,
+          },
+          body: {
+            submission: {
+              title: value.title,
+              description: value.description,
+              genre_ids: value.genre,
+              platform_ids: value.platforms,
+              demo_url: value.demo_url,
+              version: value.version,
             },
           },
-        )
+        })
 
         if ('errors' in response) {
           console.error('Submission failed', response.errors)
