@@ -165,9 +165,9 @@
   const toast = useToast()
 
   function logout() {
+    router.push('/')
     clearTokenCookie()
     clearUser()
-    router.push('/')
 
     toast.add({
       title: 'Success',

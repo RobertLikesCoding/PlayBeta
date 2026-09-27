@@ -1,4 +1,5 @@
 import type { ApiResponse } from './Api'
+import type { Genre, Platform } from './misc'
 
 export interface Submission {
   s_id: string
@@ -7,8 +8,8 @@ export interface Submission {
   demo_url: string
   status: string
   version: string
-  genre: string[]
-  platforms: string[]
+  genres: Genre[]
+  platforms: Platform[]
   created_at: string
 }
 
