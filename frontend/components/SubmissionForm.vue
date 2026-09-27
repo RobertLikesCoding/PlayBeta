@@ -144,9 +144,7 @@
                 v-model="field.state.value"
                 :items="platformList"
                 orientation="horizontal"
-                @update:model-value="
-                  (val: unknown) => field.handleChange(val as string[])
-                "
+                @update:model-value="field.handleChange"
               />
               <em
                 v-for="(error, index) of state.meta.errors"
@@ -320,8 +318,9 @@
     defaultValues: {
       title: props.submission?.title ?? '',
       description: props.submission?.description ?? '',
-      genre: props.submission?.genre ?? ([] as string[]),
-      platforms: props.submission?.platforms ?? ([] as string[]),
+      genre: props.submission?.genres.map((genre) => String(genre.id)) ?? [],
+      platforms:
+        props.submission?.platforms.map((plat) => String(plat.id)) ?? [],
       demo_url: props.submission?.demo_url ?? '',
       version: props.submission?.version ?? '',
     },
