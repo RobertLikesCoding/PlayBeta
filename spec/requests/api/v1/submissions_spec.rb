@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Submissions", type: :request do
-  let!(:windows_platform) { create(:platform) }
-  let!(:action_genre) { create(:genre) }
+  let!(:windows_platform) { create(:platform, name: 'windows') }
+  let!(:action_genre) { create(:genre, name: "action") }
   let(:game_developer) { create(:game_developer) }
   let!(:submission) { create(:submission, game_developer: game_developer) }
 
@@ -107,12 +107,17 @@ RSpec.describe "Api::V1::Submissions", type: :request do
   end
 
   describe "GET /constants" do
-    it "returns constants for platforms and genres" do
+    it "returns genres and platforms" do
       get "/api/v1/submissions/constants"
 
+      expect(response).to have_http_status(:ok)
       data = JSON.parse(response.body)
-      expect(data["genres"]).to eq(SUBMISSION_CONSTANTS[:genres])
-      expect(data["platforms"]).to eq(SUBMISSION_CONSTANTS[:platforms])
+      expect(data["genres"]).to contain_exactly(
+        { "id" => action_genre.id, "name" => action_genre.name }
+      )
+      expect(data["platforms"]).to contain_exactly(
+        { "id" => windows_platform.id, "name" => windows_platform.name }
+      )
     end
   end
 end
