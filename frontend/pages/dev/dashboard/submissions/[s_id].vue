@@ -1,14 +1,6 @@
 <template>
   <div class="flex flex-col gap-5">
-    <UButton
-      icon="i-lucide-arrow-left"
-      size="xl"
-      variant="outline"
-      color="neutral"
-      class="w-fit"
-      to="/dev/dashboard/submissions"
-      >Back</UButton
-    >
+    <BackButton to="/dev/dashboard/submissions" />
     <LoadingSpinner v-if="isLoading" />
 
     <div
@@ -36,6 +28,7 @@
   </div>
 </template>
 <script setup lang="ts">
+  import BackButton from '~/components/common/BackButton.vue'
   import LoadingSpinner from '~/components/common/LoadingSpinner.vue'
 
   const route = useRoute()
