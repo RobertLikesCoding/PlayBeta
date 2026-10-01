@@ -7,19 +7,18 @@ type CurrentUserResponse = {
 
 type UserType = GameDeveloperAPI | GameTesterAPI
 const user = ref<UserType | null>(null)
-const route = useRoute()
-const isDev = computed(() => route.path.startsWith('/dev/'))
-
 const isLoading = ref(true)
+const { isDev, isAuthenticated } = useAuth()
 
 export function useCurrentUser() {
-  const { token, isAuthenticated } = useAuth()
+  const { token } = useAuth()
 
   async function fetchUser() {
     if (user.value && isAuthenticated.value) {
       isLoading.value = false
       return user.value
     }
+
     const queryPath = isDev.value
       ? '/api/v1/game_developers/me'
       : '/api/v1/game_testers/me'
@@ -43,5 +42,9 @@ export function useCurrentUser() {
     user.value = updatedUser
   }
 
-  return { user, isLoading, isDev, fetchUser, updateUser }
+  function clearUser() {
+    user.value = null
+  }
+
+  return { user, isLoading, isDev, fetchUser, updateUser, clearUser }
 }

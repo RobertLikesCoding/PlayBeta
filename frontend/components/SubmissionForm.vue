@@ -11,8 +11,7 @@
           <form.Field
             name="title"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Title is required' : undefined,
+              onSubmit: ({ value }) => !value.trim() && PRESENCE_ERROR,
             }"
           >
             <template #default="{ field, state }">
@@ -43,8 +42,7 @@
           <form.Field
             name="description"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Description is required' : undefined,
+              onSubmit: ({ value }) => !value.trim() && PRESENCE_ERROR,
             }"
           >
             <template #default="{ field, state }">
@@ -83,13 +81,11 @@
               <USelect
                 :id="field.name"
                 :name="field.name"
-                :value="field.state.value"
-                :items="displayGenres"
+                :model-value="field.state.value"
+                :items="genreList"
                 multiple
                 placeholder="Select a genre"
-                @update:model-value="
-                  (val: string[]) => field.handleChange(val as string[])
-                "
+                @update:model-value="field.handleChange"
               />
 
               <em
@@ -107,8 +103,7 @@
           <form.Field
             name="version"
             :validators="{
-              onSubmit: ({ value }) =>
-                !value ? 'Version is required' : undefined,
+              onSubmit: ({ value }) => !value.trim() && PRESENCE_ERROR,
             }"
           >
             <template #default="{ field, state }">
@@ -147,11 +142,9 @@
               <label :htmlFor="field.name">Platforms</label>
               <UCheckboxGroup
                 v-model="field.state.value"
-                :items="displayPlatforms"
+                :items="platformList"
                 orientation="horizontal"
-                @update:model-value="
-                  (val: unknown) => field.handleChange(val as string[])
-                "
+                @update:model-value="field.handleChange"
               />
               <em
                 v-for="(error, index) of state.meta.errors"
@@ -197,11 +190,7 @@
         <form.Field
           name="demo_url"
           :validators="{
-            onSubmit: ({ value }) => {
-              if (!value) return 'Please provide a link to the demo'
-              if (!value?.startsWith('https://'))
-                return 'Please provide only save URLs starting with https'
-            },
+            onSubmit: ({ value }) => validateDemoUrl(value),
           }"
         >
           <template #default="{ field, state }">
@@ -209,7 +198,6 @@
             <UInput
               :id="field.name"
               :name="field.name"
-              type="url"
               :value="field.state.value"
               variant="outline"
               placeholder="https://example.com"
@@ -247,11 +235,7 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import type {
-    CreateSubmissionResponse,
-    Submission,
-    SubmissionConstants,
-  } from '~/types/Submission'
+  import type { CreateSubmissionResponse, Submission } from '~/types/Submission'
 
   const props = defineProps<{
     mode: 'edit' | 'create'
@@ -260,48 +244,33 @@
 
   const { token } = useAuth()
   const toast = useToast()
-
-  const { platforms, genres } = await $fetch<SubmissionConstants>(
-    '/api/v1/submissions/constants',
-    {
-      baseURL: useRuntimeConfig().public.apiBase,
-    },
-  )
-
-  function capitalizeLists(list: string[]) {
-    return list.toSorted().map((item) => ({
-      label: item[0]?.toUpperCase() + item.substring(1),
-      value: item,
-    }))
-  }
-
-  const displayGenres = computed(() => capitalizeLists(genres))
-  const displayPlatforms = computed(() => capitalizeLists(platforms))
+  const { platformList, genreList } = await useConstants()
 
   const form = useForm({
     onSubmit: async ({ value }) => {
+      const isCreate = props.mode === 'create'
+      const requestPath = isCreate
+        ? '/api/v1/submissions'
+        : `/api/v1/submissions/${props.submission?.s_id}`
       try {
-        const response = await $fetch<CreateSubmissionResponse>(
-          '/api/v1/submissions',
-          {
-            baseURL: useRuntimeConfig().public.apiBase,
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token.value}`,
-            },
-            body: {
-              submission: {
-                title: value.title,
-                description: value.description,
-                genre: value.genre,
-                platforms: value.platforms,
-                demo_url: value.demo_url,
-                version: value.version,
-              },
+        const response = await $fetch<CreateSubmissionResponse>(requestPath, {
+          baseURL: useRuntimeConfig().public.apiBase,
+          method: props.mode === 'create' ? 'POST' : 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token.value}`,
+          },
+          body: {
+            submission: {
+              title: value.title,
+              description: value.description,
+              genre_ids: value.genre,
+              platform_ids: value.platforms,
+              demo_url: value.demo_url,
+              version: value.version,
             },
           },
-        )
+        })
 
         if ('errors' in response) {
           console.error('Submission failed', response.errors)
@@ -327,8 +296,9 @@
     defaultValues: {
       title: props.submission?.title ?? '',
       description: props.submission?.description ?? '',
-      genre: props.submission?.genre ?? ([] as string[]),
-      platforms: props.submission?.platforms ?? ([] as string[]),
+      genre: props.submission?.genres.map((genre) => String(genre.id)) ?? [],
+      platforms:
+        props.submission?.platforms.map((plat) => String(plat.id)) ?? [],
       demo_url: props.submission?.demo_url ?? '',
       version: props.submission?.version ?? '',
     },

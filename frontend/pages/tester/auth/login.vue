@@ -1,6 +1,6 @@
 <template>
   <LoginForm
-    mode="tester"
+    account-type="tester"
     info-text="Sign in with your Game Tester account"
   />
 </template>

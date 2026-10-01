@@ -1,9 +1,9 @@
+export const PRESENCE_ERROR = 'Please fill in this field'
+
 export function validateEmail(value: string | undefined): string | undefined {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-  if (!value?.trim()) {
-    return 'Email is required'
-  }
+  if (!value?.trim()) return PRESENCE_ERROR
   if (!emailRegex.test(value)) {
     return 'Please provide a valid email address'
   }
@@ -12,20 +12,16 @@ export function validateEmail(value: string | undefined): string | undefined {
 export function validatePassword(
   value: string | undefined,
 ): string | undefined {
-  if (!value?.trim()) {
-    return 'Password is required'
-  }
+  if (!value?.trim()) return PRESENCE_ERROR
 
-  validatePasswordLength(value)
+  return validatePasswordLength(value)
 }
 
 export function validatePasswordConfirm(
   value: string,
   password: string,
 ): string | undefined {
-  if (!value.trim()) {
-    return 'Please confirm your password'
-  }
+  if (!value.trim()) return PRESENCE_ERROR
   if (value && value !== password) {
     return "Passwords don't match"
   }
@@ -34,7 +30,7 @@ export function validatePasswordConfirm(
 export function validateBirthday(
   value: string | undefined,
 ): string | undefined {
-  if (!value?.trim()) return 'Please enter your birthdate'
+  if (!value?.trim()) return PRESENCE_ERROR
 
   const MINIMUM_AGE = 16
   const birthDate = new Date(value)
@@ -56,11 +52,11 @@ export function validateBirthday(
 }
 
 export function validateCurrentPassword(value: string | undefined) {
-  return !value?.trim() && 'Please fill in your current password'
+  if (!value?.trim()) return PRESENCE_ERROR
 }
 
 export function validateNewPassword(value: string | undefined) {
-  if (!value?.trim()) return 'Please fill in a new password'
+  if (!value?.trim()) return PRESENCE_ERROR
   return validatePasswordLength(value)
 }
 
@@ -68,7 +64,7 @@ export function validateNewPasswordConfirm(
   newPassword: string,
   confirmPassword: string,
 ) {
-  if (!confirmPassword.trim()) return 'Please confirm your new password'
+  if (!confirmPassword.trim()) return PRESENCE_ERROR
   if (newPassword !== confirmPassword) return 'Passwords do not match'
 }
 
@@ -85,6 +81,12 @@ export function validateUrl(value: string | undefined) {
   } catch (error) {
     return 'Please provide a valid URL'
   }
+}
+
+export function validateDemoUrl(value: string) {
+  if (!value.trim()) return PRESENCE_ERROR
+
+  return validateUrl(value)
 }
 
 function validatePasswordLength(value: string, minLength: number = 8) {

@@ -33,19 +33,22 @@ describe('SubmissionForm', () => {
     const title = wrapper.find('input[name="title"]')
     const form = wrapper.find('form')
 
-    title.setValue('Game Title')
-    title.setValue('')
+    await title.setValue('Game Title')
+    await title.setValue('')
     await form.trigger('submit')
+    await flushPromises()
     const error = wrapper.findAll('em')
     const errorMessages = error.map((em) => em.text())
 
     expect(error.length).toBe(6)
-    expect(errorMessages).toContain('Title is required')
-    expect(errorMessages).toContain('Description is required')
+    expect(errorMessages).toContain('Please fill in this field')
     expect(errorMessages).toContain('Please select at least 1 genre')
-    expect(errorMessages).toContain('Version is required')
+    expect(
+      errorMessages.filter(
+        (message) => message === 'Please fill in this field',
+      ),
+    ).toHaveLength(4)
     expect(errorMessages).toContain('Please select at least 1 platform')
-    expect(errorMessages).toContain('Please provide a link to the demo')
   })
 
   describe('when submitting', () => {
@@ -64,9 +67,9 @@ describe('SubmissionForm', () => {
       await descriptionTextarea.setValue(
         'A detailed description of the game that is long enough to pass validation.',
       )
-      await genreSelect.vm.$emit('update:modelValue', ['action'])
+      await genreSelect.vm.$emit('update:modelValue', ['1'])
       await versionInput.setValue('1.0.0')
-      await platformCheckboxes.vm.$emit('update:modelValue', ['windows'])
+      await platformCheckboxes.vm.$emit('update:modelValue', ['1'])
       await demoUrlInput.setValue('https://example.com/demo')
 
       await form.trigger('submit.prevent')

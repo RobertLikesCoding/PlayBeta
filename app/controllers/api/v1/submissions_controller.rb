@@ -6,37 +6,53 @@ class Api::V1::SubmissionsController < ApplicationController
     render json: {
       data: current_user.submissions,
       message: "Successfully loaded submissions"
-    }, status: :ok
+    },
+status: :ok
   end
 
   def show
     render json: {
-      data: @submission,
+      data: @submission.as_json(include: {
+        genres: { only: [ :id, :name ] },
+        platforms: { only: [ :id, :name ] }
+      }),
       message: "Successfully loaded submission"
-    }, status: :ok
+    },
+status: :ok
   end
 
   def create
     submission = current_user.submissions.new(submission_params)
 
     if submission.save
-      render json: { message: "Successfully created new submission", data: submission }, status: :ok
+      render json: { message: "Successfully created new submission",
+      data: submission.as_json(include: {
+        genres: { only: [ :id, :name ] },
+        platforms: { only: [ :id, :name ] }
+      }) }, status: :ok
     else
       render json: {
         message: "Failed to create submission",
         errors: submission.errors.full_messages
-        }, status: :unprocessable_content
+        },
+status: :unprocessable_content
     end
   end
 
   def update
     if @submission.update(submission_params)
-      render json: { message: "Successfully updated submission", data: @submission }, status: :ok
+      render json: { message: "Successfully updated submission",
+      data: @submission.as_json(include: {
+        genres: { only: [ :id, :name ] },
+        platforms: { only: [ :id, :name ] }
+      })
+      }, status: :ok
     else
       render json: {
         message: "Failed to update submission",
         errors: @submission.errors.full_messages
-      }, status: :unprocessable_content
+      },
+status: :unprocessable_content
     end
   end
 
@@ -49,7 +65,10 @@ class Api::V1::SubmissionsController < ApplicationController
   end
 
   def constants
-    render json: SUBMISSION_CONSTANTS
+    render json: {
+      genres: Genre.select(:id, :name),
+      platforms: Platform.select(:id, :name)
+    }
   end
 
   private
@@ -67,7 +86,9 @@ class Api::V1::SubmissionsController < ApplicationController
     end
 
     def set_submission
-      @submission = current_user.submissions.find_by(s_id: params[:s_id])
+      @submission = current_user.submissions
+                                .includes(:genres, :platforms)
+                                .find_by(s_id: params[:s_id])
 
       render json: { message: "Submission not found" }, status: :not_found if @submission.nil?
     end

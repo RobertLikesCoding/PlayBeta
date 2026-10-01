@@ -258,15 +258,6 @@
           const updatedUser = response.data
           updateUser(updatedUser)
 
-          form.reset({
-            email: updatedUser.email ?? '',
-            birthdate: updatedUser.birthdate ?? '',
-            // location: updatedUser.location ?? '',
-            avatar: updatedUser.avatar ?? '',
-            gender: updatedUser.gender ?? '',
-            username: updatedUser.username ?? '',
-          })
-
           toast.add({
             title: 'Success',
             description: 'Your changes were saved successfully.',
@@ -288,6 +279,23 @@
       username: props.user?.username ?? '',
     },
   })
+
+  // this updates the form whenever the user props change
+  watch(
+    () => props.user,
+    (user) => {
+      if (!user) return
+      form.reset({
+        email: user.email ?? '',
+        birthdate: user.birthdate ?? '',
+        // location: user.location ?? '',
+        avatar: user.avatar ?? '',
+        gender: user.gender ?? '',
+        username: user.username ?? '',
+      })
+    },
+    { immediate: true },
+  )
 
   const genderOptions = ALLOWED_GENDER_OPTIONS.map((option) => {
     return {

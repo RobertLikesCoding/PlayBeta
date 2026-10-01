@@ -1,37 +1,30 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import NavBar from '~/components/NavBar.vue'
-import { ref } from 'vue'
 
-const mockIsAuthenticated = ref(false)
-const mockToken = { value: 'test-token' }
-const clearTokenCookieMock = vi.fn()
+const { mockState, clearTokenCookieMock } = vi.hoisted(() => {
+  return {
+    mockState: { isAuthenticated: false, isDev: true },
+    clearTokenCookieMock: vi.fn(),
+  }
+})
 
 vi.mock('~/composables/useAuth', () => ({
   useAuth: () => ({
-    isAuthenticated: mockIsAuthenticated,
-    token: mockToken,
+    isAuthenticated: mockState.isAuthenticated,
+    token: { value: 'test-token' },
     setTokenCookie: vi.fn(),
     clearTokenCookie: clearTokenCookieMock,
-  }),
-}))
-
-vi.mock('~/composables/useCurrentUser', () => ({
-  useCurrentUser: () => ({
-    // user: ref(null),
-    // isLoading: ref(false),
-    isDev: ref(true),
-    // fetchUser: vi.fn(),
-    // updateUser: vi.fn(),
+    isDev: mockState.isDev,
   }),
 }))
 
 describe('NavBar', () => {
-  describe('Account Button', () => {
-    beforeEach(() => {
-      vi.clearAllMocks()
-    })
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
 
+  describe('Account Button', () => {
     it('should link to signup if user is not logged in', async () => {
       const wrapper = await mountSuspended(NavBar)
       const accountLink = wrapper
@@ -42,7 +35,7 @@ describe('NavBar', () => {
     })
 
     it('should link to dashboard if user is logged in', async () => {
-      mockIsAuthenticated.value = true
+      mockState.isAuthenticated = true
 
       const wrapper = await mountSuspended(NavBar)
       const accountLink = wrapper

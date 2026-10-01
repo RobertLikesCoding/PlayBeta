@@ -201,10 +201,7 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import type {
-    GameDeveloperAPI,
-    UpdateGameDeveloperResponse,
-  } from '~/types/GameDeveloper'
+  import type { GameDeveloperAPI } from '~/types/GameDeveloper'
 
   definePageMeta({
     layout: 'dashboard-developer',
@@ -215,67 +212,10 @@
     isLoading: boolean
   }>()
 
-  const { token } = useAuth()
-  const toast = useToast()
-  const { updateUser } = useCurrentUser()
+  const { updateDeveloper } = useGameDeveloperUpdate()
 
   const form = useForm({
-    onSubmit: async ({ value }) => {
-      try {
-        const response = await $fetch<UpdateGameDeveloperResponse>(
-          `/api/v1/game_developers/me`,
-          {
-            baseURL: useRuntimeConfig().public.apiBase,
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token.value}`,
-            },
-            body: {
-              game_developer: {
-                email: value.email,
-                studio_name: value.studio_name,
-                website: value.website,
-                location: value.location,
-                bio: value.bio,
-                // avatar: value.avatar,
-              },
-            },
-          },
-        )
-        if (response && 'errors' in response) {
-          console.error('Update failed:', response.errors)
-          toast.add({
-            title: 'Error',
-            description: 'Saving failed. Please try again',
-            color: 'error',
-            icon: 'i-lucide-x-circle',
-          })
-        } else {
-          const updatedUser = response.data
-          updateUser(updatedUser)
-
-          form.reset({
-            email: updatedUser.email,
-            studio_name: updatedUser.studio_name,
-            website: updatedUser.website,
-            location: updatedUser.location,
-            bio: updatedUser.bio,
-            avatar: updatedUser.avatar ?? null,
-          })
-
-          toast.add({
-            title: 'Success',
-            description: 'Your changes were saved successfully.',
-            color: 'success',
-            icon: 'i-lucide-check-circle',
-          })
-          return response
-        }
-      } catch (error) {
-        console.error('An unexpected error occurred:', error)
-      }
-    },
+    onSubmit: async ({ value }) => await updateDeveloper(value),
     defaultValues: {
       email: props.user?.email ?? '',
       studio_name: props.user?.studio_name ?? '',
@@ -285,4 +225,21 @@
       avatar: props.user?.avatar ?? '',
     },
   })
+
+  // this updates the form whenever the user props change
+  watch(
+    () => props.user,
+    (user) => {
+      if (!user) return
+      form.reset({
+        email: user.email,
+        studio_name: user.studio_name,
+        website: user.website,
+        location: user.location,
+        bio: user.bio,
+        avatar: user.avatar ?? '',
+      })
+    },
+    { immediate: true },
+  )
 </script>

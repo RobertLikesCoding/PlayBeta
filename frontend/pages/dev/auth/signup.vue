@@ -1,6 +1,6 @@
 <template>
   <SignUpForm
-    mode="dev"
+    account-type="dev"
     info-text="By signing up, you can upload your demos, connect with dedicated playtesters, and gather insights to improve your game."
   />
 </template>

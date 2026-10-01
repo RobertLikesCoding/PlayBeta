@@ -1,6 +1,6 @@
 <template>
   <LoginForm
-    mode="dev"
+    account-type="dev"
     info-text="Sign in with your Game Developer account"
   />
 </template>
