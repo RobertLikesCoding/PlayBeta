@@ -8,11 +8,6 @@ export interface GameTesterAPI {
   username?: string
 }
 
-export type GameTesterCreateResponse = ApiResponse<{
-  id: number
-  token: string
-}>
-
 export type UpdateGameTesterResponse = ApiResponse<GameTesterAPI>
 
 export const ALLOWED_GENDER_OPTIONS = [

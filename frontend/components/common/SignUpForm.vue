@@ -205,6 +205,7 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
+  import type { ApiResponse } from '~/types/Api'
   import type { AccountType } from '~/types/misc'
 
   const props = defineProps<{
@@ -222,8 +223,7 @@
   const { setTokenCookie } = useAuth()
   const signupErrors = ref<string[]>([])
 
-  type SignUpResponse =
-    { user_id: number; token: string } | { errors: string[] }
+  type SignUpResponse = ApiResponse<{ id: number; token: string }>
 
   const form = useForm({
     onSubmit: async ({ value }) => {
@@ -254,8 +254,8 @@
         })
 
         form.reset()
-        if ('token' in response) {
-          setTokenCookie(response.token, props.accountType)
+        if ('data' in response) {
+          setTokenCookie(response.data.token, props.accountType)
           navigateTo(redirectPath)
         }
       } catch (error) {
