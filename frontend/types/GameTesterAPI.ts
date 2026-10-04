@@ -6,6 +6,8 @@ export interface GameTesterAPI {
   birthdate: string
   gender?: Gender
   username?: string
+  genres?: string[]
+  platforms?: string[]
 }
 
 export type UpdateGameTesterResponse = ApiResponse<GameTesterAPI>

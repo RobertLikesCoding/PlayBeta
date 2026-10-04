@@ -157,6 +157,61 @@
           </form.Field>
         </div>
 
+        <div class="flex flex-col gap-2">
+          <form.Field name="genres">
+            <template #default="{ field, state }">
+              <label :htmlFor="field.name">Prefered Genres</label>
+              <USelect
+                :id="field.name"
+                :model-value="field.state.value"
+                :name="field.name"
+                label-key="label"
+                value-key="value"
+                :items="genreList"
+                placeholder="Select genres that interest you"
+                multiple
+                variant="subtle"
+                @update:model-value="field.handleChange"
+                @blur="field.handleBlur"
+              />
+              <em
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field name="platforms">
+            <template #default="{ field, state }">
+              <label :htmlFor="field.name">Prefered Platform</label>
+              <USelect
+                :id="field.name"
+                :model-value="field.state.value"
+                :name="field.name"
+                label-key="label"
+                value-key="value"
+                :items="platformList"
+                placeholder="Select your prefered testing platform"
+                variant="subtle"
+                @update:model-value="field.handleChange"
+                @blur="field.handleBlur"
+              />
+              <em
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
         <!-- <div class="flex flex-col gap-2">
           <form.Field name="location">
             <template #default="{ field, state }">
@@ -241,6 +296,8 @@
                 // avatar: value.avatar,
                 gender: value.gender,
                 username: value.username,
+                genres: value.genres,
+                platform_ids: [value.platforms],
               },
             },
           },
@@ -277,6 +334,8 @@
       avatar: props.user?.avatar ?? '',
       gender: props.user?.gender ?? '',
       username: props.user?.username ?? '',
+      genres: props.user?.genres ?? [],
+      platform_ids: props.user?.platforms ?? '',
     },
   })
 
@@ -292,6 +351,8 @@
         avatar: user.avatar ?? '',
         gender: user.gender ?? '',
         username: user.username ?? '',
+        genres: user.genres ?? [],
+        platform_ids: props.user?.platforms ?? '',
       })
     },
     { immediate: true },
@@ -303,4 +364,6 @@
       value: option,
     }
   })
+
+  const { platformList, genreList } = await useConstants()
 </script>
