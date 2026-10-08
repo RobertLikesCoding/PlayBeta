@@ -144,7 +144,6 @@
                 placeholder="Select a gender option"
                 variant="subtle"
                 @update:model-value="field.handleChange"
-                @blur="field.handleBlur"
               />
               <em
                 v-for="(error, index) of state.meta.errors"
@@ -171,8 +170,11 @@
                 placeholder="Select genres that interest you"
                 multiple
                 variant="subtle"
+                :ui="{
+                  value: 'capitalize',
+                  itemLabel: 'capitalize',
+                }"
                 @update:model-value="field.handleChange"
-                @blur="field.handleBlur"
               />
               <em
                 v-for="(error, index) of state.meta.errors"
@@ -198,8 +200,11 @@
                 :items="platformList"
                 placeholder="Select your prefered testing platform"
                 variant="subtle"
+                :ui="{
+                  value: 'capitalize',
+                  itemLabel: 'capitalize',
+                }"
                 @update:model-value="field.handleChange"
-                @blur="field.handleBlur"
               />
               <em
                 v-for="(error, index) of state.meta.errors"
@@ -335,7 +340,7 @@
       gender: props.user?.gender ?? '',
       username: props.user?.username ?? '',
       genres: props.user?.genres ?? [],
-      platform_ids: props.user?.platforms ?? '',
+      platforms: props.user?.platforms?.[0]?.name ?? '',
     },
   })
 
@@ -352,7 +357,7 @@
         gender: user.gender ?? '',
         username: user.username ?? '',
         genres: user.genres ?? [],
-        platform_ids: props.user?.platforms ?? '',
+        platforms: props.user?.platforms?.[0]?.name ?? '',
       })
     },
     { immediate: true },

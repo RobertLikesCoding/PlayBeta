@@ -85,6 +85,10 @@
                 :items="genreList"
                 multiple
                 placeholder="Select a genre"
+                :ui="{
+                  value: 'capitalize',
+                  itemLabel: 'capitalize',
+                }"
                 @update:model-value="field.handleChange"
               />
 
@@ -144,6 +148,9 @@
                 v-model="field.state.value"
                 :items="platformList"
                 orientation="horizontal"
+                :ui="{
+                  item: 'capitalize',
+                }"
                 @update:model-value="field.handleChange"
               />
               <em
