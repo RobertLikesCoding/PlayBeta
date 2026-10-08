@@ -301,7 +301,7 @@
                 // avatar: value.avatar,
                 gender: value.gender,
                 username: value.username,
-                genres: value.genres,
+                genre_ids: value.genres,
                 platform_ids: [value.platforms],
               },
             },
@@ -339,8 +339,8 @@
       avatar: props.user?.avatar ?? '',
       gender: props.user?.gender ?? '',
       username: props.user?.username ?? '',
-      genres: props.user?.genres ?? [],
-      platforms: props.user?.platforms?.[0]?.name ?? '',
+      genres: props.user?.genres?.map((g) => String(g.id)) ?? [],
+      platforms: props.user?.platforms?.[0]?.id ?? '',
     },
   })
 
@@ -356,8 +356,8 @@
         avatar: user.avatar ?? '',
         gender: user.gender ?? '',
         username: user.username ?? '',
-        genres: user.genres ?? [],
-        platforms: props.user?.platforms?.[0]?.name ?? '',
+        genres: props.user?.genres?.map((g) => String(g.id)) ?? [],
+        platforms: props.user?.platforms?.[0]?.id ?? '',
       })
     },
     { immediate: true },
