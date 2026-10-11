@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import ProfilePage from '~/pages/tester/dashboard/profile/index.vue'
 import type { VueWrapper } from '@vue/test-utils'
-import { mount } from '@vue/test-utils'
+import { mountSuspended } from '@nuxt/test-utils/runtime'
 
 vi.mock('~/composables/useCurrentUser', () => ({
   useCurrentUser: () => ({
@@ -24,8 +24,8 @@ describe('Profile Page', () => {
 
   let wrapper: VueWrapper
 
-  beforeEach(() => {
-    wrapper = mount(ProfilePage, {
+  beforeEach(async () => {
+    wrapper = await mountSuspended(ProfilePage, {
       props: {
         user: tester,
         isLoading: false,

@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "GameTesters", type: :request do
   let(:platform) { create(:platform, name: 'linux', id: 1) }
-  let(:user) { create(:game_tester, platforms: [ platform ]) }
+  let(:genre) { create(:genre, name: 'action', id: 1) }
+  let(:user) { create(:game_tester, platforms: [ platform ], genres: [ genre ]) }
 
 
   describe "GET /index" do
@@ -35,7 +36,11 @@ RSpec.describe "GameTesters", type: :request do
       end
 
       it "returns the user's preferred platforms" do
-        expect(data["platforms"]).to eq([ { "id" => platform.id, "name" => "linux" } ])
+        expect(data["platforms"]).to eq([ { "id" => platform.id, "name" => platform.name } ])
+      end
+
+      it "returns the user's preferred genres" do
+        expect(data["genres"]).to eq([ { "id" => genre.id, "name" => genre.name } ])
       end
     end
 
@@ -102,8 +107,6 @@ RSpec.describe "GameTesters", type: :request do
     let(:existing_user) { create(:game_tester, email: 'test@mail.de') }
 
     context 'when authenticated' do
-      let(:tester_params) { { email: 'newMail@mail.de', platform_ids: [ platform.id ] } }
-
       before do
         patch "/api/v1/game_testers/me",
           headers: authenticated_header(existing_user),
@@ -112,24 +115,43 @@ RSpec.describe "GameTesters", type: :request do
 
       let(:data) { response.parsed_body["data"] }
 
-      it "returns updated user" do
-        expect(response).to have_http_status(:success)
+      context 'when updating email' do
+        let(:tester_params) { { email: 'newMail@mail.de' } }
 
-        expect(data).to include(
-          "email" => tester_params[:email],
-        )
-        expect(existing_user.platforms.count).to eq(1)
+        it "returns updated user" do
+          expect(response).to have_http_status(:success)
+
+          expect(data).to include("email" => tester_params[:email])
+        end
+
+        it "returns unprocessable content for invalid email" do
+          patch "/api/v1/game_testers/me",
+            headers: authenticated_header(existing_user),
+            params: { game_tester: { email: "" } }
+
+          expect(response).to have_http_status(:unprocessable_content)
+
+          json = JSON.parse(response.body)
+          expect(json["errors"]).to include("Email can't be blank")
+        end
       end
 
-      it "returns unprocessable content for invalid email" do
-        patch "/api/v1/game_testers/me",
-          headers: authenticated_header(existing_user),
-          params: { game_tester: { email: "" } }
+      context 'when updating platforms' do
+        let(:tester_params) { { platform_ids: [ platform.id ] } }
 
-        expect(response).to have_http_status(:unprocessable_content)
+        it "updates the user's platforms" do
+          expect(response).to have_http_status(:success)
+          expect(existing_user.platforms.pluck(:id)).to eq([ platform.id ])
+        end
+      end
 
-        json = JSON.parse(response.body)
-        expect(json["errors"]).to include("Email can't be blank")
+      context 'when updating genres' do
+        let(:tester_params) { { genre_ids: [ genre.id ] } }
+
+        it "updates the user's genres" do
+          expect(response).to have_http_status(:success)
+          expect(existing_user.genres.pluck(:id)).to eq([ genre.id ])
+        end
       end
     end
 
