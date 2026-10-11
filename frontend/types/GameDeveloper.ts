@@ -10,8 +10,4 @@ export interface GameDeveloperAPI {
   avatar: string
 }
 
-export type CreateGameDeveloperResponse = ApiResponse<{
-  id: number
-  token: string
-}>
 export type UpdateGameDeveloperResponse = ApiResponse<GameDeveloperAPI>

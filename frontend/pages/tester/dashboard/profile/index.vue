@@ -144,7 +144,67 @@
                 placeholder="Select a gender option"
                 variant="subtle"
                 @update:model-value="field.handleChange"
-                @blur="field.handleBlur"
+              />
+              <em
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field name="genres">
+            <template #default="{ field, state }">
+              <label :htmlFor="field.name">Prefered Genres</label>
+              <USelect
+                :id="field.name"
+                :model-value="field.state.value"
+                :name="field.name"
+                label-key="label"
+                value-key="value"
+                :items="genreList"
+                placeholder="Select genres that interest you"
+                multiple
+                variant="subtle"
+                :ui="{
+                  value: 'capitalize',
+                  itemLabel: 'capitalize',
+                }"
+                @update:model-value="field.handleChange"
+              />
+              <em
+                v-for="(error, index) of state.meta.errors"
+                :key="index"
+                class="text-red-300"
+                role="alert"
+                >{{ error }}
+              </em>
+            </template>
+          </form.Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <form.Field name="platforms">
+            <template #default="{ field, state }">
+              <label :htmlFor="field.name">Prefered Platform</label>
+              <USelect
+                :id="field.name"
+                :model-value="field.state.value"
+                :name="field.name"
+                label-key="label"
+                value-key="value"
+                :items="platformList"
+                placeholder="Select your prefered testing platform"
+                variant="subtle"
+                :ui="{
+                  value: 'capitalize',
+                  itemLabel: 'capitalize',
+                }"
+                @update:model-value="field.handleChange"
               />
               <em
                 v-for="(error, index) of state.meta.errors"
@@ -241,6 +301,8 @@
                 // avatar: value.avatar,
                 gender: value.gender,
                 username: value.username,
+                genre_ids: value.genres,
+                platform_ids: [value.platforms],
               },
             },
           },
@@ -277,6 +339,8 @@
       avatar: props.user?.avatar ?? '',
       gender: props.user?.gender ?? '',
       username: props.user?.username ?? '',
+      genres: props.user?.genres?.map((g) => String(g.id)) ?? [],
+      platforms: props.user?.platforms?.[0]?.id ?? '',
     },
   })
 
@@ -292,6 +356,8 @@
         avatar: user.avatar ?? '',
         gender: user.gender ?? '',
         username: user.username ?? '',
+        genres: props.user?.genres?.map((g) => String(g.id)) ?? [],
+        platforms: props.user?.platforms?.[0]?.id ?? '',
       })
     },
     { immediate: true },
@@ -303,4 +369,6 @@
       value: option,
     }
   })
+
+  const { platformList, genreList } = await useConstants()
 </script>

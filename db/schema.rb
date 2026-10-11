@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_190320) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_08_203856) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,12 +39,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_190320) do
     t.string "website"
   end
 
+  create_table "game_tester_genres", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "game_tester_id", null: false
+    t.bigint "genre_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_tester_id", "genre_id"], name: "index_game_tester_genres_on_game_tester_id_and_genre_id", unique: true
+    t.index ["game_tester_id"], name: "index_game_tester_genres_on_game_tester_id"
+    t.index ["genre_id"], name: "index_game_tester_genres_on_genre_id"
+  end
+
   create_table "game_tester_platforms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "game_tester_id", null: false
     t.bigint "platform_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["game_tester_id", "platform_id"], name: "index_game_tester_platforms_on_game_tester_id_and_platform_id"
+    t.index ["game_tester_id", "platform_id"], name: "index_game_tester_platforms_on_game_tester_id_and_platform_id", unique: true
     t.index ["platform_id", "game_tester_id"], name: "index_game_tester_platforms_on_platform_id_and_game_tester_id"
   end
 
@@ -104,6 +114,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_190320) do
   end
 
   add_foreign_key "event_logs", "game_developers"
+  add_foreign_key "game_tester_genres", "game_testers"
+  add_foreign_key "game_tester_genres", "genres"
   add_foreign_key "game_tester_platforms", "game_testers"
   add_foreign_key "game_tester_platforms", "platforms"
   add_foreign_key "submission_genres", "genres"

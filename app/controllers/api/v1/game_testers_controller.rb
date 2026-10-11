@@ -47,10 +47,16 @@ class Api::V1::GameTestersController < ApplicationController
     end
 
     def tester_params
-      params.require(:game_tester).permit(:email, :birthdate, :gender, :avatar, :username)
+      params.require(:game_tester).permit(:email, :birthdate, :gender, :avatar, :username, platform_ids: [], genre_ids: [])
     end
 
     def tester_json(tester)
-      tester.slice(:id, :email, :birthdate, :gender, :username)
+      tester
+        .as_json(
+        only: [ :id, :email, :birthdate, :gender, :username ],
+        include: {
+          genres: { only: [ :id, :name ] },
+          platforms: { only: [ :id, :name ] }
+        })
     end
 end

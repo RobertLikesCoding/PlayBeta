@@ -6,5 +6,7 @@ FactoryBot.define do
     password_confirmation { "password123" }
     birthdate { rand(16..40).years.ago.to_date }
     gender { [ :prefer_not_to_say, :male, :female, :non_binary ].sample }
+    # platforms { [ association(:platform) ] }
+    # genres { [ association(:genre) ] }
   end
 end

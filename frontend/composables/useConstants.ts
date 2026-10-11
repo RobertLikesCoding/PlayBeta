@@ -10,14 +10,14 @@ export async function useConstants() {
 
   const genreList = computed(() => {
     return genres.map((genre) => ({
-      label: genre.name[0]?.toUpperCase() + genre.name.substring(1),
-      value: String(genre.id),
+      label: genre.name,
+      value: genre.id,
     }))
   })
   const platformList = computed(() => {
     return platforms.map((platform) => ({
-      label: platform.name[0]?.toUpperCase() + platform.name.substring(1),
-      value: String(platform.id),
+      label: platform.name,
+      value: platform.id,
     }))
   })
 

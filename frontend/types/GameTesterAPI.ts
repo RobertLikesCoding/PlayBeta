@@ -1,4 +1,5 @@
 import type { ApiResponse } from './Api'
+import type { Genre, Platform } from './misc'
 
 export interface GameTesterAPI {
   id: number
@@ -6,12 +7,9 @@ export interface GameTesterAPI {
   birthdate: string
   gender?: Gender
   username?: string
+  genres?: Genre[]
+  platforms?: Platform[]
 }
-
-export type GameTesterCreateResponse = ApiResponse<{
-  id: number
-  token: string
-}>
 
 export type UpdateGameTesterResponse = ApiResponse<GameTesterAPI>
 
