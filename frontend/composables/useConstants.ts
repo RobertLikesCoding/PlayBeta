@@ -11,13 +11,13 @@ export async function useConstants() {
   const genreList = computed(() => {
     return genres.map((genre) => ({
       label: genre.name,
-      value: genre.id,
+      value: String(genre.id),
     }))
   })
   const platformList = computed(() => {
     return platforms.map((platform) => ({
       label: platform.name,
-      value: platform.id,
+      value: String(platform.id),
     }))
   })
 

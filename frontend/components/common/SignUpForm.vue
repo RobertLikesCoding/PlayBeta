@@ -159,18 +159,12 @@
         class="mt-2 justify-center hover:cursor-pointer"
         size="xl"
         label="Submit"
-        :loading="form.useSelector((meta) => meta.isSubmitting).value"
-        :disabled="
-          form.useSelector((meta) => meta.isSubmitting).value ||
-          form.useSelector((meta) => meta.errors.length !== 0).value
-        "
+        :loading="isSubmitting"
+        :disabled="isSubmitting || hasFormErrors"
       />
     </form>
     <div
-      v-if="
-        form.useSelector((meta) => meta.isSubmitted).value &&
-        !signupErrors.length
-      "
+      v-if="isSubmitted && !signupErrors.length"
       class="border-2 rounded-md mt-5 p-2 border-green-300"
     >
       <p>
@@ -278,4 +272,8 @@
       gender: '',
     },
   })
+
+  const isSubmitting = form.useSelector((meta) => meta.isSubmitting)
+  const hasFormErrors = form.useSelector((meta) => meta.errors.length !== 0)
+  const isSubmitted = form.useSelector((meta) => meta.isSubmitted)
 </script>

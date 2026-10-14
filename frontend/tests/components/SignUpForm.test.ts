@@ -3,28 +3,28 @@ import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import SignUpForm from '~/components/common/SignUpForm.vue'
 
-const { navigateToMock, setTokenCookieMock, useAuthMock } = vi.hoisted(() => ({
-  navigateToMock: vi.fn(),
-  setTokenCookieMock: vi.fn(),
-  useAuthMock: vi.fn(() => ({
-    isAuthenticated: { value: true },
-    setTokenCookie: setTokenCookieMock,
-  })),
-}))
+const { fetchMock, navigateToMock, setTokenCookieMock, useAuthMock } =
+  vi.hoisted(() => ({
+    fetchMock: vi.fn(),
+    navigateToMock: vi.fn(),
+    setTokenCookieMock: vi.fn(),
+    useAuthMock: vi.fn(() => ({
+      isAuthenticated: { value: true },
+      setTokenCookie: setTokenCookieMock,
+    })),
+  }))
 
+mockNuxtImport('$fetch', () => fetchMock)
 mockNuxtImport('navigateTo', () => navigateToMock)
 mockNuxtImport('useAuth', () => useAuthMock)
 
 describe('SignUpForm', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.stubGlobal(
-      '$fetch',
-      vi.fn().mockResolvedValue({
-        data: { id: 1, token: 'signup-token' },
-        message: 'Successfully created user',
-      }),
-    )
+    fetchMock.mockResolvedValue({
+      data: { id: 1, token: 'signup-token' },
+      message: 'Successfully created user',
+    })
   })
 
   it('stores the signup token and redirects a tester to the dashboard', async () => {
