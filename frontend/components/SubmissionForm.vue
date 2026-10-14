@@ -271,8 +271,8 @@
             submission: {
               title: value.title,
               description: value.description,
-              genre_ids: value.genre,
-              platform_ids: value.platforms,
+              genre_ids: value.genre.map(Number),
+              platform_ids: value.platforms.map(Number),
               demo_url: value.demo_url,
               version: value.version,
             },
