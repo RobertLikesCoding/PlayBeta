@@ -73,24 +73,24 @@ RSpec.describe GameTester, type: :model do
   end
 
   describe "dependent destroy" do
-    it "destroys invitations when the game tester is destroyed" do
+    it "destroys participations when the game tester is destroyed" do
       game_tester = create(:game_tester)
       submission = create(:submission)
-      invitation = create(:invitation, game_tester:, submission:)
+      participation = create(:participation, game_tester:, submission:)
 
       expect { game_tester.destroy }
-        .to change { Invitation.exists?(invitation.id) }
+        .to change { Participation.exists?(participation.id) }
         .from(true).to(false)
 
       expect(Submission.exists?(submission.id)).to be(true)
     end
   end
 
-  describe "invitations" do
-    it "has many submissions through invitations" do
+  describe "participations" do
+    it "has many submissions through participations" do
       game_tester = create(:game_tester)
       submission = create(:submission)
-      create(:invitation, game_tester:, submission:)
+      create(:participation, game_tester:, submission:)
 
       expect(game_tester.submissions).to include(submission)
     end

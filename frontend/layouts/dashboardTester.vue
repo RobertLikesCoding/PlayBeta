@@ -52,10 +52,10 @@
 
   const { user, isLoading, fetchUser } = useCurrentUser()
 
-  type MenuSection = 'invitations' | 'profile' | 'settings'
+  type MenuSection = 'participations' | 'profile' | 'settings'
 
   const menu: { section: MenuSection; label: string }[] = [
-    { section: 'invitations', label: 'Invitations' },
+    { section: 'participations', label: 'participations' },
     { section: 'profile', label: 'Profile' },
     { section: 'settings', label: 'Settings' },
   ]

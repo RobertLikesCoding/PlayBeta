@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :invitation do
+  factory :participation do
     association :submission
     association :game_tester
   end
