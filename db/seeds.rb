@@ -10,20 +10,25 @@
 
 # Create Genres and Platforms first
 Genre::GENRES.each do |genre|
-  Genre.create!(name: genre)
+  Genre.find_or_create_by(name: genre)
 end
 
 puts "created Genres"
 
 Platform::PLATFORMS.each do |platform|
-  Platform.create!(name: platform)
+  Platform.find_or_create_by(name: platform)
 end
 
 puts "created Platforms"
 
-# CREATE GAME DEVELOPERS
+# CREATE GAME DEVELOPERS WITH SUBMISSIONS
 FactoryBot.create_list(:game_developer, 3)  do |dev, i|
   FactoryBot.create_list(:submission, Random.rand(5), game_developer: dev)
 end
 
 puts "created developers with submissions"
+
+# CREATE GAME TESTERS
+FactoryBot.create_list(:game_tester, 100)
+
+puts "created game testers"
