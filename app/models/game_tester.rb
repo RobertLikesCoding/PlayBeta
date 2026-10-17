@@ -4,6 +4,8 @@ class GameTester < ApplicationRecord
   has_many :game_tester_genres, dependent: :destroy
   has_many :platforms, through: :game_tester_platforms
   has_many :genres, through: :game_tester_genres
+  has_many :invitations, dependent: :destroy
+  has_many :submissions, through: :invitations
 
   validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
   validates :password, presence: true, length: { minimum: 8 }, on: :create
