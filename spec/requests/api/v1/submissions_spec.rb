@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Submissions", type: :request do
-  let!(:windows_platform) { create(:platform, name: 'windows') }
-  let!(:action_genre) { create(:genre, name: "action") }
   let(:game_developer) { create(:game_developer) }
-  let!(:submission) { create(:submission, game_developer: game_developer) }
+  let(:action_genre) { create(:genre, name: "action") }
+  let(:windows_platform) { create(:platform, name: "windows") }
+  let(:submission) { create(:submission, game_developer: game_developer) }
 
   describe "GET /index" do
-    before { create_list(:submission, 3, game_developer:) }
+    before { create_list(:submission, 4, game_developer: game_developer) }
 
     it "should return all submissions for the current user" do
       get "/api/v1/submissions", headers: authenticated_header(game_developer)
@@ -32,10 +32,10 @@ RSpec.describe "Api::V1::Submissions", type: :request do
 
   describe "POST /create" do
     it "should create a new submission" do
-      submission_params = attributes_for(:submission)
-      submission_params = submission_params
-                          .merge(genre_ids: [ action_genre.id ])
-                          .merge(platform_ids: [ windows_platform.id ])
+      submission_params = attributes_for(:submission).merge(
+        genre_ids: [ action_genre.id ],
+        platform_ids: [ windows_platform.id ]
+      )
 
       post "/api/v1/submissions",
         headers: authenticated_header(game_developer),
@@ -107,6 +107,11 @@ RSpec.describe "Api::V1::Submissions", type: :request do
   end
 
   describe "GET /constants" do
+    before do
+      action_genre
+      windows_platform
+    end
+
     it "returns genres and platforms" do
       get "/api/v1/submissions/constants"
 

@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Submission, type: :model do
-  let!(:windows_platform) { create(:platform) }
-  let!(:action_genre) { create(:genre) }
   subject(:healthy_submission) { create(:submission) }
 
   context 'is valid' do
@@ -86,6 +84,30 @@ RSpec.describe Submission, type: :model do
 
       new_submission.valid?
       expect(new_submission.s_id).not_to be_blank
+    end
+  end
+
+  describe "dependent destroy" do
+    it "destroys invitations when the submission is destroyed" do
+      submission = create(:submission)
+      game_tester = create(:game_tester)
+      invitation = create(:invitation, submission:, game_tester:)
+
+      expect { submission.destroy }
+        .to change { Invitation.exists?(invitation.id) }
+        .from(true).to(false)
+
+      expect(GameTester.exists?(game_tester.id)).to be(true)
+    end
+  end
+
+  describe "invitations" do
+    let(:game_tester) { create(:game_tester) }
+    it "has many game_testers through invitations" do
+      submission = create(:submission)
+      create(:invitation, game_tester:, submission:)
+
+      expect(submission.game_testers).to include(game_tester)
     end
   end
 end

@@ -10,17 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_08_203856) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_194741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "invitation_status", ["pending", "accepted", "declined"]
+
   create_table "event_logs", force: :cascade do |t|
+    t.string "loggable_type", null: false
+    t.bigint "loggable_id", null: false
+    t.bigint "game_developer_id"
     t.string "action", null: false
     t.jsonb "changes_data", default: {}
     t.datetime "created_at", null: false
-    t.bigint "game_developer_id"
-    t.bigint "loggable_id", null: false
-    t.string "loggable_type", null: false
     t.datetime "updated_at", null: false
     t.index ["action"], name: "index_event_logs_on_action"
     t.index ["created_at"], name: "index_event_logs_on_created_at"
@@ -29,20 +33,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_203856) do
   end
 
   create_table "game_developers", force: :cascade do |t|
-    t.string "bio"
-    t.datetime "created_at", null: false
     t.string "email"
-    t.string "location"
     t.string "password_digest"
-    t.string "studio_name"
-    t.datetime "updated_at", null: false
+    t.string "bio"
     t.string "website"
+    t.string "studio_name"
+    t.string "location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "game_tester_genres", force: :cascade do |t|
-    t.datetime "created_at", null: false
     t.bigint "game_tester_id", null: false
     t.bigint "genre_id", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_tester_id", "genre_id"], name: "index_game_tester_genres_on_game_tester_id_and_genre_id", unique: true
     t.index ["game_tester_id"], name: "index_game_tester_genres_on_game_tester_id"
@@ -50,66 +54,77 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_203856) do
   end
 
   create_table "game_tester_platforms", force: :cascade do |t|
-    t.datetime "created_at", null: false
     t.bigint "game_tester_id", null: false
     t.bigint "platform_id", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_tester_id", "platform_id"], name: "index_game_tester_platforms_on_game_tester_id_and_platform_id", unique: true
     t.index ["platform_id", "game_tester_id"], name: "index_game_tester_platforms_on_platform_id_and_game_tester_id"
   end
 
   create_table "game_testers", force: :cascade do |t|
-    t.date "birthdate", null: false
-    t.datetime "created_at", null: false
-    t.string "email"
-    t.integer "gender"
-    t.string "password_digest"
-    t.datetime "updated_at", null: false
     t.string "username"
+    t.string "email"
+    t.string "password_digest"
+    t.integer "gender"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.date "birthdate", null: false
   end
 
   create_table "genres", force: :cascade do |t|
-    t.datetime "created_at", null: false
     t.string "name"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_genres_on_name", unique: true
   end
 
-  create_table "platforms", force: :cascade do |t|
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "game_tester_id", null: false
+    t.bigint "submission_id", null: false
+    t.enum "status", default: "pending", null: false, enum_type: "invitation_status"
     t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_tester_id", "submission_id"], name: "index_invitations_on_game_tester_id_and_submission_id", unique: true
+    t.index ["game_tester_id"], name: "index_invitations_on_game_tester_id"
+    t.index ["submission_id"], name: "index_invitations_on_submission_id"
+  end
+
+  create_table "platforms", force: :cascade do |t|
     t.string "name", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_platforms_on_name", unique: true
   end
 
   create_table "submission_genres", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.bigint "genre_id", null: false
     t.bigint "submission_id", null: false
+    t.bigint "genre_id", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["genre_id"], name: "index_submission_genres_on_genre_id"
     t.index ["submission_id"], name: "index_submission_genres_on_submission_id"
   end
 
   create_table "submission_platforms", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.bigint "platform_id", null: false
     t.bigint "submission_id", null: false
+    t.bigint "platform_id", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["platform_id"], name: "index_submission_platforms_on_platform_id"
     t.index ["submission_id"], name: "index_submission_platforms_on_submission_id"
   end
 
   create_table "submissions", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "demo_url"
-    t.string "description"
-    t.bigint "game_developer_id", null: false
-    t.uuid "s_id", default: -> { "gen_random_uuid()" }
-    t.string "status"
     t.string "title"
-    t.datetime "updated_at", null: false
+    t.uuid "s_id", default: -> { "gen_random_uuid()" }
+    t.string "description"
+    t.string "demo_url"
+    t.string "status"
     t.string "version"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "game_developer_id", null: false
     t.index ["game_developer_id"], name: "index_submissions_on_game_developer_id"
   end
 
@@ -118,6 +133,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_203856) do
   add_foreign_key "game_tester_genres", "genres"
   add_foreign_key "game_tester_platforms", "game_testers"
   add_foreign_key "game_tester_platforms", "platforms"
+  add_foreign_key "invitations", "game_testers"
+  add_foreign_key "invitations", "submissions"
   add_foreign_key "submission_genres", "genres"
   add_foreign_key "submission_genres", "submissions"
   add_foreign_key "submission_platforms", "platforms"

@@ -8,6 +8,8 @@ class Submission < ApplicationRecord
   has_many :genres, through: :submission_genres
   has_many :submission_platforms, dependent: :destroy
   has_many :platforms, through: :submission_platforms
+  has_many :invitations, dependent: :destroy
+  has_many :game_testers, through: :invitations
 
   before_validation :give_s_id
   validates :title, presence: true, length: { maximum: 100 }
