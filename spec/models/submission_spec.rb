@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Submission, type: :model do
-  let!(:windows_platform) { create(:platform) }
-  let!(:action_genre) { create(:genre) }
   subject(:healthy_submission) { create(:submission) }
 
   context 'is valid' do
