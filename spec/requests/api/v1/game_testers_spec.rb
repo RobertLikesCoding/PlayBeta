@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "GameTesters", type: :request do
-  let(:platform) { create(:platform, name: 'linux', id: 1) }
-  let(:genre) { create(:genre, name: 'action', id: 1) }
+  let(:platform) { Platform.find_or_create_by!(name: 'linux') }
+  let(:genre) { Genre.find_or_create_by!(name: 'action') }
   let(:user) { create(:game_tester, platforms: [ platform ], genres: [ genre ]) }
 
 
@@ -141,7 +141,7 @@ RSpec.describe "GameTesters", type: :request do
 
         it "updates the user's platforms" do
           expect(response).to have_http_status(:success)
-          expect(existing_user.platforms.pluck(:id)).to eq([ platform.id ])
+          expect(existing_user.reload.platforms.pluck(:id)).to eq([ platform.id ])
         end
       end
 
@@ -150,7 +150,7 @@ RSpec.describe "GameTesters", type: :request do
 
         it "updates the user's genres" do
           expect(response).to have_http_status(:success)
-          expect(existing_user.genres.pluck(:id)).to eq([ genre.id ])
+          expect(existing_user.reload.genres.pluck(:id)).to eq([ genre.id ])
         end
       end
     end

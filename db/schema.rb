@@ -16,7 +16,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_194741) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "invitation_status", ["pending", "accepted", "declined"]
+  create_enum "participation_status", ["signed_up", "selected", "active", "completed", "canceled"]
 
   create_table "event_logs", force: :cascade do |t|
     t.string "loggable_type", null: false
@@ -79,15 +79,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_194741) do
     t.index ["name"], name: "index_genres_on_name", unique: true
   end
 
-  create_table "invitations", force: :cascade do |t|
+  create_table "participations", force: :cascade do |t|
     t.bigint "game_tester_id", null: false
     t.bigint "submission_id", null: false
-    t.enum "status", default: "pending", null: false, enum_type: "invitation_status"
+    t.enum "status", default: "signed_up", null: false, enum_type: "participation_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["game_tester_id", "submission_id"], name: "index_invitations_on_game_tester_id_and_submission_id", unique: true
-    t.index ["game_tester_id"], name: "index_invitations_on_game_tester_id"
-    t.index ["submission_id"], name: "index_invitations_on_submission_id"
+    t.index ["game_tester_id", "submission_id"], name: "index_participations_on_game_tester_id_and_submission_id", unique: true
+    t.index ["game_tester_id"], name: "index_participations_on_game_tester_id"
+    t.index ["submission_id"], name: "index_participations_on_submission_id"
   end
 
   create_table "platforms", force: :cascade do |t|
@@ -133,8 +133,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_194741) do
   add_foreign_key "game_tester_genres", "genres"
   add_foreign_key "game_tester_platforms", "game_testers"
   add_foreign_key "game_tester_platforms", "platforms"
-  add_foreign_key "invitations", "game_testers"
-  add_foreign_key "invitations", "submissions"
+  add_foreign_key "participations", "game_testers"
+  add_foreign_key "participations", "submissions"
   add_foreign_key "submission_genres", "genres"
   add_foreign_key "submission_genres", "submissions"
   add_foreign_key "submission_platforms", "platforms"
