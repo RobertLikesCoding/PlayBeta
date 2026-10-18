@@ -1,6 +1,12 @@
 class Submission < ApplicationRecord
   include Loggable
-  STATUS = %w[in_review approved rejected]
+
+  enum :status, {
+    prep: "prep",
+    active: "active",
+    closed: "closed",
+    completed: "completed"
+  }, validate: true, default: "prep"
 
   belongs_to :game_developer
   has_many :event_logs, as: :loggable, dependent: :destroy
@@ -19,8 +25,6 @@ class Submission < ApplicationRecord
   validates :platforms, presence: true
   validates :demo_url, presence: true, format: { with: /\Ahttps:\/\/.+\z/, message: "must start with https://" }
   validates :version, presence: true
-  attribute :status, :string, default: "in_review"
-  validates :status, inclusion: { in: STATUS }
 
   def give_s_id
     self.s_id ||= SecureRandom.uuid

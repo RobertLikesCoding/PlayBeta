@@ -72,7 +72,7 @@ RSpec.describe Submission, type: :model do
 
   describe "status" do
     it "sets default when no status is passed" do
-      expect(healthy_submission.status).to eq("in_review")
+      expect(healthy_submission.status).to eq("prep")
     end
   end
 

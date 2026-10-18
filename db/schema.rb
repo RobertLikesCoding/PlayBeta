@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_16_194741) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_18_184009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "participation_status", ["signed_up", "selected", "active", "completed", "canceled"]
+  create_enum "submission_status", ["prep", "live", "closed", "completed"]
 
   create_table "event_logs", force: :cascade do |t|
     t.string "loggable_type", null: false
@@ -120,11 +121,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_194741) do
     t.uuid "s_id", default: -> { "gen_random_uuid()" }
     t.string "description"
     t.string "demo_url"
-    t.string "status"
     t.string "version"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "game_developer_id", null: false
+    t.enum "status", default: "prep", null: false, enum_type: "submission_status"
     t.index ["game_developer_id"], name: "index_submissions_on_game_developer_id"
   end
 
