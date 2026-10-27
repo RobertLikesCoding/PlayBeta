@@ -3,7 +3,7 @@ class Submission < ApplicationRecord
 
   enum :status, {
     prep: "prep",
-    active: "active",
+    live: "live",
     closed: "closed",
     completed: "completed"
   }, validate: true, default: "prep"

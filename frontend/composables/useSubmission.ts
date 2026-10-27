@@ -1,4 +1,8 @@
-import type { GetSubmissionResponse } from '~/types/Submission'
+import type {
+  CreateSubmissionResponse,
+  GetSubmissionResponse,
+  SubmissionStatus,
+} from '~/types/Submission'
 
 export function useSubmission(s_id: string) {
   const { token } = useAuth()
@@ -30,5 +34,43 @@ export function useSubmission(s_id: string) {
     data,
     pending,
     error,
+  }
+}
+
+interface CreateSubmissionPayload {
+  submission: {
+    title?: string
+    description?: string
+    genre_ids?: number[]
+    platform_ids?: number[]
+    demo_url?: string
+    version?: string
+    status?: SubmissionStatus
+  }
+}
+
+export async function saveSubmission({
+  requestPath,
+  payload,
+  method,
+}: {
+  requestPath: string
+  payload: CreateSubmissionPayload
+  method: 'POST' | 'PATCH'
+}) {
+  const { token } = useAuth()
+
+  const response = await $fetch<CreateSubmissionResponse>(requestPath, {
+    baseURL: useRuntimeConfig().public.apiBase,
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token.value}`,
+    },
+    body: payload,
+  })
+
+  return {
+    response,
   }
 }

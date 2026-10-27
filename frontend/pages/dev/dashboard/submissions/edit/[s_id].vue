@@ -1,15 +1,5 @@
 <template>
-  <div class="flex flex-col gap-5">
-    <UButton
-      icon="i-lucide-arrow-left"
-      size="xl"
-      variant="outline"
-      color="neutral"
-      class="w-fit"
-      to="/dev/dashboard/submissions"
-      >Back</UButton
-    >
-
+  <div class="flex flex-col">
     <SubmissionForm
       mode="edit"
       :submission="data ?? undefined"

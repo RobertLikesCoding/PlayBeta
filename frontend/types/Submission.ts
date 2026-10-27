@@ -6,12 +6,14 @@ export interface Submission {
   title: string
   description: string
   demo_url: string
-  status: string
+  status: SubmissionStatus
   version: string
   genres: Genre[]
   platforms: Platform[]
   created_at: string
 }
+
+export type SubmissionStatus = 'prep' | 'live' | 'closed' | 'completed'
 
 interface CreateSubmissionResult {
   message?: string
