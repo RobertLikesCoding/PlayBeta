@@ -3,6 +3,24 @@
     class="flex flex-col gap-5"
     @submit.prevent="form.handleSubmit()"
   >
+    <section
+      v-if="submission?.status"
+      data-test-id="status-section"
+    >
+      <div class="bg-neutral-700/20 rounded p-5 flex items-center gap-4">
+        <h3 class="text-xl font-bold shrink-0">Submission Status:</h3>
+        <div class="flex flex-1 justify-between items-center">
+          <SubmissionStatusBadge :submission-status="submission?.status" />
+
+          <SubmissionStatusChangeModal
+            :submission-status="submission.status"
+            :loading="isStatusChangeLoading"
+            @selected-status="handleStatusChange"
+          />
+        </div>
+      </div>
+    </section>
+
     <section data-test-id="basic-info-section">
       <div class="bg-neutral-700/20 rounded p-5 flex flex-col gap-4">
         <h3 class="text-2xl font-bold">Basic Information</h3>
@@ -242,15 +260,17 @@
 
 <script setup lang="ts">
   import { useForm } from '@tanstack/vue-form'
-  import type { CreateSubmissionResponse, Submission } from '~/types/Submission'
+  import type { Submission, SubmissionStatus } from '~/types/Submission'
 
   const props = defineProps<{
     mode: 'edit' | 'create'
     submission?: Submission
   }>()
 
-  const { token } = useAuth()
   const toast = useToast()
+  const { saveSubmission } = useSubmissionSave()
+  const { saveSubmission: saveStatusChange, isLoading: isStatusChangeLoading } =
+    useSubmissionSave()
   const { platformList, genreList } = await useConstants()
 
   const form = useForm({
@@ -260,14 +280,10 @@
         ? '/api/v1/submissions'
         : `/api/v1/submissions/${props.submission?.s_id}`
       try {
-        const response = await $fetch<CreateSubmissionResponse>(requestPath, {
-          baseURL: useRuntimeConfig().public.apiBase,
-          method: props.mode === 'create' ? 'POST' : 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token.value}`,
-          },
-          body: {
+        const response = await saveSubmission({
+          method: isCreate ? 'POST' : 'PATCH',
+          requestPath: requestPath,
+          payload: {
             submission: {
               title: value.title,
               description: value.description,
@@ -283,7 +299,7 @@
           console.error('Submission failed', response.errors)
           toast.add({
             title: 'Error',
-            description: 'Failed to create your submission. Please try again.',
+            description: `Failed to ${isCreate ? 'create' : 'update'} your submission. Please try again.`,
             color: 'error',
             icon: 'i-lucide-x-circle',
           })
@@ -291,7 +307,7 @@
           await navigateTo('/dev/dashboard/submissions')
           toast.add({
             title: 'Success',
-            description: 'Your submission was created successfully.',
+            description: `Your submission was ${isCreate ? 'created' : 'updated'} successfully.`,
             color: 'success',
             icon: 'i-lucide-check-circle',
           })
@@ -310,4 +326,15 @@
       version: props.submission?.version ?? '',
     },
   })
+
+  async function handleStatusChange(selectedStatus: SubmissionStatus) {
+    const payload = {
+      submission: { status: selectedStatus },
+    }
+    await saveStatusChange({
+      method: 'PATCH',
+      requestPath: `/api/v1/submissions/${props.submission?.s_id}`,
+      payload: payload,
+    })
+  }
 </script>

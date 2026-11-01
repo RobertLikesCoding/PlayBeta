@@ -49,28 +49,41 @@ interface CreateSubmissionPayload {
   }
 }
 
-export async function saveSubmission({
-  requestPath,
-  payload,
-  method,
-}: {
-  requestPath: string
-  payload: CreateSubmissionPayload
-  method: 'POST' | 'PATCH'
-}) {
+export function useSubmissionSave() {
   const { token } = useAuth()
+  const isLoading = ref(false)
 
-  const response = await $fetch<CreateSubmissionResponse>(requestPath, {
-    baseURL: useRuntimeConfig().public.apiBase,
-    method: method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token.value}`,
-    },
-    body: payload,
-  })
+  async function saveSubmission({
+    requestPath,
+    payload,
+    method,
+  }: {
+    requestPath: string
+    payload: CreateSubmissionPayload
+    method: 'POST' | 'PATCH'
+  }) {
+    isLoading.value = true
+    try {
+      const response = await $fetch<CreateSubmissionResponse>(requestPath, {
+        baseURL: useRuntimeConfig().public.apiBase,
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token.value}`,
+        },
+        body: payload,
+      })
+
+      return {
+        response,
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
 
   return {
-    response,
+    saveSubmission,
+    isLoading,
   }
 }
