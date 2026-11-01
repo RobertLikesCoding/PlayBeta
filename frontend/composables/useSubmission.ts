@@ -7,7 +7,7 @@ import type {
 export function useSubmission(s_id: string) {
   const { token } = useAuth()
 
-  const { data, pending, error } = useAsyncData(
+  const { data, pending, error, refresh } = useAsyncData(
     `submission-${s_id}`,
     async () => {
       if (!token.value) return null
@@ -34,6 +34,7 @@ export function useSubmission(s_id: string) {
     data,
     pending,
     error,
+    refresh,
   }
 }
 

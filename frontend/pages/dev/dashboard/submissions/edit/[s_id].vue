@@ -3,6 +3,7 @@
     <SubmissionForm
       mode="edit"
       :submission="data ?? undefined"
+      @submission-updated="refreshSubmission"
     />
   </div>
 </template>
@@ -17,5 +18,10 @@
   const route = useRoute()
   const s_id = route.params.s_id as string
 
-  const { data, pending, error } = await useSubmission(s_id)
+  const {
+    data,
+    pending,
+    error,
+    refresh: refreshSubmission,
+  } = await useSubmission(s_id)
 </script>

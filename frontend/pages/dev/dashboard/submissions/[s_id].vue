@@ -47,7 +47,12 @@
   const route = useRoute()
   const s_id = route.params.s_id as string
 
-  const { data, pending: isLoading, error } = useSubmission(s_id)
+  const {
+    data,
+    pending: isLoading,
+    error,
+    refresh: refreshSubmission,
+  } = useSubmission(s_id)
   const { saveSubmission, isLoading: isStatusChangeLoading } =
     useSubmissionSave()
 
@@ -67,5 +72,7 @@
       requestPath: `/api/v1/submissions/${s_id}`,
       payload: payload,
     })
+
+    refreshSubmission()
   }
 </script>

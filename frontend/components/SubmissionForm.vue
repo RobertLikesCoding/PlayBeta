@@ -267,6 +267,10 @@
     submission?: Submission
   }>()
 
+  const emit = defineEmits<{
+    submissionUpdated: []
+  }>()
+
   const toast = useToast()
   const { saveSubmission } = useSubmissionSave()
   const { saveSubmission: saveStatusChange, isLoading: isStatusChangeLoading } =
@@ -336,5 +340,7 @@
       requestPath: `/api/v1/submissions/${props.submission?.s_id}`,
       payload: payload,
     })
+
+    emit('submissionUpdated')
   }
 </script>
