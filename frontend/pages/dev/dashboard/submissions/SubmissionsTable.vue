@@ -11,8 +11,9 @@
 </template>
 
 <script setup lang="ts">
-  import { UBadge, UCheckbox } from '#components'
+  import { UCheckbox } from '#components'
   import type { TableColumn, TableRow } from '@nuxt/ui'
+  import SubmissionStatusBadge from '~/components/SubmissionStatusBadge.vue'
   import type { Submission } from '~/types/Submission'
 
   defineProps<{
@@ -45,26 +46,26 @@
     {
       accessorKey: 'title',
       header: 'Title',
-      cell: ({ row }) => row.getValue('title'),
+      cell: ({ row }) => row.original.title,
     },
     {
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row }) =>
-        h(UBadge, {
-          label: getStatusLabel(row.getValue('status')),
+        h(SubmissionStatusBadge, {
+          submissionStatus: row.original.status,
         }),
     },
     {
       accessorKey: 'version',
       header: 'Version',
-      cell: ({ row }) => row.getValue('version'),
+      cell: ({ row }) => row.original.version,
     },
     {
       accessorKey: 'created_at',
       header: 'Created at',
       cell: ({ row }) => {
-        return new Date(row.getValue('created_at')).toLocaleString('en-US', {
+        return new Date(row.original.created_at).toLocaleString('en-US', {
           day: 'numeric',
           month: 'short',
           hour: '2-digit',
@@ -79,15 +80,5 @@
     const submission_id = row.original.s_id
 
     await navigateTo(`/dev/dashboard/submissions/${submission_id}`)
-  }
-
-  const statusMap = {
-    in_review: 'in review',
-    approved: 'approved',
-    rejected: 'rejected',
-  }
-
-  function getStatusLabel(backendLabel: 'in_review' | 'approved' | 'rejected') {
-    return statusMap[backendLabel]
   }
 </script>
