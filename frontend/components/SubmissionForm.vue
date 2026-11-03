@@ -181,31 +181,6 @@
             </template>
           </form.Field>
         </div>
-
-        <!-- <div class="flex flex-col gap-2">
-            <form.Field name="Screenshots">
-              <template v-slot="{ field, state }">
-                <label :htmlFor="field.name">Screenshots</label>
-                <UInput
-                  :id="field.name"
-                  :name="field.name"
-                  type="file"
-                  :value="field.state.value"
-                  variant="outline"
-                  @input="
-                    (e: Event) =>
-                      field.handleChange((e.target as HTMLInputElement).value)
-                  "
-                />
-                <em
-                  v-for="error of state.meta.errors"
-                  class="text-red-300"
-                  role="alert"
-                  >{{ error }}
-                </em>
-              </template>
-            </form.Field>
-          </div> -->
       </div>
     </section>
 
@@ -220,6 +195,7 @@
         >
           <template #default="{ field, state }">
             <label :htmlFor="field.name">Demo Link</label>
+            <!-- @vue-ignore -->
             <UInput
               :id="field.name"
               :name="field.name"
@@ -231,6 +207,7 @@
                   field.handleChange((e.target as HTMLInputElement).value)
               "
             />
+            <!-- @vue-ignore -->
             <em
               v-for="(error, index) of state.meta.errors"
               :key="index"
