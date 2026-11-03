@@ -15,6 +15,16 @@ export interface Submission {
 
 export type SubmissionStatus = 'prep' | 'live' | 'closed' | 'completed'
 
+export const ALLOWED_STATUS_TRANSITIONS: Record<
+  SubmissionStatus,
+  SubmissionStatus[]
+> = {
+  prep: ['live'],
+  live: ['closed', 'completed'],
+  closed: ['live', 'completed'],
+  completed: [],
+}
+
 interface CreateSubmissionResult {
   message?: string
   errors: string[]

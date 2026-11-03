@@ -32,7 +32,10 @@
 </template>
 
 <script setup lang="ts">
-  import type { SubmissionStatus } from '~/types/Submission'
+  import {
+    ALLOWED_STATUS_TRANSITIONS,
+    type SubmissionStatus,
+  } from '~/types/Submission'
 
   const props = defineProps<{
     submissionStatus: SubmissionStatus
@@ -51,15 +54,10 @@
     }
   }
 
-  const STATUS_TRANSITIONS: Record<SubmissionStatus, SubmissionStatus[]> = {
-    prep: ['live'],
-    live: ['closed', 'completed'],
-    closed: ['live', 'completed'],
-    completed: [],
-  }
-
   const availableStatusOptions = computed<SubmissionStatus[]>(() =>
-    props.submissionStatus ? STATUS_TRANSITIONS[props.submissionStatus] : [],
+    props.submissionStatus
+      ? ALLOWED_STATUS_TRANSITIONS[props.submissionStatus]
+      : [],
   )
   const selectedStatus = ref<SubmissionStatus>()
 
