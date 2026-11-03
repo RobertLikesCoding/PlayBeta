@@ -6,11 +6,23 @@ export interface Submission {
   title: string
   description: string
   demo_url: string
-  status: string
+  status: SubmissionStatus
   version: string
   genres: Genre[]
   platforms: Platform[]
   created_at: string
+}
+
+export type SubmissionStatus = 'prep' | 'live' | 'closed' | 'completed'
+
+export const ALLOWED_STATUS_TRANSITIONS: Record<
+  SubmissionStatus,
+  SubmissionStatus[]
+> = {
+  prep: ['live'],
+  live: ['closed', 'completed'],
+  closed: ['live', 'completed'],
+  completed: [],
 }
 
 interface CreateSubmissionResult {

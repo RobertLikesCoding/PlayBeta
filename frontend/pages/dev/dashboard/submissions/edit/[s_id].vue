@@ -1,18 +1,9 @@
 <template>
-  <div class="flex flex-col gap-5">
-    <UButton
-      icon="i-lucide-arrow-left"
-      size="xl"
-      variant="outline"
-      color="neutral"
-      class="w-fit"
-      to="/dev/dashboard/submissions"
-      >Back</UButton
-    >
-
+  <div class="flex flex-col">
     <SubmissionForm
       mode="edit"
       :submission="data ?? undefined"
+      @submission-updated="refreshSubmission"
     />
   </div>
 </template>
@@ -27,5 +18,10 @@
   const route = useRoute()
   const s_id = route.params.s_id as string
 
-  const { data, pending, error } = await useSubmission(s_id)
+  const {
+    data,
+    pending,
+    error,
+    refresh: refreshSubmission,
+  } = await useSubmission(s_id)
 </script>

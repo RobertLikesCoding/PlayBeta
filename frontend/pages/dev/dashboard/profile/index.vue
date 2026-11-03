@@ -126,13 +126,12 @@
           <form.Field
             name="website"
             :validators="{
-              onBlur: ({ value }) => {
-                return validateUrl(value)
-              },
+              onBlur: ({ value }) => validateUrl(value),
             }"
           >
             <template #default="{ field, state }">
               <label :htmlFor="field.name">Website</label>
+              <!-- @vue-ignore -->
               <UInput
                 :id="field.name"
                 :name="field.name"
@@ -146,6 +145,7 @@
                 "
                 @blur="field.handleBlur"
               />
+              <!-- @vue-ignore -->
               <em
                 v-for="(error, index) of state.meta.errors"
                 :key="index"

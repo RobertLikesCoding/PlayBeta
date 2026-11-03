@@ -1,9 +1,13 @@
-import type { GetSubmissionResponse } from '~/types/Submission'
+import type {
+  CreateSubmissionResponse,
+  GetSubmissionResponse,
+  SubmissionStatus,
+} from '~/types/Submission'
 
 export function useSubmission(s_id: string) {
   const { token } = useAuth()
 
-  const { data, pending, error } = useAsyncData(
+  const { data, pending, error, refresh } = useAsyncData(
     `submission-${s_id}`,
     async () => {
       if (!token.value) return null
@@ -30,5 +34,57 @@ export function useSubmission(s_id: string) {
     data,
     pending,
     error,
+    refresh,
+  }
+}
+
+interface CreateSubmissionPayload {
+  submission: {
+    title?: string
+    description?: string
+    genre_ids?: number[]
+    platform_ids?: number[]
+    demo_url?: string
+    version?: string
+    status?: SubmissionStatus
+  }
+}
+
+export function useSubmissionSave() {
+  const { token } = useAuth()
+  const isLoading = ref(false)
+
+  async function saveSubmission({
+    requestPath,
+    payload,
+    method,
+  }: {
+    requestPath: string
+    payload: CreateSubmissionPayload
+    method: 'POST' | 'PATCH'
+  }) {
+    isLoading.value = true
+    try {
+      const response = await $fetch<CreateSubmissionResponse>(requestPath, {
+        baseURL: useRuntimeConfig().public.apiBase,
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token.value}`,
+        },
+        body: payload,
+      })
+
+      return {
+        response,
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  return {
+    saveSubmission,
+    isLoading,
   }
 }

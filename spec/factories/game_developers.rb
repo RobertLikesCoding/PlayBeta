@@ -3,7 +3,7 @@ FactoryBot.define do
     email { Faker::Internet.email }
     password { "password123" }
     password_confirmation { "password123" }
-    studio_name { "Awesome Studio" }
+    studio_name { Faker::Company.name }
     bio { Faker::Lorem.paragraph }
 
     # Define traits for specific scenarios

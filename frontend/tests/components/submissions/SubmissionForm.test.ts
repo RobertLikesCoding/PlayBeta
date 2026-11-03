@@ -1,8 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import NewSubmissionPage from '~/pages/dev/dashboard/submissions/new.vue'
 import { flushPromises } from '@vue/test-utils'
 import type { VueWrapper } from '@vue/test-utils'
+import SubmissionForm from '~/components/SubmissionForm.vue'
+import SubmissionStatusChangeModal from '~/components/SubmissionStatusChangeModal.vue'
+import SubmissionStatusBadge from '~/components/SubmissionStatusBadge.vue'
+import type { Submission } from '~/types/Submission'
 
 describe('SubmissionForm', () => {
   let wrapper: VueWrapper
@@ -90,6 +94,40 @@ describe('SubmissionForm', () => {
       expect(errorTexts).toContain(
         'Please provide only save URLs starting with https',
       )
+    })
+  })
+
+  describe('when in edit mode', () => {
+    it('should show a section for changing the status', async () => {
+      const submission: Submission = {
+        s_id: 'submission-id',
+        title: 'Game Title',
+        description: 'A game description',
+        demo_url: 'https://example.com/demo',
+        status: 'prep',
+        version: '1.0.0',
+        genres: [{ id: '1', name: 'action' }],
+        platforms: [{ id: '1', name: 'windows' }],
+        created_at: '2026-11-03',
+      }
+      const editWrapper = await mountSuspended(SubmissionForm, {
+        props: { mode: 'edit', submission },
+      })
+      const section = editWrapper.find('section[data-test-id="status-section"]')
+
+      expect(section.exists()).toBe(true)
+      expect(section.findComponent(SubmissionStatusBadge).exists()).toBe(true)
+      expect(section.findComponent(SubmissionStatusChangeModal).exists()).toBe(
+        true,
+      )
+    })
+  })
+
+  describe('when in create mode', () => {
+    it('should not show a section for changing the status', async () => {
+      const section = wrapper.find('section[data-test-id="status-section"]')
+
+      expect(section.exists()).toBe(false)
     })
   })
 })

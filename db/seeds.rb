@@ -21,14 +21,29 @@ end
 
 puts "created Platforms"
 
+# CREATE DEV USER ACCOUNTS
+GameTester.create!(
+  email: ENV["GAME_TESTER_EMAIL"],
+  password: ENV["GAME_TESTER_PASSWORD"],
+  password_confirmation: ENV["GAME_TESTER_PASSWORD"],
+  birthdate: Date.new(1990, 1, 1)
+)
+GameDeveloper.create!(
+  email: ENV["GAME_DEVELOPER_EMAIL"],
+  password: ENV["GAME_DEVELOPER_PASSWORD"],
+  password_confirmation: ENV["GAME_DEVELOPER_PASSWORD"]
+) do |dev|
+  FactoryBot.create_list(:submission, 3, game_developer: dev)
+end
+
+# fill db with tester accounts
+FactoryBot.create_list(:game_tester, 100)
+
+puts "created game testers"
+
 # CREATE GAME DEVELOPERS WITH SUBMISSIONS
 FactoryBot.create_list(:game_developer, 3)  do |dev, i|
   FactoryBot.create_list(:submission, Random.rand(5), game_developer: dev)
 end
 
 puts "created developers with submissions"
-
-# CREATE GAME TESTERS
-FactoryBot.create_list(:game_tester, 100)
-
-puts "created game testers"
